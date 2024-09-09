@@ -3,6 +3,7 @@ package betting
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -47,6 +48,10 @@ func Get[T any](client *BettingClient, id int, method string, params RPCParams, 
 	jsonRpc := JsonRpcResponse{}
 	if err = helpers.ReadJson(res, &jsonRpc); err != nil {
 		return err
+	}
+
+	if errorCode := jsonRpc.Error.Data.APINGException.ErrorCode; errorCode != "" {
+		return errors.New(errorCode)
 	}
 
 	if m, err := json.Marshal(jsonRpc.Result); err == nil {

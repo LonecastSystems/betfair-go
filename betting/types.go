@@ -58,6 +58,14 @@ type (
 	JsonError struct {
 		Code    int    `json:"code"`
 		Message string `json:"message"`
+		Data    struct {
+			APINGException struct {
+				RequestUUID  string `json:"requestUUID"`
+				ErrorCode    string `json:"errorCode"`
+				ErrorDetails string `json:"errorDetails"`
+			} `json:"APINGException"`
+			Exceptionname string `json:"exceptionname"`
+		} `json:"data"`
 	}
 
 	JsonRPC struct {
