@@ -1,4 +1,4 @@
-package rpc
+package tests
 
 import (
 	"slices"
@@ -7,18 +7,8 @@ import (
 	"github.com/LonecastSystems/betfair-go/client/rpc"
 )
 
-var sessionKey, appKey = "", ""
-
-func CreateClient() rpc.RpcBettingClient {
-	return rpc.RpcBettingClient(rpc.CreateClient(sessionKey, appKey))
-}
-
 func TestEventTypes(t *testing.T) {
-	if sessionKey == "" || appKey == "" {
-		t.Skip("Invalid credentials")
-	}
-
-	c := CreateClient()
+	c := CreateClient(t)
 
 	params := rpc.RPCParams{Filter: rpc.MarketFilter{
 		MarketTypeCodes: []string{"OVER_UNDER_25"},
@@ -41,11 +31,7 @@ func TestEventTypes(t *testing.T) {
 }
 
 func TestListCompetitions(t *testing.T) {
-	if sessionKey == "" || appKey == "" {
-		t.Skip("Invalid credentials")
-	}
-
-	c := CreateClient()
+	c := CreateClient(t)
 
 	params := rpc.RPCParams{Filter: rpc.MarketFilter{
 		TextQuery:       "Premier League",
@@ -70,11 +56,7 @@ func TestListCompetitions(t *testing.T) {
 }
 
 func TestMarketTypes(t *testing.T) {
-	if sessionKey == "" || appKey == "" {
-		t.Skip("Invalid credentials")
-	}
-
-	c := CreateClient()
+	c := CreateClient(t)
 
 	params := rpc.RPCParams{Filter: rpc.MarketFilter{
 		EventTypeIds:    []string{"1"},
@@ -136,11 +118,7 @@ func TestMarketTypes(t *testing.T) {
 }
 
 func TestEvents(t *testing.T) {
-	if sessionKey == "" || appKey == "" {
-		t.Skip("Invalid credentials")
-	}
-
-	c := CreateClient()
+	c := CreateClient(t)
 
 	params := rpc.RPCParams{Filter: rpc.MarketFilter{
 		EventTypeIds:    []string{"1"},
