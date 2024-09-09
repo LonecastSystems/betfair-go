@@ -1,14 +1,37 @@
-package betting
+package rpc
 
 import (
+	"net/http"
 	"time"
-
-	"github.com/LonecastSystems/betfair-go/client"
 )
 
-type BettingClient struct {
-	Client client.JsonRpcClient
-}
+type (
+	JsonRpcClient struct {
+		Client         *http.Client
+		ApplicationKey string
+		SessionToken   string
+	}
+
+	RpcBettingClient interface {
+		ListCompetitions(params RPCParams) ([]CompetitionResult, error)
+		ListEventTypes(params RPCParams) ([]EventTypeResult, error)
+		ListEvents(params RPCParams) ([]EventResult, error)
+		ListMarketTypes(params RPCParams) ([]MarketTypeResult, error)
+	}
+)
+
+type (
+	SessionResponse struct {
+		SessionToken string `json:"sessionToken"`
+		LoginStatus  string `json:"loginStatus"`
+	}
+	SessionLogoutResponse struct {
+		Token   string `json:"token"`
+		Product string `json:"product"`
+		Status  string `json:"status"`
+		Error   string `json:"error"`
+	}
+)
 
 // Requests
 type (

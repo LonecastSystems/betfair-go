@@ -1,7 +1,11 @@
-package client
+package rpc
 
 import (
+	"bytes"
 	"crypto/tls"
+	"encoding/json"
+	"errors"
+	"fmt"
 	"net/http"
 	"net/url"
 
@@ -63,4 +67,45 @@ func (client *JsonRpcClient) Logout() (response *http.Response, err error) {
 	}
 
 	return resp, err
+}
+
+var postUrl = url.URL{Path: "https://api.betfair.com/exchange/betting/json-rpc/v1/"}
+
+func Get[T any](client *JsonRpcClient, id int, method string, params RPCParams, response *T) error {
+	query := JsonRPC{
+		JsonRPC: "2.0",
+		Method:  fmt.Sprintf("SportsAPING/v1.0/%v", method),
+		Params:  params,
+		ID:      1,
+	}
+
+	body, err := json.Marshal(&query)
+	if err != nil {
+		return err
+	}
+
+	req, err := http.NewRequest("POST", postUrl.RequestURI(), bytes.NewBuffer(body))
+	if err != nil {
+		return err
+	}
+
+	res, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+
+	jsonRpc := JsonRpcResponse{}
+	if err = helpers.ReadJson(res, &jsonRpc); err != nil {
+		return err
+	}
+
+	if errorCode := jsonRpc.Error.Data.APINGException.ErrorCode; errorCode != "" {
+		return errors.New(errorCode)
+	}
+
+	if m, err := json.Marshal(jsonRpc.Result); err == nil {
+		return json.Unmarshal(m, &response)
+	}
+
+	return nil
 }
