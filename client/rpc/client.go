@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strconv"
 
 	"github.com/LonecastSystems/betfair-go/helpers"
 )
@@ -104,7 +105,7 @@ func Get[T any, TParams any](client *JsonRpcClient, id int, method string, param
 	}
 
 	if errorCode := jsonRpc.Error.Code; errorCode < 0 {
-		return errors.New(string(errorCode))
+		return errors.New(strconv.Itoa(errorCode))
 	}
 
 	if m, err := json.Marshal(jsonRpc.Result); err == nil {
