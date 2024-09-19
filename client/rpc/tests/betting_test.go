@@ -135,3 +135,35 @@ func TestEvents(t *testing.T) {
 		t.Fatal(len)
 	}
 }
+
+func TestMarketCatalogue(t *testing.T) {
+	c := CreateClient(t)
+
+	params := rpc.RPCParams{Filter: rpc.MarketFilter{}, MaxResults: "10"}
+
+	markets, err := c.ListMarketCatalogue(params)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	len := len(markets)
+	if len == 0 {
+		t.Fatal(len)
+	}
+}
+
+func TestMarketBook(t *testing.T) {
+	c := CreateClient(t)
+
+	params := rpc.MarketBookParams{MarketIds: []string{"1.232493875"}}
+
+	marketDetails, err := c.ListMarketBook(params)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	len := len(marketDetails)
+	if len == 0 {
+		t.Fatal(len)
+	}
+}

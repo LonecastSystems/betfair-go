@@ -17,6 +17,8 @@ type (
 		ListEventTypes(params RPCParams) ([]EventTypeResult, error)
 		ListEvents(params RPCParams) ([]EventResult, error)
 		ListMarketTypes(params RPCParams) ([]MarketTypeResult, error)
+		ListMarketCatalogue(params RPCParams) ([]MarketCatalogueResult, error)
+		ListMarketBook(params MarketBookParams) ([]MarketBookResult, error)
 	}
 )
 
@@ -33,7 +35,7 @@ type (
 	}
 )
 
-// Requests
+// Results
 type (
 	CompetitionResult struct {
 		Competition struct {
@@ -67,6 +69,38 @@ type (
 		MarketType  string `json:"marketType"`
 		MarketCount int    `json:"marketCount"`
 	}
+
+	MarketCatalogueResult struct {
+		MarketID     string  `json:"marketId"`
+		MarketName   string  `json:"marketName"`
+		TotalMatched float64 `json:"totalMatched"`
+	}
+
+	MarketBookResult struct {
+		MarketID              string    `json:"marketId"`
+		IsMarketDataDelayed   bool      `json:"isMarketDataDelayed"`
+		Status                string    `json:"status"`
+		BetDelay              int       `json:"betDelay"`
+		BspReconciled         bool      `json:"bspReconciled"`
+		Complete              bool      `json:"complete"`
+		Inplay                bool      `json:"inplay"`
+		NumberOfWinners       int       `json:"numberOfWinners"`
+		NumberOfRunners       int       `json:"numberOfRunners"`
+		NumberOfActiveRunners int       `json:"numberOfActiveRunners"`
+		LastMatchTime         time.Time `json:"lastMatchTime"`
+		TotalMatched          float64   `json:"totalMatched"`
+		TotalAvailable        float64   `json:"totalAvailable"`
+		CrossMatching         bool      `json:"crossMatching"`
+		RunnersVoidable       bool      `json:"runnersVoidable"`
+		Version               int64     `json:"version"`
+		Runners               []struct {
+			SelectionID     int     `json:"selectionId"`
+			Handicap        float64 `json:"handicap"`
+			Status          string  `json:"status"`
+			LastPriceTraded float64 `json:"lastPriceTraded"`
+			TotalMatched    float64 `json:"totalMatched"`
+		} `json:"runners"`
+	}
 )
 
 // RPC
@@ -91,15 +125,20 @@ type (
 		} `json:"data"`
 	}
 
-	JsonRPC struct {
-		JsonRPC string    `json:"jsonrpc"`
-		Method  string    `json:"method"`
-		Params  RPCParams `json:"params"`
-		ID      int       `json:"id"`
+	JsonRPC[T any] struct {
+		JsonRPC string `json:"jsonrpc"`
+		Method  string `json:"method"`
+		Params  T      `json:"params"`
+		ID      int    `json:"id"`
 	}
 
 	RPCParams struct {
-		Filter MarketFilter `json:"filter"`
+		Filter     MarketFilter `json:"filter"`
+		MaxResults string       `json:"maxResults"`
+	}
+
+	MarketBookParams struct {
+		MarketIds []string `json:"marketIds,omitempty"`
 	}
 )
 

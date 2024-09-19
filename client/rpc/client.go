@@ -71,8 +71,8 @@ func (client *JsonRpcClient) Logout() (response *http.Response, err error) {
 
 var postUrl = url.URL{Path: "https://api.betfair.com/exchange/betting/json-rpc/v1/"}
 
-func Get[T any](client *JsonRpcClient, id int, method string, params RPCParams, response *T) error {
-	query := JsonRPC{
+func Get[T any, TParams any](client *JsonRpcClient, id int, method string, params TParams, response *T) error {
+	query := JsonRPC[TParams]{
 		JsonRPC: "2.0",
 		Method:  fmt.Sprintf("SportsAPING/v1.0/%v", method),
 		Params:  params,
@@ -101,6 +101,10 @@ func Get[T any](client *JsonRpcClient, id int, method string, params RPCParams, 
 
 	if errorCode := jsonRpc.Error.Data.APINGException.ErrorCode; errorCode != "" {
 		return errors.New(errorCode)
+	}
+
+	if errorCode := jsonRpc.Error.Code; errorCode < 0 {
+		return errors.New(string(errorCode))
 	}
 
 	if m, err := json.Marshal(jsonRpc.Result); err == nil {

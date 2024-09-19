@@ -39,3 +39,23 @@ func (client *JsonRpcClient) ListMarketTypes(params RPCParams) ([]MarketTypeResu
 
 	return json, nil
 }
+
+func (client *JsonRpcClient) ListMarketCatalogue(params RPCParams) ([]MarketCatalogueResult, error) {
+	json := []MarketCatalogueResult{}
+
+	if err := Get(client, 1, "listMarketCatalogue", params, &json); err != nil {
+		return []MarketCatalogueResult{}, err
+	}
+
+	return json, nil
+}
+
+func (client *JsonRpcClient) ListMarketBook(params MarketBookParams) ([]MarketBookResult, error) {
+	json := []MarketBookResult{}
+
+	if err := Get(client, 1, "listMarketBook", params, &json); err != nil {
+		return []MarketBookResult{}, err
+	}
+
+	return json, nil
+}
