@@ -100,12 +100,12 @@ func Get[T any, TParams any](client *JsonRpcClient, id int, method string, param
 		return err
 	}
 
-	if errorCode := jsonRpc.Error.Data.APINGException.ErrorCode; errorCode != "" {
-		return errors.New(errorCode)
-	}
-
 	if errorCode := jsonRpc.Error.Code; errorCode < 0 {
-		return errors.New(strconv.Itoa(errorCode))
+		if errorCodex := jsonRpc.Error.Data.APINGException.ErrorCode; errorCodex != "" {
+			return errors.New(errorCodex)
+		} else {
+			return errors.New(strconv.Itoa(errorCode))
+		}
 	}
 
 	if m, err := json.Marshal(jsonRpc.Result); err == nil {

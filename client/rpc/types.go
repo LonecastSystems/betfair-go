@@ -93,13 +93,15 @@ type (
 		CrossMatching         bool      `json:"crossMatching"`
 		RunnersVoidable       bool      `json:"runnersVoidable"`
 		Version               int64     `json:"version"`
-		Runners               []struct {
-			SelectionID     int     `json:"selectionId"`
-			Handicap        float64 `json:"handicap"`
-			Status          string  `json:"status"`
-			LastPriceTraded float64 `json:"lastPriceTraded"`
-			TotalMatched    float64 `json:"totalMatched"`
-		} `json:"runners"`
+		Runners               []Runner  `json:"runners"`
+	}
+
+	Runner struct {
+		SelectionID     int     `json:"selectionId"`
+		Handicap        float64 `json:"handicap"`
+		Status          string  `json:"status"`
+		LastPriceTraded float64 `json:"lastPriceTraded"`
+		TotalMatched    float64 `json:"totalMatched"`
 	}
 )
 
