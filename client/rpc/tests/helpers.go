@@ -8,10 +8,10 @@ import (
 
 var sessionKey, appKey = "", ""
 
-func CreateClient(t *testing.T) rpc.RpcBettingClient {
+func CreateClient(t *testing.T) *rpc.JsonRpcClient {
 	if sessionKey == "" || appKey == "" {
 		t.Skip("Invalid credentials")
 	}
 
-	return rpc.RpcBettingClient(rpc.CreateClient(sessionKey, appKey))
+	return rpc.CreateClient(sessionKey, appKey)
 }

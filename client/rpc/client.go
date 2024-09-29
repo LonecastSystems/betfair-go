@@ -13,6 +13,18 @@ import (
 	"github.com/LonecastSystems/betfair-go/helpers"
 )
 
+var betfairUrl = "https://api.betfair.com/exchange/%v/json-rpc/v1/"
+
+const (
+	api_account = "account"
+	api_betting = "betting"
+)
+
+var apis = map[string]string{
+	api_account: "AccountAPING",
+	api_betting: "SportsAPING",
+}
+
 func (client *JsonRpcClient) Do(req *http.Request) (*http.Response, error) {
 	req.Header.Add("X-Authentication", client.SessionToken)
 	req.Header.Add("X-Application", client.ApplicationKey)
@@ -70,12 +82,18 @@ func (client *JsonRpcClient) Logout() (response *http.Response, err error) {
 	return resp, err
 }
 
-var postUrl = url.URL{Path: "https://api.betfair.com/exchange/betting/json-rpc/v1/"}
+func GetAccounts[T any, TParams any](client *JsonRpcClient, id int, method string, params TParams, response *T) error {
+	return Get(client, api_account, id, method, params, response)
+}
 
-func Get[T any, TParams any](client *JsonRpcClient, id int, method string, params TParams, response *T) error {
+func GetSports[T any, TParams any](client *JsonRpcClient, id int, method string, params TParams, response *T) error {
+	return Get(client, api_betting, id, method, params, response)
+}
+
+func Get[T any, TParams any](client *JsonRpcClient, api string, id int, method string, params TParams, response *T) error {
 	query := JsonRPC[TParams]{
 		JsonRPC: "2.0",
-		Method:  fmt.Sprintf("SportsAPING/v1.0/%v", method),
+		Method:  fmt.Sprintf("%v/v1.0/%v", apis[api], method),
 		Params:  params,
 		ID:      1,
 	}
@@ -85,7 +103,9 @@ func Get[T any, TParams any](client *JsonRpcClient, id int, method string, param
 		return err
 	}
 
-	req, err := http.NewRequest("POST", postUrl.RequestURI(), bytes.NewBuffer(body))
+	apiUrl := fmt.Sprintf(betfairUrl, api)
+
+	req, err := http.NewRequest("POST", apiUrl, bytes.NewBuffer(body))
 	if err != nil {
 		return err
 	}

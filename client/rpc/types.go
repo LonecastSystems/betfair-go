@@ -13,12 +13,16 @@ type (
 	}
 
 	RpcBettingClient interface {
-		ListCompetitions(params RPCParams) ([]CompetitionResult, error)
-		ListEventTypes(params RPCParams) ([]EventTypeResult, error)
-		ListEvents(params RPCParams) ([]EventResult, error)
-		ListMarketTypes(params RPCParams) ([]MarketTypeResult, error)
-		ListMarketCatalogue(params RPCParams) ([]MarketCatalogueResult, error)
+		ListCompetitions(params MarketParams) ([]CompetitionResult, error)
+		ListEventTypes(params MarketParams) ([]EventTypeResult, error)
+		ListEvents(params MarketParams) ([]EventResult, error)
+		ListMarketTypes(params MarketParams) ([]MarketTypeResult, error)
+		ListMarketCatalogue(params MarketParams) ([]MarketCatalogueResult, error)
 		ListMarketBook(params MarketBookParams) ([]MarketBookResult, error)
+	}
+
+	RpcAccountClient interface {
+		GetAccountFunds() (WalletResult, error)
 	}
 )
 
@@ -35,7 +39,20 @@ type (
 	}
 )
 
-// Results
+// Accounts -> Results
+type (
+	WalletResult struct {
+		AvailableToBetBalance float64 `json:"availableToBetBalance"`
+		Exposure              float64 `json:"exposure"`
+		RetainedCommission    float64 `json:"retainedCommission"`
+		ExposureLimit         float64 `json:"exposureLimit"`
+		DiscountRate          float64 `json:"discountRate"`
+		PointsBalance         int     `json:"pointsBalance"`
+		Wallet                string  `json:"wallet"`
+	}
+)
+
+// Betting -> Results
 type (
 	CompetitionResult struct {
 		Competition struct {
@@ -146,7 +163,11 @@ type (
 		ID      int    `json:"id"`
 	}
 
-	RPCParams struct {
+	AccountDetailsParams struct {
+		Wallet string `json:"wallet"`
+	}
+
+	MarketParams struct {
 		Filter     MarketFilter `json:"filter"`
 		MaxResults string       `json:"maxResults"`
 	}
