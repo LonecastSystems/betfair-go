@@ -102,6 +102,18 @@ type (
 		Status          string  `json:"status"`
 		LastPriceTraded float64 `json:"lastPriceTraded"`
 		TotalMatched    float64 `json:"totalMatched"`
+		Ex              Ex      `json:"ex"`
+	}
+
+	Ex struct {
+		AvailableToBack []RunnerPrice `json:"availableToBack"`
+		AvailableToLay  []RunnerPrice `json:"availableToLay"`
+		TradedVolume    []interface{} `json:"tradedVolume"`
+	}
+
+	RunnerPrice struct {
+		Price float64 `json:"price"`
+		Size  float64 `json:"size"`
 	}
 )
 
@@ -140,7 +152,8 @@ type (
 	}
 
 	MarketBookParams struct {
-		MarketIds []string `json:"marketIds,omitempty"`
+		MarketIds       []string        `json:"marketIds,omitempty"`
+		PriceProjection PriceProjection `json:"priceProjection,omitempty"`
 	}
 )
 
@@ -167,5 +180,9 @@ type (
 	TimeRange struct {
 		From string `json:"from,omitempty"`
 		To   string `json:"to,omitempty"`
+	}
+
+	PriceProjection struct {
+		PriceData []string `json:"priceData"`
 	}
 )
