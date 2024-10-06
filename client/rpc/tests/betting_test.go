@@ -167,3 +167,16 @@ func TestMarketBook(t *testing.T) {
 		t.Fatal(len)
 	}
 }
+
+func TestGetCurrentOrders(t *testing.T) {
+	c := CreateClient(t)
+
+	orders, err := c.GetCurrentOrders(rpc.CurrentOrdersParams{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if orders.Orders[0].MarketID != "UK" {
+		t.Fatal("Wallet null")
+	}
+}
