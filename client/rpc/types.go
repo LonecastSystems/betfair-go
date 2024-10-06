@@ -19,6 +19,7 @@ type (
 		ListMarketTypes(params MarketParams) ([]MarketTypeResult, error)
 		ListMarketCatalogue(params MarketParams) ([]MarketCatalogueResult, error)
 		ListMarketBook(params MarketBookParams) ([]MarketBookResult, error)
+		ListCurrentOrders(params CurrentOrdersParams) (CurrentOrderResult, error)
 	}
 
 	RpcAccountClient interface {

@@ -60,7 +60,7 @@ func (client *JsonRpcClient) ListMarketBook(params MarketBookParams) ([]MarketBo
 	return json, nil
 }
 
-func (client *JsonRpcClient) GetCurrentOrders(params CurrentOrdersParams) (CurrentOrderResult, error) {
+func (client *JsonRpcClient) ListCurrentOrders(params CurrentOrdersParams) (CurrentOrderResult, error) {
 	json := CurrentOrderResult{}
 
 	if err := GetSports(client, 1, "listCurrentOrders", params, &json); err != nil {

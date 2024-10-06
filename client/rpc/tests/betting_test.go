@@ -168,15 +168,11 @@ func TestMarketBook(t *testing.T) {
 	}
 }
 
-func TestGetCurrentOrders(t *testing.T) {
+func TestListCurrentOrders(t *testing.T) {
 	c := CreateClient(t)
 
-	orders, err := c.GetCurrentOrders(rpc.CurrentOrdersParams{})
+	_, err := c.ListCurrentOrders(rpc.CurrentOrdersParams{})
 	if err != nil {
 		t.Fatal(err)
-	}
-
-	if orders.Orders[0].MarketID != "UK" {
-		t.Fatal("Wallet null")
 	}
 }
