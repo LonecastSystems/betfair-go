@@ -1,42 +1,14 @@
 package rpc
 
 import (
-	"net/http"
 	"time"
+
+	"github.com/LonecastSystems/betfair-go/client/common"
 )
 
 type (
-	JsonRpcClient struct {
-		Client         *http.Client
-		ApplicationKey string
-		SessionToken   string
-	}
-
-	RpcBettingClient interface {
-		ListCompetitions(params MarketParams) ([]CompetitionResult, error)
-		ListEventTypes(params MarketParams) ([]EventTypeResult, error)
-		ListEvents(params MarketParams) ([]EventResult, error)
-		ListMarketTypes(params MarketParams) ([]MarketTypeResult, error)
-		ListMarketCatalogue(params MarketParams) ([]MarketCatalogueResult, error)
-		ListMarketBook(params MarketBookParams) ([]MarketBookResult, error)
-		ListCurrentOrders(params CurrentOrdersParams) (CurrentOrderResult, error)
-	}
-
-	RpcAccountClient interface {
-		GetAccountFunds() (WalletResult, error)
-	}
-)
-
-type (
-	SessionResponse struct {
-		SessionToken string `json:"sessionToken"`
-		LoginStatus  string `json:"loginStatus"`
-	}
-	SessionLogoutResponse struct {
-		Token   string `json:"token"`
-		Product string `json:"product"`
-		Status  string `json:"status"`
-		Error   string `json:"error"`
+	RpcClient struct {
+		Client *common.JsonClient
 	}
 )
 
@@ -134,12 +106,12 @@ type (
 		Size  float64 `json:"size"`
 	}
 
-	CurrentOrderResult struct {
-		Orders        []Order `json:"currentOrders"`
-		MoreAvailable bool    `json:"moreAvailable"`
+	CurrentOrderSummaryReport struct {
+		Orders        []CurrentOrderSummary `json:"currentOrders"`
+		MoreAvailable bool                  `json:"moreAvailable"`
 	}
 
-	Order struct {
+	CurrentOrderSummary struct {
 		BetID               string    `json:"betId"`
 		MarketID            string    `json:"marketId"`
 		SelectionID         int       `json:"selectionId"`
@@ -206,6 +178,8 @@ type (
 	}
 
 	CurrentOrdersParams struct {
+		FromRecord  int `json:"fromRecord"`
+		RecordCount int `json:"recordCount"`
 	}
 )
 

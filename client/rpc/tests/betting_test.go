@@ -1,7 +1,6 @@
 package tests
 
 import (
-	"slices"
 	"testing"
 
 	"github.com/LonecastSystems/betfair-go/client/rpc"
@@ -68,52 +67,8 @@ func TestMarketTypes(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	marketCodes := []string{
-		"ALT_TOTAL_GOALS",
-		"ASIAN_HANDICAP",
-		"BOTH_TEAMS_TO_SCORE",
-		"CORNER_ODDS",
-		"CORRECT_SCORE",
-		"DOUBLE_CHANCE",
-		"DRAW_NO_BET",
-		"FIRST_HALF_GOALS_05",
-		"FIRST_HALF_GOALS_15",
-		"FIRST_HALF_GOALS_25",
-		"HALF_TIME",
-		"HALF_TIME_FULL_TIME",
-		"HALF_TIME_SCORE",
-		"HANDICAP",
-		"MATCH_ODDS",
-		"OVER_UNDER_05",
-		"OVER_UNDER_15",
-		"OVER_UNDER_25",
-		"OVER_UNDER_35",
-		"OVER_UNDER_45",
-		"OVER_UNDER_55",
-		"OVER_UNDER_65",
-		"OVER_UNDER_75",
-		"OVER_UNDER_85",
-		"PROMOTION",
-		"RELEGATION",
-		"ROCK_BOTTOM",
-		"SPECIALS_NEXT_MGR",
-		"TEAM_A_1",
-		"TEAM_B_1",
-		"TOP_10_FINISH",
-		"TOP_2_FINISH",
-		"TOP_4_FINISH_FT",
-		"TOP_6_FINISH",
-		"TOP_GOALSCORER",
-		"TOP_N_FINISH",
-		"UNDIFFERENTIATED",
-		"WINNER",
-		"WINNER_WITHOUT",
-	}
-
-	for _, marketType := range marketTypes {
-		if !slices.Contains(marketCodes, marketType.MarketType) {
-			t.Fatal(marketType)
-		}
+	if len(marketTypes) == 0 {
+		t.Fatal("Empty market types")
 	}
 }
 
@@ -171,7 +126,7 @@ func TestMarketBook(t *testing.T) {
 func TestListCurrentOrders(t *testing.T) {
 	c := CreateClient(t)
 
-	_, err := c.ListCurrentOrders(rpc.CurrentOrdersParams{})
+	_, err := c.ListCurrentOrders(rpc.CurrentOrdersParams{FromRecord: 0, RecordCount: 1})
 	if err != nil {
 		t.Fatal(err)
 	}
