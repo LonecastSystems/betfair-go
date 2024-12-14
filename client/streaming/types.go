@@ -1,19 +1,5 @@
 package streaming
 
-import (
-	"crypto/tls"
-
-	"github.com/LonecastSystems/betfair-go/client/common"
-)
-
-type (
-	StreamingClient struct {
-		Client     *common.JsonClient
-		Connection *tls.Conn
-		ReadChunks int
-	}
-)
-
 type (
 	StatusMessage struct {
 		ID                   int    `json:"id"`

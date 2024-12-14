@@ -14,6 +14,14 @@ import (
 
 const betfairUrl = "stream-api.betfair.com:443"
 
+type (
+	StreamingClient struct {
+		Client     *common.JsonClient
+		Connection *tls.Conn
+		ReadChunks int
+	}
+)
+
 func CreateClient(sessionToken string, app_key string, readBytes int) *StreamingClient {
 	return &StreamingClient{Client: common.CreateClient(sessionToken, app_key), ReadChunks: readBytes}
 }
@@ -70,9 +78,7 @@ func (client *StreamingClient) Write(request any, isRequest bool) (err error) {
 	}
 
 	bytes = append(bytes, []byte("\r\n")...)
-
-	_, err = client.Connection.Write(bytes)
-	if err != nil {
+	if _, err = client.Connection.Write(bytes); err != nil {
 		return err
 	}
 

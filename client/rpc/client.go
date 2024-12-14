@@ -24,6 +24,12 @@ var apis = map[string]string{
 	api_betting: "SportsAPING",
 }
 
+type (
+	RpcClient struct {
+		Client *common.JsonClient
+	}
+)
+
 func CreateClient(sessionToken string, app_key string) *RpcClient {
 	return &RpcClient{Client: common.CreateClient(sessionToken, app_key)}
 }

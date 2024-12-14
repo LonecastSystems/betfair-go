@@ -2,14 +2,6 @@ package rpc
 
 import (
 	"time"
-
-	"github.com/LonecastSystems/betfair-go/client/common"
-)
-
-type (
-	RpcClient struct {
-		Client *common.JsonClient
-	}
 )
 
 // Accounts -> Results

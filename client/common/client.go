@@ -8,6 +8,14 @@ import (
 	"github.com/LonecastSystems/betfair-go/helpers"
 )
 
+type (
+	JsonClient struct {
+		Client         *http.Client
+		ApplicationKey string
+		SessionToken   string
+	}
+)
+
 func CreateClient(sessionToken string, app_key string) *JsonClient {
 	return &JsonClient{Client: &http.Client{}, SessionToken: sessionToken, ApplicationKey: app_key}
 }
@@ -41,29 +49,33 @@ func (jsonClient *JsonClient) Login(tls *tls.Config, apiKey string, applicationN
 	}
 
 	resp, err := client.Do(req)
-	if err == nil {
-		json := SessionResponse{}
-		if err := helpers.ReadJson(resp, &json); err == nil {
-			return resp, nil
-		}
+	if err != nil {
+		return resp, err
 	}
 
-	return resp, err
+	json := SessionResponse{}
+	if err := helpers.ReadJson(resp, &json); err != nil {
+		return resp, err
+	}
+
+	jsonClient.SessionToken = json.SessionToken
+	return resp, nil
 }
 
-func (client *JsonClient) Logout() (jsonResponse SessionLogoutResponse, response *http.Response, err error) {
+func (jsonClient *JsonClient) Logout() (jsonResponse SessionLogoutResponse, response *http.Response, err error) {
 	postUrl := url.URL{Path: "https://identitysso.betfair.com/api/logout"}
 
 	req, _ := http.NewRequest("POST", postUrl.RequestURI(), nil)
 
 	json := SessionLogoutResponse{}
 
-	resp, err := client.Do(req)
+	resp, err := jsonClient.Do(req)
 	helpers.ReadJson(resp, &json)
 
 	if err == nil {
 		return jsonResponse, resp, helpers.ReadJson(resp, &json)
 	}
 
+	jsonClient.SessionToken = ""
 	return json, resp, err
 }

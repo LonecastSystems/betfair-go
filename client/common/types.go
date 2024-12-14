@@ -1,15 +1,5 @@
 package common
 
-import "net/http"
-
-type (
-	JsonClient struct {
-		Client         *http.Client
-		ApplicationKey string
-		SessionToken   string
-	}
-)
-
 type (
 	SessionResponse struct {
 		SessionToken string `json:"sessionToken"`
