@@ -70,10 +70,12 @@ func (jsonClient *JsonClient) Logout() (jsonResponse SessionLogoutResponse, resp
 	json := SessionLogoutResponse{}
 
 	resp, err := jsonClient.Do(req)
-	helpers.ReadJson(resp, &json)
+	if err != nil {
+		return json, resp, err
+	}
 
-	if err == nil {
-		return jsonResponse, resp, helpers.ReadJson(resp, &json)
+	if err := helpers.ReadJson(resp, &json); err != nil {
+		return json, resp, err
 	}
 
 	jsonClient.SessionToken = ""
