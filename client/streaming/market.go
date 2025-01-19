@@ -86,20 +86,20 @@ type (
 	}
 
 	RunnerChange struct {
-		Conflated                  bool        `json:"con"`             // If true, more than one change is combined in this message
-		TradedVolume               float64     `json:"tv,omitempty"`    // Traded Volume on this runner (only sent if changed)
-		LastTradedPrice            float64     `json:"ltp,omitempty"`   // Last Traded Price on this runner (only sent if changed)
-		StartingPriceNear          float64     `json:"spn,omitempty"`   // Starting Price Near (only sent if changed)
-		StartingPriceFar           float64     `json:"spf,omitempty"`   // Starting Price Far (only sent if changed)
-		BestAvailableToBack        [][]float64 `json:"batb,omitempty"`  // Best Available To Back
-		BestAvailableToLay         [][]float64 `json:"batl,omitempty"`  // Best Available To Lay
-		BestDisplayAvailableToBack [][]float64 `json:"bdatb,omitempty"` // Best Display Available To Back
-		BestDisplayAvailableToLay  [][]float64 `json:"bdatl,omitempty"` // Best Display Available To Back
-		AvailableToBack            [][]float64 `json:"atb"`             // Available To Back (non-virtual prices)
-		AvailableToLay             [][]float64 `json:"atl"`             // Available To Lay (non-virtual prices)
-		StartingPriceBack          [][]float64 `json:"spb"`             // Starting Price (Available To) Back
-		StartingPriceLay           [][]float64 `json:"spl"`             // Starting Price (Available To) Lay
-		Traded                     [][]float64 `json:"trd"`             // Traded prices and sizes
+		Conflated                  bool        `json:"con"`           // If true, more than one change is combined in this message
+		TradedVolume               float64     `json:"tv,omitempty"`  // Traded Volume on this runner (only sent if changed)
+		LastTradedPrice            float64     `json:"ltp,omitempty"` // Last Traded Price on this runner (only sent if changed)
+		StartingPriceNear          interface{} `json:"spn,omitempty"` // Starting Price Near (only sent if changed)
+		StartingPriceFar           interface{} `json:"spf,omitempty"` // Starting Price Far (only sent if changed)
+		BestAvailableToBack        [][]float64 `json:"batb"`          // Best Available To Back
+		BestAvailableToLay         [][]float64 `json:"batl"`          // Best Available To Lay
+		BestDisplayAvailableToBack [][]float64 `json:"bdatb"`         // Best Display Available To Back
+		BestDisplayAvailableToLay  [][]float64 `json:"bdatl"`         // Best Display Available To Back
+		AvailableToBack            [][]float64 `json:"atb"`           // Available To Back (non-virtual prices)
+		AvailableToLay             [][]float64 `json:"atl"`           // Available To Lay (non-virtual prices)
+		StartingPriceBack          [][]float64 `json:"spb"`           // Starting Price (Available To) Back
+		StartingPriceLay           [][]float64 `json:"spl"`           // Starting Price (Available To) Lay
+		Traded                     [][]float64 `json:"trd"`           // Traded prices and sizes
 	}
 )
 
