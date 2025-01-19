@@ -8,7 +8,6 @@ import (
 )
 
 var sessionKey, appKey = "", ""
-var certificate_pem_path = ""
 var certificate_key_path = ""
 var certificate_crt_path = ""
 
@@ -19,7 +18,7 @@ func NewStreamingClient(t *testing.T) *streaming.StreamingClient {
 
 	c := streaming.NewStreamingClient(sessionKey, appKey)
 
-	tlsConfig, err := helpers.GetTLSConfig(certificate_pem_path, certificate_crt_path, certificate_key_path)
+	tlsConfig, err := helpers.GetTLSConfig(certificate_crt_path, certificate_key_path)
 	if err != nil {
 		t.Fatal(err)
 	}
