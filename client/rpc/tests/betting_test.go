@@ -7,7 +7,7 @@ import (
 )
 
 func TestEventTypes(t *testing.T) {
-	c := CreateClient(t)
+	c := NewTestRpcClient(t)
 
 	params := rpc.MarketParams{Filter: rpc.MarketFilter{
 		MarketTypeCodes: []string{"OVER_UNDER_25"},
@@ -30,7 +30,7 @@ func TestEventTypes(t *testing.T) {
 }
 
 func TestListCompetitions(t *testing.T) {
-	c := CreateClient(t)
+	c := NewTestRpcClient(t)
 
 	params := rpc.MarketParams{Filter: rpc.MarketFilter{
 		CompetitionIds:  []string{"10932509"},
@@ -55,7 +55,7 @@ func TestListCompetitions(t *testing.T) {
 }
 
 func TestMarketTypes(t *testing.T) {
-	c := CreateClient(t)
+	c := NewTestRpcClient(t)
 
 	params := rpc.MarketParams{Filter: rpc.MarketFilter{
 		EventTypeIds:    []string{"1"},
@@ -73,7 +73,7 @@ func TestMarketTypes(t *testing.T) {
 }
 
 func TestEvents(t *testing.T) {
-	c := CreateClient(t)
+	c := NewTestRpcClient(t)
 
 	params := rpc.MarketParams{Filter: rpc.MarketFilter{
 		EventTypeIds:    []string{"1"},
@@ -92,7 +92,7 @@ func TestEvents(t *testing.T) {
 }
 
 func TestMarketCatalogue(t *testing.T) {
-	c := CreateClient(t)
+	c := NewTestRpcClient(t)
 
 	params := rpc.MarketParams{Filter: rpc.MarketFilter{}, MaxResults: "10"}
 
@@ -108,7 +108,7 @@ func TestMarketCatalogue(t *testing.T) {
 }
 
 func TestMarketBook(t *testing.T) {
-	c := CreateClient(t)
+	c := NewTestRpcClient(t)
 
 	params := rpc.MarketBookParams{MarketIds: []string{"1.233455113"}, PriceProjection: rpc.PriceProjection{PriceData: []string{"EX_ALL_OFFERS"}}}
 
@@ -124,7 +124,7 @@ func TestMarketBook(t *testing.T) {
 }
 
 func TestListCurrentOrders(t *testing.T) {
-	c := CreateClient(t)
+	c := NewTestRpcClient(t)
 
 	_, err := c.ListCurrentOrders(rpc.CurrentOrdersParams{FromRecord: 0, RecordCount: 1})
 	if err != nil {

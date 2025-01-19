@@ -30,13 +30,42 @@ type (
 	}
 )
 
-func CreateClient(sessionToken string, app_key string) *RpcClient {
-	return &RpcClient{Client: common.CreateClient(sessionToken, app_key)}
+func NewRpcClient(sessionToken string, app_key string) *RpcClient {
+	return &RpcClient{Client: common.NewJsonClient(sessionToken, app_key)}
 }
 
 func (client *RpcClient) Do(req *http.Request) (*http.Response, error) {
 	return client.Client.Do(req)
 }
+
+type (
+	JsonRpcResponse struct {
+		JsonRPC string      `json:"jsonrpc"`
+		Result  interface{} `json:"result"`
+		Error   JsonError   `json:"error,omitempty"`
+		ID      int         `json:"id"`
+	}
+
+	JsonError struct {
+		Code    int    `json:"code"`
+		Message string `json:"message"`
+		Data    struct {
+			APINGException struct {
+				RequestUUID  string `json:"requestUUID"`
+				ErrorCode    string `json:"errorCode"`
+				ErrorDetails string `json:"errorDetails"`
+			} `json:"APINGException"`
+			ExceptionName string `json:"exceptionname"`
+		} `json:"data"`
+	}
+
+	JsonRPC[T any] struct {
+		JsonRPC string `json:"jsonrpc"`
+		Method  string `json:"method"`
+		Params  T      `json:"params"`
+		ID      int    `json:"id"`
+	}
+)
 
 func GetAccounts[T any, TParams any](client *RpcClient, id int, method string, params TParams, response *T) error {
 	return get(client, api_account, id, method, params, response)

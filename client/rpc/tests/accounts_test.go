@@ -7,7 +7,7 @@ import (
 )
 
 func TestGetAccountFunds(t *testing.T) {
-	c := CreateClient(t)
+	c := NewTestRpcClient(t)
 
 	wallet, err := c.GetAccountFunds(rpc.AccountDetailsParams{Wallet: "UK"})
 	if err != nil {

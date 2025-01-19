@@ -8,10 +8,10 @@ import (
 
 var sessionKey, appKey = "", ""
 
-func CreateClient(t *testing.T) *rpc.RpcClient {
+func NewTestRpcClient(t *testing.T) *rpc.RpcClient {
 	if sessionKey == "" || appKey == "" {
 		t.Skip("Invalid credentials")
 	}
 
-	return rpc.CreateClient(sessionKey, appKey)
+	return rpc.NewRpcClient(sessionKey, appKey)
 }

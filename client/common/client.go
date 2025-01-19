@@ -14,9 +14,21 @@ type (
 		ApplicationKey string
 		SessionToken   string
 	}
+
+	SessionResponse struct {
+		SessionToken string `json:"sessionToken"`
+		LoginStatus  string `json:"loginStatus"`
+	}
+
+	SessionLogoutResponse struct {
+		Token   string `json:"token"`
+		Product string `json:"product"`
+		Status  string `json:"status"`
+		Error   string `json:"error"`
+	}
 )
 
-func CreateClient(sessionToken string, app_key string) *JsonClient {
+func NewJsonClient(sessionToken string, app_key string) *JsonClient {
 	return &JsonClient{Client: &http.Client{}, SessionToken: sessionToken, ApplicationKey: app_key}
 }
 

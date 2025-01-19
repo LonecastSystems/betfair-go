@@ -1,7 +1,6 @@
 package streaming
 
 import (
-	"bytes"
 	"crypto/tls"
 	"encoding/json"
 	"errors"
@@ -14,21 +13,46 @@ import (
 
 const betfairUrl = "stream-api.betfair.com:443"
 
-type (
-	StreamingClient struct {
-		Client     *common.JsonClient
-		Connection *tls.Conn
-		ReadChunks int
-	}
-)
+type StreamingClient struct {
+	Client              *common.JsonClient
+	Connection          *tls.Conn
+	SegmentationEnabled bool
+	ConflateMs          int
+	HeartbeatMs         int
+	InitialClk          string
+	Clk                 string
+}
 
-func CreateClient(sessionToken string, app_key string, readBytes int) *StreamingClient {
-	return &StreamingClient{Client: common.CreateClient(sessionToken, app_key), ReadChunks: readBytes}
+func NewStreamingClient(sessionToken string, app_key string) *StreamingClient {
+	return &StreamingClient{Client: common.NewJsonClient(sessionToken, app_key)}
 }
 
 func (client *StreamingClient) Do(req *http.Request) (*http.Response, error) {
 	return client.Client.Do(req)
 }
+
+type (
+	ConnectionMessage struct {
+		Op           string `json:"op"`
+		ConnectionID string `json:"connectionId"`
+	}
+
+	AuthenticationMessage struct {
+		ID      int    `json:"id"`
+		Op      string `json:"op"`
+		AppKey  string `json:"appKey"`
+		Session string `json:"session"`
+	}
+
+	StatusMessage struct {
+		ID                   int    `json:"id"`
+		StatusCode           string `json:"statusCode"`
+		ConnectionClosed     bool   `json:"connectionClosed"`
+		ErrorCode            string `json:"errorCode"`
+		ErrorMessage         string `json:"errorMessage"`
+		ConnectionsAvailable int    `json:"connectionsAvailable"`
+	}
+)
 
 func (client *StreamingClient) Login(config *tls.Config) (err error) {
 	client.Connection, err = tls.Dial("tcp", betfairUrl, config)
@@ -37,8 +61,7 @@ func (client *StreamingClient) Login(config *tls.Config) (err error) {
 	}
 
 	cm := &ConnectionMessage{}
-	err = client.Read(cm)
-	if err != nil {
+	if err = client.Read(cm); err != nil {
 		return err
 	}
 
@@ -52,39 +75,28 @@ func (client *StreamingClient) Login(config *tls.Config) (err error) {
 	return client.Write(am, true)
 }
 
-func (client *StreamingClient) Read(response any) (err error) {
-	buffer := bytes.NewBuffer(nil)
-	for {
-		chunk := make([]byte, client.ReadChunks)
-		read, err := client.Connection.Read(chunk)
-		if err != nil && err != io.EOF {
-			return err
-		}
+func (client *StreamingClient) Read(response any) error {
+	dec := json.NewDecoder(client.Connection)
 
-		buffer.Write(chunk[:read])
-
-		if err == io.EOF || read < client.ReadChunks {
-			break
-		}
-	}
-
-	return json.Unmarshal(buffer.Bytes(), &response)
-}
-
-func (client *StreamingClient) Write(request any, isRequest bool) (err error) {
-	bytes, err := json.Marshal(request)
-	if err != nil {
+	if err := dec.Decode(&response); err != nil && err != io.EOF {
 		return err
 	}
 
-	bytes = append(bytes, []byte("\r\n")...)
-	if _, err = client.Connection.Write(bytes); err != nil {
+	return nil
+}
+
+func (client *StreamingClient) Write(request any, isRequest bool) error {
+	enc := json.NewEncoder(client.Connection)
+
+	if err := enc.Encode(request); err != nil {
 		return err
 	}
 
 	if isRequest {
 		status := &StatusMessage{}
-		client.Read(status)
+		if err := client.Read(status); err != nil {
+			return err
+		}
 
 		if status.ErrorCode != "" {
 			return errors.New(status.ErrorCode)
@@ -94,28 +106,33 @@ func (client *StreamingClient) Write(request any, isRequest bool) (err error) {
 	return nil
 }
 
-func (client *StreamingClient) ReadStream(reads chan<- any) (err error) {
-	dec := json.NewDecoder(client.Connection)
+func ReadStream[T any](connection *tls.Conn, reads chan<- T) (err error) {
+	dec := json.NewDecoder(connection)
 
 	for dec.More() {
-		var x any
-		err := dec.Decode(&x)
-		if err != nil && err != io.EOF {
+		var x T
+
+		if err := dec.Decode(&x); err != nil && err != io.EOF {
 			return err
 		}
 
-		reads <- x
+		select {
+		case reads <- x:
+		default:
+			return nil
+		}
 	}
+
+	close(reads)
 
 	return nil
 }
 
-func (client *StreamingClient) WriteStream(reads chan any) (err error) {
-	dec := json.NewEncoder(client.Connection)
+func WriteStream[T any](connection *tls.Conn, reads chan T) (err error) {
+	dec := json.NewEncoder(connection)
 
 	for x := range reads {
-		err := dec.Encode(x)
-		if err != nil {
+		if err := dec.Encode(x); err != nil {
 			return err
 		}
 
