@@ -12,7 +12,7 @@ func TestSubscribeToMarkets(t *testing.T) {
 
 	fields := []string{"EX_BEST_OFFERS_DISP", "EX_BEST_OFFERS", "EX_ALL_OFFERS", "EX_TRADED", "EX_TRADED_VOL", "EX_LTP", "EX_MARKET_DEF", "SP_TRADED", "SP_PROJECTED"}
 
-	marketChanges, err := c.SubscribeToMarkets(streaming.MarketFilter{MarketIds: []string{"1.237874661"}}, streaming.MarketDataFilter{Fields: fields, LadderLevels: 2})
+	marketChanges, err := c.SubscribeToMarkets(streaming.MarketFilter{MarketIDs: []string{"1.237874661"}}, streaming.MarketDataFilter{Fields: fields, LadderLevels: 2})
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -10,10 +10,10 @@ type (
 
 	MarketFilter struct {
 		TextQuery          string    `json:"textQuery,omitempty"`
-		EventTypeIds       []string  `json:"eventTypeIds,omitempty"`
-		EventIds           []string  `json:"eventIds,omitempty"`
-		CompetitionIds     []string  `json:"competitionIds,omitempty"`
-		MarketIds          []string  `json:"marketIds,omitempty"`
+		EventTypeIDs       []string  `json:"eventTypeIds,omitempty"`
+		EventIDs           []string  `json:"eventIds,omitempty"`
+		CompetitionIDs     []string  `json:"competitionIds,omitempty"`
+		MarketIDs          []string  `json:"marketIds,omitempty"`
 		Venues             []string  `json:"venues,omitempty"`
 		BspOnly            bool      `json:"bspOnly,omitempty"`
 		TurnInPlayEnabled  bool      `json:"turnInPlayEnabled,omitempty"`
@@ -123,7 +123,7 @@ func (client *RpcClient) ListMarketCatalogue(params MarketParams) ([]MarketCatal
 
 type (
 	MarketBookParams struct {
-		MarketIds       []string        `json:"marketIds,omitempty"`
+		MarketIDs       []string        `json:"marketIds,omitempty"`
 		PriceProjection PriceProjection `json:"priceProjection,omitempty"`
 	}
 

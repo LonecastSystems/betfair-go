@@ -127,17 +127,3 @@ func ReadStream[T any](connection *tls.Conn, reads chan<- T) (err error) {
 
 	return nil
 }
-
-func WriteStream[T any](connection *tls.Conn, reads chan T) (err error) {
-	dec := json.NewEncoder(connection)
-
-	for x := range reads {
-		if err := dec.Encode(x); err != nil {
-			return err
-		}
-
-		reads <- x
-	}
-
-	return nil
-}

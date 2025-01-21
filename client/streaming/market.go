@@ -19,11 +19,11 @@ type (
 	}
 
 	MarketFilter struct {
-		MarketIds         []string `json:"marketIds,omitempty"`
+		MarketIDs         []string `json:"marketIds,omitempty"`
 		BspMarket         bool     `json:"bspMarket,omitempty"`
 		BettingTypes      []string `json:"bettingTypes,omitempty"`
-		EventTypeIds      []string `json:"eventTypeIds,omitempty"`
-		EventIds          []string `json:"eventIds,omitempty"`
+		EventTypeIDs      []string `json:"eventTypeIds,omitempty"`
+		EventIDs          []string `json:"eventIds,omitempty"`
 		TurnInPlayEnabled bool     `json:"turnInPlayEnabled,omitempty"`
 		MarketTypes       []string `json:"marketTypes,omitempty"`
 		CountryCodes      []string `json:"countryCodes,omitempty"`
@@ -57,14 +57,14 @@ type (
 	}
 
 	MarketDefinition struct {
-		Id                    string    `json:"id"`                    // Market Id - the id of the market
+		MarketID              string    `json:"id"`                    // Market Id - the id of the market
 		Venue                 string    `json:"venue"`                 // The venue - applies to horse racing and greyhound markets only
 		BspMarket             bool      `json:"bspMarket"`             // If 'true' the market supports Betfair SP betting
 		TurnInPlayEnabled     bool      `json:"turnInPlayEnabled"`     // If 'true' the market is set to turn in-play
 		PersistenceEnabled    bool      `json:"persistenceEnabled"`    // If 'true' the market supports 'Keep' bets if the market is to be turned in-play
 		MarketBaseRate        float64   `json:"marketBaseRate"`        // The commission rate applicable to the market
-		EventId               string    `json:"eventId"`               // The unique id for the event
-		EventTypeId           string    `json:"eventTypeId"`           // The unique eventTypeId that the event belongs to
+		EventID               string    `json:"eventId"`               // The unique id for the event
+		EventTypeID           string    `json:"eventTypeId"`           // The unique eventTypeId that the event belongs to
 		NumberOfWinners       int       `json:"numberOfWinners"`       // The number of winners on a market
 		BettingType           string    `json:"bettingType"`           // The market betting type i.e. ODDS, ASIAN_HANDICAP_DOUBLE_LINE, etc.
 		MarketType            string    `json:"marketType"`            // Market base type
