@@ -4,6 +4,7 @@ type (
 	CurrencyRateParams struct {
 		FromCurrency string `json:"fromCurrency,omitempty"`
 	}
+
 	CurrencyRate struct {
 		CurrencyCode string  `json:"currencyCode"`
 		Rate         float64 `json:"rate"`

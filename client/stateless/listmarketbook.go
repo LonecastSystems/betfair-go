@@ -4,6 +4,14 @@ import (
 	"time"
 )
 
+type RollupModel string
+
+const (
+	RM_STAKE  = "STAKE"
+	RM_PAYOUT = "PAYOUT"
+	RM_NONE   = "NONE"
+)
+
 type (
 	MarketBookParams struct {
 		MarketIDs                     []string        `json:"marketIds"`
@@ -26,8 +34,6 @@ type (
 		RolloverStakes        bool            `json:"rolloverStakes,omitempty"`
 	}
 
-	RollupModel string
-
 	OffersOverrides struct {
 		BestPricesDepth       int         `json:"bestPricesDepth,omitempty"`
 		RollupModel           RollupModel `json:"rollupModel,omitempty"`
@@ -35,8 +41,6 @@ type (
 		RollupLiability       float64     `json:"rollupLiability,omitempty"`
 		RollupLiabilityFactor int         `json:"rollupLiabilityFactor,omitempty"`
 	}
-
-	KeyLineDescription string
 
 	MarketBook struct {
 		MarketID              string             `json:"marketId"`
@@ -120,6 +124,15 @@ type (
 		Price     float64   `json:"price"`
 		Size      float64   `json:"size"`
 		MatchDate time.Time `json:"matchDate,omitempty"`
+	}
+
+	KeyLineDescription struct {
+		KeyLine []KeyLineSelection `json:"keyLine,omitempty"`
+	}
+
+	KeyLineSelection struct {
+		SelectionID int64   `json:"selectionId,omitempty"`
+		Handicap    float64 `json:"handicap,omitempty"`
 	}
 )
 

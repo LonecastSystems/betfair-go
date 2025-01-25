@@ -2,11 +2,34 @@ package stateless
 
 import "time"
 
+type IncludeItem string
+
+const (
+	IT_ALL                  = "ALL"
+	IT_DEPOSITS_WITHDRAWALS = "DEPOSITS_WITHDRAWALS"
+	IT_EXCHANGE             = "EXCHANGE"
+	IT_POKER_ROOM           = "POKER_ROOM"
+)
+
+type ItemClass string
+
+const (
+	IC_UNKNOWN = "UNKNOWN"
+)
+
+type WinLose string
+
+const (
+	WL_RESULT_ERR            = "RESULT_ERR"
+	WL_RESULT_FIX            = "RESULT_FIX"
+	WL_RESULT_LOST           = "RESULT_LOST"
+	WL_RESULT_NOT_APPLICABLE = "RESULT_NOT_APPLICABLE"
+	WL_RESULT_WON            = "RESULT_WON"
+	WL_COMMISSION_REVERSAL   = "COMMISSION_REVERSAL"
+)
+
 type (
-	IncludeItem string
-	ItemClass   string
-	MarketType  string
-	WinLose     string
+	MarketType string
 
 	AccountStatementParams struct {
 		Locale        string      `json:"locale,omitempty"`

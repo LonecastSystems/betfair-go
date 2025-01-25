@@ -3,14 +3,19 @@ package stateless
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"math/rand/v2"
 	"net/http"
-	"strconv"
 
 	"github.com/LonecastSystems/betfair-go/client/common"
 	"github.com/LonecastSystems/betfair-go/helpers"
+)
+
+const (
+	api_account   = "account"
+	api_betting   = "betting"
+	api_heartbeat = "heartbeat"
+	api_scores    = "scores"
 )
 
 var apis = map[string]string{
@@ -59,6 +64,21 @@ func get[T any, TParams any](client *StatelessClient, api string, method string,
 	}
 }
 
+type ErrorCode string
+
+const (
+	EC_UNEXPECTED_ERROR            = "UNEXPECTED_ERROR"
+	EC_INVALID_INPUT_DATA          = "INVALID_INPUT_DATA"
+	EC_INVALID_SESSION_INFORMATION = "INVALID_SESSION_INFORMATION"
+	EC_INVALID_APP_KEY             = "INVALID_APP_KEY"
+	EC_SERVICE_BUSY                = "SERVICE_BUSY"
+	EC_TIMEOUT_ERROR               = "TIMEOUT_ERROR"
+	EC_NO_SESSION                  = "NO_SESSION"
+	EC_NO_APP_KEY                  = "NO_APP_KEY"
+	EC_TOO_MANY_REQUESTS           = "TOO_MANY_REQUESTS"
+	EC_SERVICE_UNAVAILABLE         = "SERVICE_UNAVAILABLE"
+)
+
 type (
 	JsonRpcResponse struct {
 		JsonRPC string      `json:"jsonrpc"`
@@ -79,9 +99,9 @@ type (
 	}
 
 	JsonAPINGException struct {
-		RequestUUID  string `json:"requestUUID"`
-		ErrorCode    string `json:"errorCode"`
-		ErrorDetails string `json:"errorDetails"`
+		RequestUUID  string    `json:"requestUUID"`
+		ErrorCode    ErrorCode `json:"errorCode"`
+		ErrorDetails string    `json:"errorDetails"`
 	}
 
 	JsonRPC[T any] struct {
@@ -122,12 +142,12 @@ func getRPC[T any, TParams any](client *StatelessClient, api string, method stri
 		return err
 	}
 
-	if errorCode := jsonRpc.Error.Code; errorCode < 0 {
-		if errorCodex := jsonRpc.Error.Data.APINGException.ErrorCode; errorCodex != "" {
-			return errors.New(errorCodex)
-		} else {
-			return errors.New(strconv.Itoa(errorCode))
-		}
+	jsonError := jsonRpc.Error
+
+	if errorCode := jsonError.Code; errorCode < 0 {
+		ex := jsonRpc.Error.Data.APINGException
+
+		return fmt.Errorf("%v -> %v: %v (%v)", ex.RequestUUID, jsonError.Code, jsonError.Message, ex.ErrorCode)
 	}
 
 	if m, err := json.Marshal(jsonRpc.Result); err == nil {

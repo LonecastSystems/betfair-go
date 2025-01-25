@@ -25,14 +25,11 @@ type (
 	}
 )
 
-const (
-	api_account   = "account"
-	api_betting   = "betting"
-	api_heartbeat = "heartbeat"
-	api_scores    = "scores"
-)
-
 type Wallet string
+
+const (
+	W_UK = "UK"
+)
 
 type MarketProjection string
 
