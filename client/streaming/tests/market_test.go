@@ -10,9 +10,12 @@ func TestSubscribeToMarkets(t *testing.T) {
 	c := NewStreamingClient(t)
 	c.HeartbeatMs = 524
 
-	fields := []string{"EX_BEST_OFFERS_DISP", "EX_BEST_OFFERS", "EX_ALL_OFFERS", "EX_TRADED", "EX_TRADED_VOL", "EX_LTP", "EX_MARKET_DEF", "SP_TRADED", "SP_PROJECTED"}
+	marketFilter := streaming.MarketFilter{MarketIDs: []string{"1.238326543"}}
 
-	marketChanges, err := c.SubscribeToMarkets(streaming.MarketFilter{MarketIDs: []string{"1.237874661"}}, streaming.MarketDataFilter{Fields: fields, LadderLevels: 2})
+	fields := []string{"EX_BEST_OFFERS_DISP", "EX_BEST_OFFERS", "EX_ALL_OFFERS", "EX_TRADED", "EX_TRADED_VOL", "EX_LTP", "EX_MARKET_DEF", "SP_TRADED", "SP_PROJECTED"}
+	marketDataFilter := streaming.MarketDataFilter{Fields: fields, LadderLevels: 2}
+
+	marketChanges, err := c.SubscribeToMarkets(marketFilter, marketDataFilter)
 	if err != nil {
 		t.Fatal(err)
 	}

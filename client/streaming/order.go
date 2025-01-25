@@ -39,7 +39,7 @@ type (
 	}
 
 	OrderAccountChange struct {
-		MarketID     int           `json:"id"`
+		MarketID     string        `json:"id"`
 		Closed       bool          `json:"closed"`
 		FullImage    bool          `json:"fullImage"`
 		OrderChanges []OrderChange `json:"orc"`
@@ -47,7 +47,7 @@ type (
 
 	OrderChange struct {
 		FullImage       bool             `json:"fullImage"`    // Replace existing data at runner level with the data supplied (null if delta)
-		SelectionID     string           `json:"id"`           // Selection Id - the id of the runner (selection)
+		SelectionID     int64            `json:"id"`           // Selection Id - the id of the runner (selection)
 		Handicap        float64          `json:"hc,omitempty"` // Handicap - the handicap of the runner (null if not applicable)
 		UnmatchedOrders []UnmatchedOrder `json:"uo"`           // Unmatched Orders on this runner
 	}

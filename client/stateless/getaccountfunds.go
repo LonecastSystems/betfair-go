@@ -1,11 +1,11 @@
-package rpc
+package stateless
 
 type (
 	AccountDetailsParams struct {
-		Wallet string `json:"wallet"`
+		Wallet Wallet `json:"wallet"`
 	}
 
-	WalletResult struct {
+	AccountFundsResponse struct {
 		AvailableToBetBalance float64 `json:"availableToBetBalance"`
 		Exposure              float64 `json:"exposure"`
 		RetainedCommission    float64 `json:"retainedCommission"`
@@ -16,11 +16,11 @@ type (
 	}
 )
 
-func (client *RpcClient) GetAccountFunds(params AccountDetailsParams) (WalletResult, error) {
-	json := WalletResult{}
+func (client *StatelessClient) GetAccountFunds(params AccountDetailsParams) (AccountFundsResponse, error) {
+	json := AccountFundsResponse{}
 
-	if err := GetAccounts(client, 1, "getAccountFunds", params, &json); err != nil {
-		return WalletResult{}, err
+	if err := GetAccounts(client, "getAccountFunds", params, &json); err != nil {
+		return AccountFundsResponse{}, err
 	}
 
 	return json, nil

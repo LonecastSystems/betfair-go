@@ -11,8 +11,6 @@ import (
 	"github.com/LonecastSystems/betfair-go/client/common"
 )
 
-const betfairUrl = "stream-api.betfair.com:443"
-
 type StreamingClient struct {
 	Client              *common.JsonClient
 	Connection          *tls.Conn
@@ -55,7 +53,7 @@ type (
 )
 
 func (client *StreamingClient) Login(config *tls.Config) (err error) {
-	client.Connection, err = tls.Dial("tcp", betfairUrl, config)
+	client.Connection, err = tls.Dial("tcp", "stream-api.betfair.com:443", config)
 	if err != nil {
 		return err
 	}

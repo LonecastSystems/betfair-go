@@ -8,8 +8,8 @@ import (
 )
 
 var sessionKey, appKey = "", ""
-var certificate_key_path = ""
 var certificate_crt_path = ""
+var certificate_key_path = ""
 
 func NewStreamingClient(t *testing.T) *streaming.StreamingClient {
 	if sessionKey == "" || appKey == "" {

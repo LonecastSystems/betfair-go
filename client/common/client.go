@@ -36,6 +36,7 @@ func (client *JsonClient) Do(req *http.Request) (*http.Response, error) {
 	req.Header.Add("X-Authentication", client.SessionToken)
 	req.Header.Add("X-Application", client.ApplicationKey)
 	req.Header.Add("Accept", "application/json")
+	req.Header.Add("content-type", "application/json")
 
 	return client.Client.Do(req)
 }
