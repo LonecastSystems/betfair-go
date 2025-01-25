@@ -22,7 +22,7 @@ type (
 	}
 
 	CurrentOrderSummaryReport struct {
-		Orders        []CurrentOrderSummary `json:"currentOrders"`
+		CurrentOrders []CurrentOrderSummary `json:"currentOrders"`
 		MoreAvailable bool                  `json:"moreAvailable"`
 	}
 

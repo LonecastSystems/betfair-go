@@ -25,7 +25,7 @@ type (
 	}
 
 	ClearedOrderSummaryReport struct {
-		CurrentOrders []ClearedOrderSummary `json:"clearedOrders"`
+		ClearedOrders []ClearedOrderSummary `json:"clearedOrders"`
 		MoreAvailable bool                  `json:"moreAvailable"`
 	}
 

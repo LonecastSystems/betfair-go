@@ -31,7 +31,7 @@ type (
 		PersistenceType PersistenceType `json:"persistenceType"`
 		TimeInForce     TimeInForce     `json:"timeInForce,omitempty"`
 		MinFillSize     float64         `json:"minFillSize,omitempty"`
-		BetTargetType   interface{}     `json:"betTargetType,omitempty"`
+		BetTargetType   BetTargetType   `json:"betTargetType,omitempty"`
 		BetTargetSize   float64         `json:"betTargetSize,omitempty"`
 	}
 

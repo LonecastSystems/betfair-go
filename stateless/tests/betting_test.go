@@ -66,7 +66,7 @@ func TestListCurrentOrders(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if len(report.Orders) == 0 {
+	if len(report.CurrentOrders) == 0 {
 		t.Fatal("No orders")
 	}
 }
@@ -247,7 +247,7 @@ func TestListClearedOrders(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if len(report.CurrentOrders) == 0 {
-		t.Fatal("No current orders")
+	if len(report.ClearedOrders) == 0 {
+		t.Fatal("No cleared orders")
 	}
 }
