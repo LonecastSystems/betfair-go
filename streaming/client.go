@@ -111,17 +111,12 @@ func ReadStream[T any](connection *tls.Conn, reads chan<- T) (err error) {
 		var x T
 
 		if err := dec.Decode(&x); err != nil && err != io.EOF {
-			return err
+			break
 		}
 
-		select {
-		case reads <- x:
-		default:
-			return nil
-		}
+		reads <- x
 	}
 
 	close(reads)
-
 	return nil
 }

@@ -93,13 +93,11 @@ func (client *StreamingClient) SubscribeToOrders(orderFilter OrderFilter) (chan 
 		Clk:                 client.Clk,
 	}
 
-	orderChanges := make(chan OrderChangeMessage)
-
 	if err := client.Write(ms, true); err != nil {
-		close(orderChanges)
-		return orderChanges, err
+		return nil, err
 	}
 
+	orderChanges := make(chan OrderChangeMessage)
 	go ReadStream(client.Connection, orderChanges)
 
 	return orderChanges, nil
