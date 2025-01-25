@@ -7,7 +7,7 @@ import (
 	"math/rand/v2"
 	"net/http"
 
-	"github.com/LonecastSystems/betfair-go/client/common"
+	"github.com/LonecastSystems/betfair-go/common"
 	"github.com/LonecastSystems/betfair-go/helpers"
 )
 

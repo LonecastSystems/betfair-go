@@ -3,8 +3,8 @@ package tests
 import (
 	"testing"
 
-	"github.com/LonecastSystems/betfair-go/client/streaming"
 	"github.com/LonecastSystems/betfair-go/helpers"
+	"github.com/LonecastSystems/betfair-go/streaming"
 )
 
 var sessionKey, appKey = "", ""

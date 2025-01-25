@@ -3,7 +3,7 @@ package tests
 import (
 	"testing"
 
-	"github.com/LonecastSystems/betfair-go/client/streaming"
+	"github.com/LonecastSystems/betfair-go/streaming"
 )
 
 func TestSubscribeToMarkets(t *testing.T) {

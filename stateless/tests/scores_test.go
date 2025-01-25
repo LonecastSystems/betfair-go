@@ -3,7 +3,7 @@ package tests
 import (
 	"testing"
 
-	"github.com/LonecastSystems/betfair-go/client/stateless"
+	"github.com/LonecastSystems/betfair-go/stateless"
 )
 
 func TestListRaceDetails(t *testing.T) {
