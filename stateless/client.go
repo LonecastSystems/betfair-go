@@ -126,7 +126,6 @@ func getRPC[T any, TParams any](client *StatelessClient, api string, method stri
 	}
 
 	apiUrl := fmt.Sprintf("https://api.betfair.com/exchange/%v/json-rpc/v1/", api)
-
 	req, err := http.NewRequest("POST", apiUrl, bytes.NewBuffer(body))
 	if err != nil {
 		return err
@@ -142,10 +141,8 @@ func getRPC[T any, TParams any](client *StatelessClient, api string, method stri
 		return err
 	}
 
-	jsonError := jsonRpc.Error
-
-	if errorCode := jsonError.Code; errorCode < 0 {
-		ex := jsonRpc.Error.Data.APINGException
+	if jsonError, errorCode := jsonRpc.Error, jsonRpc.Error.Code; errorCode < 0 {
+		ex := jsonError.Data.APINGException
 
 		return fmt.Errorf("%v -> %v: %v (%v)", ex.RequestUUID, jsonError.Code, jsonError.Message, ex.ErrorCode)
 	}
@@ -171,7 +168,6 @@ func getRest[T any, TParams any](client *StatelessClient, api string, method str
 	}
 
 	apiUrl := fmt.Sprintf("https://api.betfair.com/exchange/%v/rest/v1.0/%v/", api, method)
-
 	req, err := http.NewRequest("POST", apiUrl, bytes.NewBuffer(body))
 	if err != nil {
 		return err
