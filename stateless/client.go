@@ -11,20 +11,6 @@ import (
 	"github.com/LonecastSystems/betfair-go/helpers"
 )
 
-const (
-	api_account   = "account"
-	api_betting   = "betting"
-	api_heartbeat = "heartbeat"
-	api_scores    = "scores"
-)
-
-var apis = map[string]string{
-	api_account:   "AccountAPING",
-	api_betting:   "SportsAPING",
-	api_heartbeat: "HeartbeatAPING",
-	api_scores:    "ScoresAPING",
-}
-
 type (
 	StatelessClient struct {
 		Client *common.JsonClient
@@ -39,6 +25,13 @@ func NewStatelessClient(sessionToken string, app_key string, rest bool) *Statele
 func (client *StatelessClient) Do(req *http.Request) (*http.Response, error) {
 	return client.Client.Do(req)
 }
+
+const (
+	api_account   = "account"
+	api_betting   = "betting"
+	api_heartbeat = "heartbeat"
+	api_scores    = "scores"
+)
 
 func GetAccounts[T any](client *StatelessClient, method string, params any, response *T) error {
 	return get(client, api_account, method, params, response)
@@ -112,6 +105,13 @@ type (
 	}
 )
 
+var apis = map[string]string{
+	api_account:   "AccountAPING",
+	api_betting:   "SportsAPING",
+	api_heartbeat: "HeartbeatAPING",
+	api_scores:    "ScoresAPING",
+}
+
 func getRPC[T any, TParams any](client *StatelessClient, api string, method string, params TParams, response *T) error {
 	query := JsonRPC[TParams]{
 		JsonRPC: "2.0",
@@ -161,7 +161,7 @@ type JsonRestErrorResponse struct {
 	} `json:"detail"`
 }
 
-func getRest[T any, TParams any](client *StatelessClient, api string, method string, params TParams, response *T) error {
+func getRest[T any](client *StatelessClient, api string, method string, params any, response *T) error {
 	body, err := json.Marshal(&params)
 	if err != nil {
 		return err

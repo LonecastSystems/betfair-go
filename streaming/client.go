@@ -110,7 +110,7 @@ func ReadStream[T any](connection *tls.Conn, reads chan<- T) (err error) {
 	for dec.More() {
 		var x T
 
-		if err := dec.Decode(&x); err != nil && err != io.EOF {
+		if err = dec.Decode(&x); err != nil && err != io.EOF {
 			break
 		}
 
