@@ -49,7 +49,7 @@ func GetScores[T any](client *StatelessClient, method string, params any, respon
 	return getRPC(client, api_scores, method, params, response) //Only supported by RPC for now.
 }
 
-func get[T any, TParams any](client *StatelessClient, api string, method string, params TParams, response *T) error {
+func get[T any](client *StatelessClient, api string, method string, params any, response *T) error {
 	if client.Rest {
 		return getRest(client, api, method, params, response)
 	} else {
@@ -57,7 +57,7 @@ func get[T any, TParams any](client *StatelessClient, api string, method string,
 	}
 }
 
-type ErrorCode string
+type JsonAPINGExceptionErrorCode string
 
 const (
 	EC_UNEXPECTED_ERROR            = "UNEXPECTED_ERROR"
@@ -70,6 +70,9 @@ const (
 	EC_NO_APP_KEY                  = "NO_APP_KEY"
 	EC_TOO_MANY_REQUESTS           = "TOO_MANY_REQUESTS"
 	EC_SERVICE_UNAVAILABLE         = "SERVICE_UNAVAILABLE"
+	EC_REQUEST_SIZE_EXCEEDS_LIMIT  = "REQUEST_SIZE_EXCEEDS_LIMIT"
+	EC_TOO_MUCH_DATA               = "TOO_MUCH_DATA"
+	EC_ACCESS_DENIED               = "ACCESS_DENIED"
 )
 
 type (
@@ -92,15 +95,15 @@ type (
 	}
 
 	JsonAPINGException struct {
-		RequestUUID  string    `json:"requestUUID"`
-		ErrorCode    ErrorCode `json:"errorCode"`
-		ErrorDetails string    `json:"errorDetails"`
+		RequestUUID  string                      `json:"requestUUID"`
+		ErrorCode    JsonAPINGExceptionErrorCode `json:"errorCode"`
+		ErrorDetails string                      `json:"errorDetails"`
 	}
 
-	JsonRPC[T any] struct {
+	JsonRPC struct {
 		JsonRPC string `json:"jsonrpc"`
 		Method  string `json:"method"`
-		Params  T      `json:"params"`
+		Params  any    `json:"params"`
 		ID      int    `json:"id"`
 	}
 )
@@ -112,8 +115,8 @@ var apis = map[string]string{
 	api_scores:    "ScoresAPING",
 }
 
-func getRPC[T any, TParams any](client *StatelessClient, api string, method string, params TParams, response *T) error {
-	query := JsonRPC[TParams]{
+func getRPC[T any](client *StatelessClient, api string, method string, params any, response *T) error {
+	query := JsonRPC{
 		JsonRPC: "2.0",
 		Method:  fmt.Sprintf("%v/v1.0/%v", apis[api], method),
 		Params:  params,
