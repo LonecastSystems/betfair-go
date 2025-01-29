@@ -4,6 +4,37 @@ import (
 	"time"
 )
 
+type PriceLadderType string
+
+const (
+	PLT_CLASSIC    PriceLadderType = "CLASSIC"
+	PLT_FINEST     PriceLadderType = "FINEST"
+	PLT_LINE_RANGE PriceLadderType = "LINE_RANGE"
+)
+
+type MarketSort string
+
+const (
+	MS_MINIMUM_TRADED    MarketSort = "MINIMUM_TRADED"
+	MS_MAXIMUM_TRADED    MarketSort = "MAXIMUM_TRADED"
+	MS_MINIMUM_AVAILABLE MarketSort = "MINIMUM_AVAILABLE"
+	MS_MAXIMUM_AVAILABLE MarketSort = "MAXIMUM_AVAILABLE"
+	MS_FIRST_TO_START    MarketSort = "FIRST_TO_START"
+	MS_LAST_TO_START     MarketSort = "LAST_TO_START"
+)
+
+type MarketProjection string
+
+const (
+	MP_COMPETITION        MarketProjection = "COMPETITION"
+	MP_EVENT              MarketProjection = "EVENT"
+	MP_EVENT_TYPE         MarketProjection = "EVENT_TYPE"
+	MP_MARKET_START_TIME  MarketProjection = "MARKET_START_TIME"
+	MP_MARKET_DESCRIPTION MarketProjection = "MARKET_DESCRIPTION"
+	MP_RUNNER_DESCRIPTION MarketProjection = "RUNNER_DESCRIPTION"
+	MP_RUNNER_METADATA    MarketProjection = "RUNNER_METADATA"
+)
+
 type (
 	MarketCatalogueParams struct {
 		Filter           MarketFilter     `json:"filter"`

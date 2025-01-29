@@ -1,5 +1,16 @@
 package stateless
 
+type MarketBettingType string
+
+const (
+	MBT_ODDS       MarketBettingType = "ODDS"
+	MBT_LINE       MarketBettingType = "LINE"
+	MBT_RANGE      MarketBettingType = "RANGE"
+	MBT_ASIAN      MarketBettingType = "ASIAN_HANDICAP_DOUBLE_LINE"
+	MBT_FIXED      MarketBettingType = "FIXED_ODDS"
+	MBT_FIXED_ODDS MarketBettingType = "FIXED_ODDS"
+)
+
 type (
 	MarketFilter struct {
 		TextQuery          string              `json:"textQuery,omitempty"`
@@ -31,28 +42,6 @@ const (
 	W_UK = "UK"
 )
 
-type MarketProjection string
-
-const (
-	MP_COMPETITION        MarketProjection = "COMPETITION"
-	MP_EVENT              MarketProjection = "EVENT"
-	MP_EVENT_TYPE         MarketProjection = "EVENT_TYPE"
-	MP_MARKET_START_TIME  MarketProjection = "MARKET_START_TIME"
-	MP_MARKET_DESCRIPTION MarketProjection = "MARKET_DESCRIPTION"
-	MP_RUNNER_DESCRIPTION MarketProjection = "RUNNER_DESCRIPTION"
-	MP_RUNNER_METADATA    MarketProjection = "RUNNER_METADATA"
-)
-
-type PriceData string
-
-const (
-	PD_SP_AVAILABLE   PriceData = "SP_AVAILABLE"
-	PD_SP_TRADED      PriceData = "SP_TRADED"
-	PD_EX_BEST_OFFERS PriceData = "EX_BEST_OFFERS"
-	PD_EX_ALL_OFFERS  PriceData = "EX_ALL_OFFERS"
-	PD_EX_TRADED      PriceData = "EX_TRADED"
-)
-
 type MatchProjection string
 
 const (
@@ -67,35 +56,6 @@ const (
 	OP_ALL                OrderProjection = "ALL"
 	OP_EXECUTABLE         OrderProjection = "EXECUTABLE"
 	OP_EXECUTION_COMPLETE OrderProjection = "EXECUTION_COMPLETE"
-)
-
-type MarketStatus string
-
-const (
-	MS_INACTIVE  MarketStatus = "INACTIVE"
-	MS_OPEN      MarketStatus = "OPEN"
-	MS_SUSPENDED MarketStatus = "SUSPENDED"
-	MS_CLOSED    MarketStatus = "CLOSED"
-)
-
-type RunnerStatus string
-
-const (
-	RS_ACTIVE         RunnerStatus = "ACTIVE"
-	RS_WINNER         RunnerStatus = "WINNER"
-	RS_LOSER          RunnerStatus = "LOSER"
-	RS_PLACED         RunnerStatus = "PLACED"
-	RS_REMOVED_VACANT RunnerStatus = "REMOVED_VACANT"
-	RS_REMOVED        RunnerStatus = "REMOVED"
-	RS_HIDDEN         RunnerStatus = "HIDDEN"
-)
-
-type TimeGranularity string
-
-const (
-	TG_DAYS    TimeGranularity = "DAYS"
-	TG_HOURS   TimeGranularity = "HOURS"
-	TG_MINUTES TimeGranularity = "MINUTES"
 )
 
 type Side string
@@ -114,52 +74,12 @@ const (
 	OS_EXPIRED            OrderStatus = "EXPIRED"
 )
 
-type OrderBy string
-
-const (
-	OB_BY_BET          OrderBy = "BY_BET"
-	OB_BY_MARKET       OrderBy = "BY_MARKET"
-	OB_BY_MATCH_TIME   OrderBy = "BY_MATCH_TIME"
-	OB_BY_PLACE_TIME   OrderBy = "BY_PLACE_TIME"
-	OB_BY_SETTLED_TIME OrderBy = "BY_SETTLED_TIME"
-	OB_BY_VOID_TIME    OrderBy = "BY_VOID_TIME"
-)
-
-type SortDir string
-
-const (
-	SD_EARLIEST_TO_LATEST SortDir = "EARLIEST_TO_LATEST"
-	SD_LATEST_TO_EARLIEST SortDir = "LATEST_TO_EARLIEST"
-)
-
 type OrderType string
 
 const (
 	OT_LIMIT           OrderType = "LIMIT"
 	OT_LIMIT_ON_CLOSE  OrderType = "LIMIT_ON_CLOSE"
 	OT_MARKET_ON_CLOSE OrderType = "MARKET_ON_CLOSE"
-)
-
-type MarketSort string
-
-const (
-	MS_MINIMUM_TRADED    MarketSort = "MINIMUM_TRADED"
-	MS_MAXIMUM_TRADED    MarketSort = "MAXIMUM_TRADED"
-	MS_MINIMUM_AVAILABLE MarketSort = "MINIMUM_AVAILABLE"
-	MS_MAXIMUM_AVAILABLE MarketSort = "MAXIMUM_AVAILABLE"
-	MS_FIRST_TO_START    MarketSort = "FIRST_TO_START"
-	MS_LAST_TO_START     MarketSort = "LAST_TO_START"
-)
-
-type MarketBettingType string
-
-const (
-	MBT_ODDS       MarketBettingType = "ODDS"
-	MBT_LINE       MarketBettingType = "LINE"
-	MBT_RANGE      MarketBettingType = "RANGE"
-	MBT_ASIAN      MarketBettingType = "ASIAN_HANDICAP_DOUBLE_LINE"
-	MBT_FIXED      MarketBettingType = "FIXED_ODDS"
-	MBT_FIXED_ODDS MarketBettingType = "FIXED_ODDS"
 )
 
 type ExecutionReportStatus string
@@ -244,44 +164,4 @@ const (
 	IRS_ERR_INVALID_CUSTOMER_ORDER_REF      InstructionReportErrorCode = "INVALID_CUSTOMER_ORDER_REF"
 	IRS_ERR_INVALID_MIN_FILL_SIZE           InstructionReportErrorCode = "BET_LAPSED_PRICE_IMPROVEMENT_TOO_LARGE"
 	IRS_ERR_BET_LAPSED                      InstructionReportErrorCode = "BET_LAPSED"
-)
-
-type GroupBy string
-
-const (
-	GB_EVENT_TYPE GroupBy = "EVENT_TYPE"
-	GB_EVENT      GroupBy = "EVENT"
-	GB_MARKET     GroupBy = "MARKET"
-	GB_SIDE       GroupBy = "SIDE"
-	GB_BET        GroupBy = "BET"
-)
-
-type BetStatus string
-
-const (
-	BS_SETTLED   BetStatus = "SETTLED"
-	BS_VOIDED    BetStatus = "VOIDED"
-	BS_LAPSED    BetStatus = "LAPSED"
-	BS_CANCELLED BetStatus = "CANCELLED"
-)
-
-type TimeInForce string
-
-const (
-	TIF_FILL_OR_KILL TimeInForce = "FILL_OR_KILL"
-)
-
-type BetTargetType string
-
-const (
-	BTT_BACKER_PROFIT BetTargetType = "BACKER_PROFIT"
-	BTT_PAYOUT        BetTargetType = "PAYOUT"
-)
-
-type PriceLadderType string
-
-const (
-	PLT_CLASSIC    PriceLadderType = "CLASSIC"
-	PLT_FINEST     PriceLadderType = "FINEST"
-	PLT_LINE_RANGE PriceLadderType = "LINE_RANGE"
 )

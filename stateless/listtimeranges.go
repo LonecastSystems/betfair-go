@@ -1,5 +1,13 @@
 package stateless
 
+type TimeGranularity string
+
+const (
+	TG_DAYS    TimeGranularity = "DAYS"
+	TG_HOURS   TimeGranularity = "HOURS"
+	TG_MINUTES TimeGranularity = "MINUTES"
+)
+
 type (
 	TimeRangesParams struct {
 		Filter      MarketFilter    `json:"filter"`

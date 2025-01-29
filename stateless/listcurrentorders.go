@@ -4,6 +4,24 @@ import (
 	"time"
 )
 
+type SortDir string
+
+const (
+	SD_EARLIEST_TO_LATEST SortDir = "EARLIEST_TO_LATEST"
+	SD_LATEST_TO_EARLIEST SortDir = "LATEST_TO_EARLIEST"
+)
+
+type OrderBy string
+
+const (
+	OB_BY_BET          OrderBy = "BY_BET"
+	OB_BY_MARKET       OrderBy = "BY_MARKET"
+	OB_BY_MATCH_TIME   OrderBy = "BY_MATCH_TIME"
+	OB_BY_PLACE_TIME   OrderBy = "BY_PLACE_TIME"
+	OB_BY_SETTLED_TIME OrderBy = "BY_SETTLED_TIME"
+	OB_BY_VOID_TIME    OrderBy = "BY_VOID_TIME"
+)
+
 type (
 	CurrentOrdersParams struct {
 		BetIDs                 []string        `json:"betIds,omitempty"`

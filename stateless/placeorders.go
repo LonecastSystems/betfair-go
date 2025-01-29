@@ -4,6 +4,19 @@ import (
 	"time"
 )
 
+type BetTargetType string
+
+const (
+	BTT_BACKER_PROFIT BetTargetType = "BACKER_PROFIT"
+	BTT_PAYOUT        BetTargetType = "PAYOUT"
+)
+
+type TimeInForce string
+
+const (
+	TIF_FILL_OR_KILL TimeInForce = "FILL_OR_KILL"
+)
+
 type (
 	PlaceOrdersParams struct {
 		MarketID            string             `json:"marketId"`

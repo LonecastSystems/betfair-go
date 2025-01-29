@@ -4,6 +4,25 @@ import (
 	"time"
 )
 
+type BetStatus string
+
+const (
+	BS_SETTLED   BetStatus = "SETTLED"
+	BS_VOIDED    BetStatus = "VOIDED"
+	BS_LAPSED    BetStatus = "LAPSED"
+	BS_CANCELLED BetStatus = "CANCELLED"
+)
+
+type GroupBy string
+
+const (
+	GB_EVENT_TYPE GroupBy = "EVENT_TYPE"
+	GB_EVENT      GroupBy = "EVENT"
+	GB_MARKET     GroupBy = "MARKET"
+	GB_SIDE       GroupBy = "SIDE"
+	GB_BET        GroupBy = "BET"
+)
+
 type (
 	ClearedOrdersParams struct {
 		BetStatus              BetStatus `json:"betStatus"`

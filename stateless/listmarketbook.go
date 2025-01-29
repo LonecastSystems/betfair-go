@@ -12,6 +12,37 @@ const (
 	RM_NONE   = "NONE"
 )
 
+type RunnerStatus string
+
+const (
+	RS_ACTIVE         RunnerStatus = "ACTIVE"
+	RS_WINNER         RunnerStatus = "WINNER"
+	RS_LOSER          RunnerStatus = "LOSER"
+	RS_PLACED         RunnerStatus = "PLACED"
+	RS_REMOVED_VACANT RunnerStatus = "REMOVED_VACANT"
+	RS_REMOVED        RunnerStatus = "REMOVED"
+	RS_HIDDEN         RunnerStatus = "HIDDEN"
+)
+
+type MarketStatus string
+
+const (
+	MS_INACTIVE  MarketStatus = "INACTIVE"
+	MS_OPEN      MarketStatus = "OPEN"
+	MS_SUSPENDED MarketStatus = "SUSPENDED"
+	MS_CLOSED    MarketStatus = "CLOSED"
+)
+
+type PriceData string
+
+const (
+	PD_SP_AVAILABLE   PriceData = "SP_AVAILABLE"
+	PD_SP_TRADED      PriceData = "SP_TRADED"
+	PD_EX_BEST_OFFERS PriceData = "EX_BEST_OFFERS"
+	PD_EX_ALL_OFFERS  PriceData = "EX_ALL_OFFERS"
+	PD_EX_TRADED      PriceData = "EX_TRADED"
+)
+
 type (
 	MarketBookParams struct {
 		MarketIDs                     []string        `json:"marketIds"`
@@ -45,7 +76,7 @@ type (
 	MarketBook struct {
 		MarketID              string             `json:"marketId"`
 		IsMarketDataDelayed   bool               `json:"isMarketDataDelayed"`
-		Status                string             `json:"status,omitempty"`
+		Status                MarketStatus       `json:"status,omitempty"`
 		BetDelay              int                `json:"betDelay,omitempty"`
 		BspReconciled         bool               `json:"bspReconciled,omitempty"`
 		Complete              bool               `json:"complete,omitempty"`
