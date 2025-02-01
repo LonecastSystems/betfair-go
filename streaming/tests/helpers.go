@@ -16,14 +16,17 @@ func NewStreamingClient(t *testing.T) *streaming.StreamingClient {
 		t.Skip("Invalid credentials")
 	}
 
-	c := streaming.NewStreamingClient(sessionKey, appKey)
+	c := streaming.NewStreamingClient(appKey)
+	if _, err := c.Client.ResumeSession(sessionKey); err != nil {
+		t.Fatal(err)
+	}
 
 	tlsConfig, err := helpers.GetTLSConfig(certificate_crt_path, certificate_key_path)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	if err := c.Login(tlsConfig); err != nil {
+	if err := c.Authenticate(tlsConfig); err != nil {
 		t.Fatal(err)
 	}
 

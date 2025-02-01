@@ -18,8 +18,8 @@ type (
 	}
 )
 
-func NewStatelessClient(sessionToken string, app_key string, rest bool) *StatelessClient {
-	return &StatelessClient{Client: common.NewJsonClient(sessionToken, app_key), Rest: rest}
+func NewStatelessClient(app_key string, rest bool) *StatelessClient {
+	return &StatelessClient{Client: common.NewJsonClient(app_key), Rest: rest}
 }
 
 func (client *StatelessClient) Do(req *http.Request) (*http.Response, error) {
@@ -158,8 +158,8 @@ func getRPC[T any](client *StatelessClient, api string, method string, params an
 }
 
 type JsonRestErrorResponse struct {
-	Faultcode   string `json:"faultcode"`
-	Faultstring string `json:"faultstring"`
+	FaultCode   string `json:"faultcode"`
+	FaultString string `json:"faultstring"`
 	Detail      struct {
 	} `json:"detail"`
 }
@@ -187,7 +187,7 @@ func getRest[T any](client *StatelessClient, api string, method string, params a
 			return err
 		}
 
-		return fmt.Errorf("%v: %v", jsonRestError.Faultcode, jsonRestError.Faultstring)
+		return fmt.Errorf("%v: %v", jsonRestError.FaultCode, jsonRestError.FaultString)
 	}
 
 	if err = helpers.ReadJson(res, &response); err != nil {

@@ -14,5 +14,10 @@ func NewTestStatelessClient(t *testing.T) *stateless.StatelessClient {
 		t.Skip("Invalid credentials")
 	}
 
-	return stateless.NewStatelessClient(sessionKey, appKey, rest)
+	c := stateless.NewStatelessClient(appKey, rest)
+	if _, err := c.Client.ResumeSession(sessionKey); err != nil {
+		t.Fatal(err)
+	}
+
+	return c
 }

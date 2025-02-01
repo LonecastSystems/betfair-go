@@ -2,10 +2,26 @@ package common
 
 import (
 	"crypto/tls"
+	"errors"
 	"net/http"
 	"net/url"
 
 	"github.com/LonecastSystems/betfair-go/helpers"
+)
+
+type SessionStatus string
+
+const (
+	KAS_SUCCESS = "SUCCESS"
+	KAS_FAIL    = "FAIL"
+)
+
+type SessionError string
+
+const (
+	KAE_INPUT_VALIDATION_ERROR = "INPUT_VALIDATION_ERROR"
+	KAE_INTERNAL_ERROR         = "INTERNAL_ERROR"
+	KAE_NO_SESSION             = "NO_SESSION"
 )
 
 type (
@@ -20,16 +36,16 @@ type (
 		LoginStatus  string `json:"loginStatus"`
 	}
 
-	SessionLogoutResponse struct {
-		Token   string `json:"token"`
-		Product string `json:"product"`
-		Status  string `json:"status"`
-		Error   string `json:"error"`
+	SessionStatusResponse struct {
+		Token   string        `json:"token"`
+		Product string        `json:"product"`
+		Status  SessionStatus `json:"status"`
+		Error   SessionError  `json:"error"`
 	}
 )
 
-func NewJsonClient(sessionToken string, app_key string) *JsonClient {
-	return &JsonClient{Client: &http.Client{}, SessionToken: sessionToken, ApplicationKey: app_key}
+func NewJsonClient(app_key string) *JsonClient {
+	return &JsonClient{Client: &http.Client{}, ApplicationKey: app_key}
 }
 
 func (client *JsonClient) Do(req *http.Request) (*http.Response, error) {
@@ -41,7 +57,33 @@ func (client *JsonClient) Do(req *http.Request) (*http.Response, error) {
 	return client.Client.Do(req)
 }
 
-func (jsonClient *JsonClient) Login(tls *tls.Config, apiKey string, applicationName string, username string, password string) (response *http.Response, err error) {
+func (jsonClient *JsonClient) ResumeSession(sessionToken string) (*http.Response, error) {
+	jsonClient.SessionToken = sessionToken
+
+	keepAliveUrl := url.URL{Path: "https://identitysso.betfair.com/api/keepAlive"}
+	req, _ := http.NewRequest("POST", keepAliveUrl.RequestURI(), nil)
+
+	resp, err := jsonClient.Do(req)
+	if err != nil {
+		jsonClient.SessionToken = ""
+		return resp, err
+	}
+
+	json := SessionStatusResponse{}
+	if err := helpers.ReadJson(resp, &json); err != nil {
+		jsonClient.SessionToken = ""
+		return resp, err
+	}
+
+	if json.Error != "" {
+		jsonClient.SessionToken = ""
+		return resp, errors.New(string(json.Error))
+	}
+
+	return resp, nil
+}
+
+func (jsonClient *JsonClient) NewSession(tls *tls.Config, apiKey string, applicationName string, username string, password string) (*http.Response, error) {
 	postUrl := url.URL{Path: "https://identitysso-cert.betfair.com/api/certlogin"}
 	q := postUrl.Query()
 	q.Set("username", username)
@@ -75,22 +117,25 @@ func (jsonClient *JsonClient) Login(tls *tls.Config, apiKey string, applicationN
 	return resp, nil
 }
 
-func (jsonClient *JsonClient) Logout() (jsonResponse SessionLogoutResponse, response *http.Response, err error) {
+func (jsonClient *JsonClient) ClearSession() (*http.Response, error) {
 	postUrl := url.URL{Path: "https://identitysso.betfair.com/api/logout"}
 
 	req, _ := http.NewRequest("POST", postUrl.RequestURI(), nil)
 
-	json := SessionLogoutResponse{}
-
 	resp, err := jsonClient.Do(req)
 	if err != nil {
-		return json, resp, err
+		return resp, err
 	}
 
+	json := SessionStatusResponse{}
 	if err := helpers.ReadJson(resp, &json); err != nil {
-		return json, resp, err
+		return resp, err
+	}
+
+	if json.Error != "" {
+		return resp, errors.New(string(json.Error))
 	}
 
 	jsonClient.SessionToken = ""
-	return json, resp, err
+	return resp, err
 }
