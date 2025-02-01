@@ -21,8 +21,8 @@ type StreamingClient struct {
 	Clk                 string
 }
 
-func NewStreamingClient(sessionToken string, app_key string) *StreamingClient {
-	return &StreamingClient{Client: common.NewJsonClient(sessionToken, app_key)}
+func NewStreamingClient(app_key string) *StreamingClient {
+	return &StreamingClient{Client: common.NewJsonClient(app_key)}
 }
 
 func (client *StreamingClient) Do(req *http.Request) (*http.Response, error) {
@@ -52,7 +52,7 @@ type (
 	}
 )
 
-func (client *StreamingClient) Login(config *tls.Config) (err error) {
+func (client *StreamingClient) Authenticate(config *tls.Config) (err error) {
 	client.Connection, err = tls.Dial("tcp", "stream-api.betfair.com:443", config)
 	if err != nil {
 		return err
