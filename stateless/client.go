@@ -2,6 +2,7 @@ package stateless
 
 import (
 	"bytes"
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"math/rand/v2"
@@ -24,6 +25,18 @@ func NewStatelessClient(app_key string, rest bool) *StatelessClient {
 
 func (client *StatelessClient) Do(req *http.Request) (*http.Response, error) {
 	return client.Client.Do(req)
+}
+
+func (client *StatelessClient) ResumeSession(sessionToken string) (*http.Response, error) {
+	return client.Client.ResumeSession(sessionToken)
+}
+
+func (client *StatelessClient) NewSession(tls *tls.Config, applicationName string, username string, password string) (*http.Response, error) {
+	return client.Client.NewSession(tls, applicationName, username, password)
+}
+
+func (client *StatelessClient) ClearSession() (*http.Response, error) {
+	return client.Client.ClearSession()
 }
 
 const (

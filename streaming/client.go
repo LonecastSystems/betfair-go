@@ -29,6 +29,18 @@ func (client *StreamingClient) Do(req *http.Request) (*http.Response, error) {
 	return client.Client.Do(req)
 }
 
+func (client *StreamingClient) ResumeSession(sessionToken string) (*http.Response, error) {
+	return client.Client.ResumeSession(sessionToken)
+}
+
+func (client *StreamingClient) NewSession(tls *tls.Config, applicationName string, username string, password string) (*http.Response, error) {
+	return client.Client.NewSession(tls, applicationName, username, password)
+}
+
+func (client *StreamingClient) ClearSession() (*http.Response, error) {
+	return client.Client.ClearSession()
+}
+
 type (
 	ConnectionMessage struct {
 		Op           string `json:"op"`
