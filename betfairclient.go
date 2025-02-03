@@ -3,11 +3,9 @@ package betfairgo
 import (
 	"bytes"
 	"crypto/tls"
-	"crypto/x509"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
 	"math/rand/v2"
 	"net/http"
 	"net/url"
@@ -83,7 +81,7 @@ func (jsonClient *BetfairClient) Resume(sessionToken string) (*http.Response, er
 	}
 
 	json := SessionStatusResponse{}
-	if err := readJson(resp, &json); err != nil {
+	if err := ReadJson(resp, &json); err != nil {
 		jsonClient.Client = nil
 		jsonClient.SessionToken = ""
 		return resp, err
@@ -125,7 +123,7 @@ func (jsonClient *BetfairClient) Login(username string, password string) (*http.
 	}
 
 	json := SessionResponse{}
-	if err := readJson(resp, &json); err != nil {
+	if err := ReadJson(resp, &json); err != nil {
 		jsonClient.Client = nil
 		return resp, err
 	}
@@ -145,7 +143,7 @@ func (jsonClient *BetfairClient) Logout() (*http.Response, error) {
 	}
 
 	json := SessionStatusResponse{}
-	if err := readJson(resp, &json); err != nil {
+	if err := ReadJson(resp, &json); err != nil {
 		return resp, err
 	}
 
@@ -281,7 +279,7 @@ func (client *BetfairClient) getRPC(api string, method string, params any, respo
 	}
 
 	jsonRpc := JsonRpcResponse{}
-	if err = readJson(res, &jsonRpc); err != nil {
+	if err = ReadJson(res, &jsonRpc); err != nil {
 		return err
 	}
 
@@ -324,43 +322,16 @@ func (client *BetfairClient) getRest(api string, method string, params any, resp
 
 	if res.StatusCode != http.StatusOK {
 		jsonRestError := JsonRestErrorResponse{}
-		if err = readJson(res, &jsonRestError); err != nil {
+		if err = ReadJson(res, &jsonRestError); err != nil {
 			return err
 		}
 
 		return fmt.Errorf("%v: %v", jsonRestError.FaultCode, jsonRestError.FaultString)
 	}
 
-	if err = readJson(res, &response); err != nil {
+	if err = ReadJson(res, &response); err != nil {
 		return err
 	}
 
 	return nil
-}
-
-func readJson(res *http.Response, response any) error {
-	defer res.Body.Close()
-
-	if body, err := io.ReadAll(res.Body); err == nil {
-		return json.Unmarshal(body, &response)
-	}
-
-	return nil
-}
-
-func GetTLSConfig(certFilePath string, keyFilePath string) (*tls.Config, error) {
-	certPool, err := x509.SystemCertPool()
-	if err != nil {
-		return nil, err
-	}
-
-	clientTLSCert, err := tls.LoadX509KeyPair(certFilePath, keyFilePath)
-	if err != nil {
-		return nil, err
-	}
-
-	return &tls.Config{
-		RootCAs:      certPool,
-		Certificates: []tls.Certificate{clientTLSCert},
-	}, nil
 }

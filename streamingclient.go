@@ -109,25 +109,3 @@ func (client *StreamingClient) Write(request any, isRequest bool) error {
 
 	return nil
 }
-
-func ReadStream[T any](connection *tls.Conn, reads chan<- T) (err error) {
-	defer close(reads)
-
-	if connection == nil {
-		return errors.New("connection not established: please authenticate")
-	}
-
-	dec := json.NewDecoder(connection)
-
-	for dec.More() {
-		var x T
-
-		if err = dec.Decode(&x); err != nil && err != io.EOF {
-			break
-		}
-
-		reads <- x
-	}
-
-	return err
-}
