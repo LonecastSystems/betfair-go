@@ -119,5 +119,5 @@ func ReadStream[T any](connection *tls.Conn, reads chan<- T) (err error) {
 	}
 
 	close(reads)
-	return nil
+	return err
 }

@@ -85,7 +85,7 @@ func (jsonClient *BetfairClient) Resume(sessionToken string) (*http.Response, er
 	}
 
 	json := SessionStatusResponse{}
-	if err := ReadJson(resp, &json); err != nil {
+	if err := readJson(resp, &json); err != nil {
 		jsonClient.Client = nil
 		jsonClient.SessionToken = ""
 		return resp, err
@@ -127,7 +127,7 @@ func (jsonClient *BetfairClient) Login(username string, password string) (*http.
 	}
 
 	json := SessionResponse{}
-	if err := ReadJson(resp, &json); err != nil {
+	if err := readJson(resp, &json); err != nil {
 		jsonClient.Client = nil
 		return resp, err
 	}
@@ -147,7 +147,7 @@ func (jsonClient *BetfairClient) Logout() (*http.Response, error) {
 	}
 
 	json := SessionStatusResponse{}
-	if err := ReadJson(resp, &json); err != nil {
+	if err := readJson(resp, &json); err != nil {
 		return resp, err
 	}
 
@@ -275,7 +275,7 @@ func (client *BetfairClient) getRPC(api string, method string, params any, respo
 	}
 
 	jsonRpc := JsonRpcResponse{}
-	if err = ReadJson(res, &jsonRpc); err != nil {
+	if err = readJson(res, &jsonRpc); err != nil {
 		return err
 	}
 
@@ -318,33 +318,19 @@ func (client *BetfairClient) getRest(api string, method string, params any, resp
 
 	if res.StatusCode != http.StatusOK {
 		jsonRestError := JsonRestErrorResponse{}
-		if err = ReadJson(res, &jsonRestError); err != nil {
+		if err = readJson(res, &jsonRestError); err != nil {
 			return err
 		}
 
 		return fmt.Errorf("%v: %v", jsonRestError.FaultCode, jsonRestError.FaultString)
 	}
 
-	if err = ReadJson(res, &response); err != nil {
+	if err = readJson(res, &response); err != nil {
 		return err
 	}
 
 	return nil
 }
-
-type (
-	ConnectionMessage struct {
-		Op           string `json:"op"`
-		ConnectionID string `json:"connectionId"`
-	}
-
-	AuthenticationMessage struct {
-		ID      int    `json:"id"`
-		Op      string `json:"op"`
-		AppKey  string `json:"appKey"`
-		Session string `json:"session"`
-	}
-)
 
 func (client *BetfairClient) GetStreamingClient() (*streaming.StreamingClient, error) {
 	if client.Client == nil {
@@ -357,7 +343,7 @@ func (client *BetfairClient) GetStreamingClient() (*streaming.StreamingClient, e
 	return sc, err
 }
 
-func ReadJson(res *http.Response, response any) (err error) {
+func readJson(res *http.Response, response any) error {
 	defer res.Body.Close()
 
 	if body, err := io.ReadAll(res.Body); err == nil {
