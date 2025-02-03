@@ -53,6 +53,7 @@ func (client *StreamingClient) Authenticate(config *tls.Config, applicationKey, 
 
 	cm := &ConnectionMessage{}
 	if err = client.Read(cm); err != nil {
+		client.Connection = nil
 		return err
 	}
 
@@ -63,12 +64,16 @@ func (client *StreamingClient) Authenticate(config *tls.Config, applicationKey, 
 		Session: sessionToken,
 	}
 
-	return client.Write(am, true)
+	if err = client.Write(am, true); err != nil {
+		client.Connection = nil
+	}
+
+	return err
 }
 
 func (client *StreamingClient) Read(response any) error {
 	if client.Connection == nil {
-		return errors.New("client not initialised: please resume or create a new session")
+		return errors.New("connection not established: please authenticate")
 	}
 
 	dec := json.NewDecoder(client.Connection)
@@ -82,7 +87,7 @@ func (client *StreamingClient) Read(response any) error {
 
 func (client *StreamingClient) Write(request any, isRequest bool) error {
 	if client.Connection == nil {
-		return errors.New("client not initialised: please resume or create a new session")
+		return errors.New("connection not established: please authenticate")
 	}
 
 	enc := json.NewEncoder(client.Connection)
@@ -106,6 +111,10 @@ func (client *StreamingClient) Write(request any, isRequest bool) error {
 }
 
 func ReadStream[T any](connection *tls.Conn, reads chan<- T) (err error) {
+	if connection == nil {
+		return errors.New("connection not established: please authenticate")
+	}
+
 	dec := json.NewDecoder(connection)
 
 	for dec.More() {
