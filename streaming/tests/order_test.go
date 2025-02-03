@@ -7,7 +7,7 @@ import (
 )
 
 func TestSubscribeToOrders(t *testing.T) {
-	c := NewStreamingClient(t)
+	c := NewTestStreamingClient(t)
 	c.HeartbeatMs = 524
 
 	orderChanges, err := c.SubscribeToOrders(streaming.OrderFilter{})
@@ -18,7 +18,9 @@ func TestSubscribeToOrders(t *testing.T) {
 	for x := range orderChanges {
 		if x.HeartbeatMs != c.HeartbeatMs {
 			t.Fatal("Heartbeat does not match")
+		} else {
+			c.Connection.Close()
+			return
 		}
-		close(orderChanges)
 	}
 }

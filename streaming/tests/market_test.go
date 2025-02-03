@@ -7,7 +7,7 @@ import (
 )
 
 func TestSubscribeToMarkets(t *testing.T) {
-	c := NewStreamingClient(t)
+	c := NewTestStreamingClient(t)
 	c.HeartbeatMs = 524
 
 	marketFilter := streaming.MarketFilter{MarketIDs: []string{"1.238426694"}}
@@ -23,7 +23,9 @@ func TestSubscribeToMarkets(t *testing.T) {
 	for x := range marketChanges {
 		if x.HeartbeatMs != c.HeartbeatMs {
 			t.Fatal("Heartbeat does not match")
+		} else {
+			c.Connection.Close()
+			return
 		}
-		close(marketChanges)
 	}
 }

@@ -161,6 +161,14 @@ func (jsonClient *BetfairClient) Logout() (*http.Response, error) {
 	return resp, nil
 }
 
+func (client *BetfairClient) LoginStream(sc *streaming.StreamingClient) error {
+	if client.Client == nil {
+		return errors.New("client not initialised: please resume or create a new session")
+	}
+
+	return sc.Authenticate(client.Tls, client.ApplicationKey, client.SessionToken)
+}
+
 const (
 	api_account   = "account"
 	api_betting   = "betting"
@@ -330,17 +338,6 @@ func (client *BetfairClient) getRest(api string, method string, params any, resp
 	}
 
 	return nil
-}
-
-func (client *BetfairClient) GetStreamingClient() (*streaming.StreamingClient, error) {
-	if client.Client == nil {
-		return nil, errors.New("client not initialised: please resume or create a new session")
-	}
-
-	sc := streaming.NewStreamingClient()
-	err := sc.Authenticate(client.Tls, client.ApplicationKey, client.SessionToken)
-
-	return sc, err
 }
 
 func readJson(res *http.Response, response any) error {
