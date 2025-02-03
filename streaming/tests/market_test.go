@@ -10,7 +10,7 @@ func TestSubscribeToMarkets(t *testing.T) {
 	c := NewStreamingClient(t)
 	c.HeartbeatMs = 524
 
-	marketFilter := streaming.MarketFilter{MarketIDs: []string{"1.238326543"}}
+	marketFilter := streaming.MarketFilter{MarketIDs: []string{"1.238426694"}}
 
 	fields := []string{"EX_BEST_OFFERS_DISP", "EX_BEST_OFFERS", "EX_ALL_OFFERS", "EX_TRADED", "EX_TRADED_VOL", "EX_LTP", "EX_MARKET_DEF", "SP_TRADED", "SP_PROJECTED"}
 	marketDataFilter := streaming.MarketDataFilter{Fields: fields, LadderLevels: 2}

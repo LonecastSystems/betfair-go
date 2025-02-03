@@ -6,40 +6,27 @@ import (
 	"errors"
 	"io"
 	"math/rand/v2"
-	"net/http"
-
-	"github.com/LonecastSystems/betfair-go/common"
 )
 
-type StreamingClient struct {
-	Client              *common.JsonClient
-	Connection          *tls.Conn
-	SegmentationEnabled bool
-	ConflateMs          int
-	HeartbeatMs         int
-	InitialClk          string
-	Clk                 string
-}
+type (
+	StreamingClient struct {
+		Connection          *tls.Conn
+		SegmentationEnabled bool
+		ConflateMs          int
+		HeartbeatMs         int
+		InitialClk          string
+		Clk                 string
+	}
 
-func NewStreamingClient(app_key string) *StreamingClient {
-	return &StreamingClient{Client: common.NewJsonClient(app_key)}
-}
-
-func (client *StreamingClient) Do(req *http.Request) (*http.Response, error) {
-	return client.Client.Do(req)
-}
-
-func (client *StreamingClient) ResumeSession(sessionToken string) (*http.Response, error) {
-	return client.Client.ResumeSession(sessionToken)
-}
-
-func (client *StreamingClient) NewSession(tls *tls.Config, applicationName string, username string, password string) (*http.Response, error) {
-	return client.Client.NewSession(tls, applicationName, username, password)
-}
-
-func (client *StreamingClient) ClearSession() (*http.Response, error) {
-	return client.Client.ClearSession()
-}
+	StatusMessage struct {
+		ID                   int    `json:"id"`
+		StatusCode           string `json:"statusCode"`
+		ConnectionClosed     bool   `json:"connectionClosed"`
+		ErrorCode            string `json:"errorCode"`
+		ErrorMessage         string `json:"errorMessage"`
+		ConnectionsAvailable int    `json:"connectionsAvailable"`
+	}
+)
 
 type (
 	ConnectionMessage struct {
@@ -53,20 +40,14 @@ type (
 		AppKey  string `json:"appKey"`
 		Session string `json:"session"`
 	}
-
-	StatusMessage struct {
-		ID                   int    `json:"id"`
-		StatusCode           string `json:"statusCode"`
-		ConnectionClosed     bool   `json:"connectionClosed"`
-		ErrorCode            string `json:"errorCode"`
-		ErrorMessage         string `json:"errorMessage"`
-		ConnectionsAvailable int    `json:"connectionsAvailable"`
-	}
 )
 
-func (client *StreamingClient) Authenticate(config *tls.Config) (err error) {
-	client.Connection, err = tls.Dial("tcp", "stream-api.betfair.com:443", config)
-	if err != nil {
+func NewStreamingClient() (client *StreamingClient) {
+	return &StreamingClient{}
+}
+
+func (client *StreamingClient) Authenticate(config *tls.Config, applicationKey, sessionToken string) (err error) {
+	if client.Connection, err = tls.Dial("tcp", "stream-api.betfair.com:443", config); err != nil {
 		return err
 	}
 
@@ -78,14 +59,18 @@ func (client *StreamingClient) Authenticate(config *tls.Config) (err error) {
 	am := AuthenticationMessage{
 		ID:      int(rand.Uint64()),
 		Op:      "authentication",
-		AppKey:  client.Client.ApplicationKey,
-		Session: client.Client.SessionToken,
+		AppKey:  applicationKey,
+		Session: sessionToken,
 	}
 
 	return client.Write(am, true)
 }
 
 func (client *StreamingClient) Read(response any) error {
+	if client.Connection == nil {
+		return errors.New("client not initialised: please resume or create a new session")
+	}
+
 	dec := json.NewDecoder(client.Connection)
 
 	if err := dec.Decode(&response); err != nil && err != io.EOF {
@@ -96,6 +81,10 @@ func (client *StreamingClient) Read(response any) error {
 }
 
 func (client *StreamingClient) Write(request any, isRequest bool) error {
+	if client.Connection == nil {
+		return errors.New("client not initialised: please resume or create a new session")
+	}
+
 	enc := json.NewEncoder(client.Connection)
 
 	if err := enc.Encode(request); err != nil {

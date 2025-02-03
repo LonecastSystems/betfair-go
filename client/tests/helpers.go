@@ -4,14 +4,14 @@ import (
 	"testing"
 
 	"github.com/LonecastSystems/betfair-go/client"
-	"github.com/LonecastSystems/betfair-go/streaming"
 )
 
 const sessionToken, appKey = "", ""
 const certificate_crt_path = ""
 const certificate_key_path = ""
+const rest = false
 
-func NewStreamingClient(t *testing.T) *streaming.StreamingClient {
+func NewTestBetfairClient(t *testing.T) *client.BetfairClient {
 	if sessionToken == "" || appKey == "" {
 		t.Skip("Invalid credentials")
 	}
@@ -22,14 +22,11 @@ func NewStreamingClient(t *testing.T) *streaming.StreamingClient {
 	}
 
 	c := client.NewBetfairClient(tlsConfig, appKey, "")
+	c.Rest = rest
+
 	if _, err := c.Resume(sessionToken); err != nil {
 		t.Fatal(err)
 	}
 
-	if sc, err := c.GetStreamingClient(); err != nil {
-		t.Fatal(err)
-		return nil
-	} else {
-		return sc
-	}
+	return c
 }
