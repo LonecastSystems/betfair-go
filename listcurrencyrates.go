@@ -1,4 +1,4 @@
-package betfairgo
+package betfair
 
 type (
 	CurrencyRateParams struct {
@@ -11,7 +11,7 @@ type (
 	}
 )
 
-func (client *BetfairClient) ListCurrencyRates(params CurrencyRateParams) ([]CurrencyRate, error) {
+func (client *Client) ListCurrencyRates(params CurrencyRateParams) ([]CurrencyRate, error) {
 	json := []CurrencyRate{}
 
 	if err := client.GetAccounts("listCurrencyRates", params, &json); err != nil {

@@ -1,4 +1,4 @@
-package betfairgo
+package betfair
 
 import (
 	"time"
@@ -98,7 +98,7 @@ type (
 	}
 )
 
-func (client *BetfairClient) ListMarketCatalogue(params MarketCatalogueParams) ([]MarketCatalogueResult, error) {
+func (client *Client) ListMarketCatalogue(params MarketCatalogueParams) ([]MarketCatalogueResult, error) {
 	json := []MarketCatalogueResult{}
 
 	if err := client.GetSports("listMarketCatalogue", params, &json); err != nil {

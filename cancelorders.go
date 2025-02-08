@@ -1,4 +1,4 @@
-package betfairgo
+package betfair
 
 import (
 	"time"
@@ -33,7 +33,7 @@ type (
 	}
 )
 
-func (client *BetfairClient) CancelOrders(params CancelOrdersParams) (CancelExecutionReport, error) {
+func (client *Client) CancelOrders(params CancelOrdersParams) (CancelExecutionReport, error) {
 	json := CancelExecutionReport{}
 
 	if err := client.GetSports("cancelOrders", params, &json); err != nil {

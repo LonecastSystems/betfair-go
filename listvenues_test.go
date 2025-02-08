@@ -1,9 +1,9 @@
-package betfairgo
+package betfair
 
 import "testing"
 
 func TestListVenues(t *testing.T) {
-	c := NewTestBetfairClient(t)
+	c := NewTestClient(t)
 
 	params := VenueParams{Filter: MarketFilter{
 		MarketCountries: []string{"GB"},

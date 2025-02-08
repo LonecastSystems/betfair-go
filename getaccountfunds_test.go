@@ -1,9 +1,9 @@
-package betfairgo
+package betfair
 
 import "testing"
 
 func TestGetAccountFunds(t *testing.T) {
-	c := NewTestBetfairClient(t)
+	c := NewTestClient(t)
 
 	resp, err := c.GetAccountFunds(AccountDetailsParams{Wallet: "UK"})
 	if err != nil {

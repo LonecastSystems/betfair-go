@@ -1,4 +1,4 @@
-package betfairgo
+package betfair
 
 import (
 	"time"
@@ -81,7 +81,7 @@ type (
 	}
 )
 
-func (client *BetfairClient) GetAccountStatement(params AccountStatementParams) (AccountStatementReport, error) {
+func (client *Client) GetAccountStatement(params AccountStatementParams) (AccountStatementReport, error) {
 	json := AccountStatementReport{}
 
 	if err := client.GetAccounts("getAccountStatement", params, &json); err != nil {

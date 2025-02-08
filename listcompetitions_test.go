@@ -1,9 +1,9 @@
-package betfairgo
+package betfair
 
 import "testing"
 
 func TestListCompetitions(t *testing.T) {
-	c := NewTestBetfairClient(t)
+	c := NewTestClient(t)
 
 	params := CompetitionParams{Filter: MarketFilter{
 		CompetitionIDs:  []string{"10932509"},

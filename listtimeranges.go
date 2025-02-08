@@ -1,4 +1,4 @@
-package betfairgo
+package betfair
 
 type TimeGranularity string
 
@@ -20,7 +20,7 @@ type (
 	}
 )
 
-func (client *BetfairClient) ListTimeRanges(params TimeRangesParams) ([]TimeRangeResult, error) {
+func (client *Client) ListTimeRanges(params TimeRangesParams) ([]TimeRangeResult, error) {
 	json := []TimeRangeResult{}
 
 	if err := client.GetSports("listTimeRanges", params, &json); err != nil {

@@ -1,4 +1,4 @@
-package betfairgo
+package betfair
 
 import (
 	"time"
@@ -81,7 +81,7 @@ type (
 	}
 )
 
-func (client *BetfairClient) ListCurrentOrders(params CurrentOrdersParams) (CurrentOrderSummaryReport, error) {
+func (client *Client) ListCurrentOrders(params CurrentOrdersParams) (CurrentOrderSummaryReport, error) {
 	json := CurrentOrderSummaryReport{}
 
 	if err := client.GetSports("listCurrentOrders", params, &json); err != nil {

@@ -1,4 +1,4 @@
-package betfairgo
+package betfair
 
 import (
 	"testing"
@@ -22,7 +22,7 @@ func TestSubscribeToMarkets(t *testing.T) {
 		if x.HeartbeatMs != c.HeartbeatMs {
 			t.Fatal("Heartbeat does not match")
 		} else {
-			c.Connection.Close()
+			c.Close()
 			return
 		}
 	}

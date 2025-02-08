@@ -1,4 +1,4 @@
-package betfairgo
+package betfair
 
 type ActionPerformed string
 
@@ -22,7 +22,7 @@ type (
 	}
 )
 
-func (client *BetfairClient) Heartbeat(params HeartbeatParams) (HeartbeatReport, error) {
+func (client *Client) Heartbeat(params HeartbeatParams) (HeartbeatReport, error) {
 	json := HeartbeatReport{}
 
 	if err := client.GetHeartbeats("heartbeat", params, &json); err != nil {

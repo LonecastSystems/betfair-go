@@ -1,4 +1,4 @@
-package betfairgo
+package betfair
 
 import (
 	"math/rand/v2"

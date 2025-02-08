@@ -1,4 +1,4 @@
-package betfairgo
+package betfair
 
 import (
 	"time"
@@ -52,6 +52,7 @@ type (
 		Liability float64 `json:"liability"`
 		Price     float64 `json:"price"`
 	}
+
 	MarketOnCloseOrder struct {
 		Liability float64 `json:"liability"`
 	}
@@ -76,7 +77,7 @@ type (
 	}
 )
 
-func (client *BetfairClient) PlaceOrders(params PlaceOrdersParams) (PlaceExecutionReport, error) {
+func (client *Client) PlaceOrders(params PlaceOrdersParams) (PlaceExecutionReport, error) {
 	json := PlaceExecutionReport{}
 
 	if err := client.GetSports("placeOrders", params, &json); err != nil {

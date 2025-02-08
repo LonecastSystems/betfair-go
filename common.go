@@ -1,4 +1,4 @@
-package betfairgo
+package betfair
 
 type MarketBettingType string
 

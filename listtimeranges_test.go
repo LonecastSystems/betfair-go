@@ -1,9 +1,9 @@
-package betfairgo
+package betfair
 
 import "testing"
 
 func TestListTimeRanges(t *testing.T) {
-	c := NewTestBetfairClient(t)
+	c := NewTestClient(t)
 
 	params := TimeRangesParams{Filter: MarketFilter{
 		EventTypeIDs: []string{"1"}},

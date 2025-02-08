@@ -1,4 +1,4 @@
-package betfairgo
+package betfair
 
 type (
 	MarketProfitAndLossParams struct {
@@ -22,7 +22,7 @@ type (
 	}
 )
 
-func (client *BetfairClient) ListMarketProfitAndLoss(params MarketProfitAndLossParams) ([]MarketProfitAndLoss, error) {
+func (client *Client) ListMarketProfitAndLoss(params MarketProfitAndLossParams) ([]MarketProfitAndLoss, error) {
 	json := []MarketProfitAndLoss{}
 
 	if err := client.GetSports("listMarketProfitAndLoss", params, &json); err != nil {

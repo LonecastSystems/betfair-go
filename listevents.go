@@ -1,4 +1,4 @@
-package betfairgo
+package betfair
 
 import "time"
 
@@ -23,7 +23,7 @@ type (
 	}
 )
 
-func (client *BetfairClient) ListEvents(params EventParams) ([]EventResult, error) {
+func (client *Client) ListEvents(params EventParams) ([]EventResult, error) {
 	json := []EventResult{}
 
 	if err := client.GetSports("listEvents", params, &json); err != nil {

@@ -1,9 +1,9 @@
-package betfairgo
+package betfair
 
 import "testing"
 
 func TestListMarketProfitAndLoss(t *testing.T) {
-	c := NewTestBetfairClient(t)
+	c := NewTestClient(t)
 
 	params := MarketProfitAndLossParams{
 		MarketIDs: []string{"1.233455113"}}

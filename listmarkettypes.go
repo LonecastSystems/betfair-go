@@ -1,4 +1,4 @@
-package betfairgo
+package betfair
 
 type (
 	MarketTypeParams struct {
@@ -12,7 +12,7 @@ type (
 	}
 )
 
-func (client *BetfairClient) ListMarketTypes(params MarketTypeParams) ([]MarketTypeResult, error) {
+func (client *Client) ListMarketTypes(params MarketTypeParams) ([]MarketTypeResult, error) {
 	json := []MarketTypeResult{}
 
 	if err := client.GetSports("listMarketTypes", params, &json); err != nil {

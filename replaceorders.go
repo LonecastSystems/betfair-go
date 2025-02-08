@@ -1,4 +1,4 @@
-package betfairgo
+package betfair
 
 type (
 	ReplaceOrdersParams struct {
@@ -30,7 +30,7 @@ type (
 	}
 )
 
-func (client *BetfairClient) ReplaceOrders(params ReplaceOrdersParams) (ReplaceExecutionReport, error) {
+func (client *Client) ReplaceOrders(params ReplaceOrdersParams) (ReplaceExecutionReport, error) {
 	json := ReplaceExecutionReport{}
 
 	if err := client.GetSports("replaceOrders", params, &json); err != nil {

@@ -1,4 +1,4 @@
-package betfairgo
+package betfair
 
 type (
 	CountryParams struct {
@@ -12,7 +12,7 @@ type (
 	}
 )
 
-func (client *BetfairClient) ListCountries(params CountryParams) ([]CountryCodeResult, error) {
+func (client *Client) ListCountries(params CountryParams) ([]CountryCodeResult, error) {
 	json := []CountryCodeResult{}
 
 	if err := client.GetSports("listCountries", params, &json); err != nil {

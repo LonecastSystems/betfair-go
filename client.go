@@ -1,4 +1,4 @@
-package betfairgo
+package betfair
 
 import (
 	"bytes"
@@ -27,8 +27,8 @@ const (
 )
 
 type (
-	BetfairClient struct {
-		Client          *http.Client
+	Client struct {
+		HttpClient      *http.Client
 		Tls             *tls.Config
 		ApplicationName string
 		ApplicationKey  string
@@ -49,12 +49,12 @@ type (
 	}
 )
 
-func NewBetfairClient(tls *tls.Config, app_key string, applicationName string) *BetfairClient {
-	return &BetfairClient{Tls: tls, ApplicationKey: app_key, ApplicationName: applicationName}
+func NewClient(tls *tls.Config, app_key string, applicationName string) *Client {
+	return &Client{Tls: tls, ApplicationKey: app_key, ApplicationName: applicationName}
 }
 
-func (client *BetfairClient) Do(req *http.Request) (*http.Response, error) {
-	if client.Client == nil {
+func (client *Client) Do(req *http.Request) (*http.Response, error) {
+	if client.HttpClient == nil {
 		return nil, errors.New("client not initialised: please resume or create a new session")
 	}
 
@@ -63,40 +63,40 @@ func (client *BetfairClient) Do(req *http.Request) (*http.Response, error) {
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("content-type", "application/json")
 
-	return client.Client.Do(req)
+	return client.HttpClient.Do(req)
 }
 
-func (jsonClient *BetfairClient) Resume(sessionToken string) (*http.Response, error) {
-	jsonClient.Client = &http.Client{}
-	jsonClient.SessionToken = sessionToken
+func (client *Client) Resume(sessionToken string) (*http.Response, error) {
+	client.HttpClient = &http.Client{}
+	client.SessionToken = sessionToken
 
 	keepAliveUrl := url.URL{Path: "https://identitysso.betfair.com/api/keepAlive"}
 	req, _ := http.NewRequest("POST", keepAliveUrl.RequestURI(), nil)
 
-	resp, err := jsonClient.Do(req)
+	resp, err := client.Do(req)
 	if err != nil {
-		jsonClient.Client = nil
-		jsonClient.SessionToken = ""
+		client.HttpClient = nil
+		client.SessionToken = ""
 		return resp, err
 	}
 
 	json := SessionStatusResponse{}
 	if err := ReadJson(resp, &json); err != nil {
-		jsonClient.Client = nil
-		jsonClient.SessionToken = ""
+		client.HttpClient = nil
+		client.SessionToken = ""
 		return resp, err
 	}
 
 	if json.Error != "" {
-		jsonClient.Client = nil
-		jsonClient.SessionToken = ""
+		client.HttpClient = nil
+		client.SessionToken = ""
 		return resp, errors.New(string(json.Error))
 	}
 
 	return resp, nil
 }
 
-func (jsonClient *BetfairClient) Login(username string, password string) (*http.Response, error) {
+func (client *Client) Login(username string, password string) (*http.Response, error) {
 	postUrl := url.URL{Path: "https://identitysso-cert.betfair.com/api/certlogin"}
 	q := postUrl.Query()
 	q.Set("username", username)
@@ -107,37 +107,37 @@ func (jsonClient *BetfairClient) Login(username string, password string) (*http.
 	req, _ := http.NewRequest("POST", postUrl.RequestURI(), nil)
 	req.SetBasicAuth(username, password)
 
-	req.Header.Add("X-Application", jsonClient.ApplicationName)
+	req.Header.Add("X-Application", client.ApplicationName)
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-	jsonClient.Client = &http.Client{
+	client.HttpClient = &http.Client{
 		Transport: &http.Transport{
-			TLSClientConfig: jsonClient.Tls,
+			TLSClientConfig: client.Tls,
 		},
 	}
 
-	resp, err := jsonClient.Client.Do(req)
+	resp, err := client.HttpClient.Do(req)
 	if err != nil {
-		jsonClient.Client = nil
+		client.HttpClient = nil
 		return resp, err
 	}
 
 	json := SessionResponse{}
 	if err := ReadJson(resp, &json); err != nil {
-		jsonClient.Client = nil
+		client.HttpClient = nil
 		return resp, err
 	}
 
-	jsonClient.SessionToken = json.SessionToken
+	client.SessionToken = json.SessionToken
 	return resp, nil
 }
 
-func (jsonClient *BetfairClient) Logout() (*http.Response, error) {
+func (client *Client) Logout() (*http.Response, error) {
 	postUrl := url.URL{Path: "https://identitysso.betfair.com/api/logout"}
 
 	req, _ := http.NewRequest("POST", postUrl.RequestURI(), nil)
 
-	resp, err := jsonClient.Do(req)
+	resp, err := client.Do(req)
 	if err != nil {
 		return resp, err
 	}
@@ -151,14 +151,14 @@ func (jsonClient *BetfairClient) Logout() (*http.Response, error) {
 		return resp, errors.New(string(json.Error))
 	}
 
-	jsonClient.Client = nil
-	jsonClient.SessionToken = ""
+	client.HttpClient = nil
+	client.SessionToken = ""
 
 	return resp, nil
 }
 
-func (client *BetfairClient) LoginStream(sc *StreamingClient) error {
-	if client.Client == nil {
+func (client *Client) GetStream(sc *StreamingClient) error {
+	if client.HttpClient == nil {
 		return errors.New("client not initialised: please resume or create a new session")
 	}
 
@@ -172,23 +172,23 @@ const (
 	api_scores    = "scores"
 )
 
-func (client *BetfairClient) GetAccounts(method string, params any, response any) error {
+func (client *Client) GetAccounts(method string, params any, response any) error {
 	return client.get(api_account, method, params, response)
 }
 
-func (client *BetfairClient) GetSports(method string, params any, response any) error {
+func (client *Client) GetSports(method string, params any, response any) error {
 	return client.get(api_betting, method, params, response)
 }
 
-func (client *BetfairClient) GetHeartbeats(method string, params any, response any) error {
+func (client *Client) GetHeartbeats(method string, params any, response any) error {
 	return client.get(api_heartbeat, method, params, response)
 }
 
-func (client *BetfairClient) GetScores(method string, params any, response any) error {
+func (client *Client) GetScores(method string, params any, response any) error {
 	return client.getRPC(api_scores, method, params, response) //Only supported by RPC for now.
 }
 
-func (client *BetfairClient) get(api string, method string, params any, response any) error {
+func (client *Client) get(api string, method string, params any, response any) error {
 	if client.Rest {
 		return client.getRest(api, method, params, response)
 	} else {
@@ -254,7 +254,7 @@ var apis = map[string]string{
 	api_scores:    "ScoresAPING",
 }
 
-func (client *BetfairClient) getRPC(api string, method string, params any, response any) error {
+func (client *Client) getRPC(api string, method string, params any, response any) error {
 	query := JsonRPC{
 		JsonRPC: "2.0",
 		Method:  fmt.Sprintf("%v/v1.0/%v", apis[api], method),
@@ -303,7 +303,7 @@ type JsonRestErrorResponse struct {
 	} `json:"detail"`
 }
 
-func (client *BetfairClient) getRest(api string, method string, params any, response any) error {
+func (client *Client) getRest(api string, method string, params any, response any) error {
 	body, err := json.Marshal(&params)
 	if err != nil {
 		return err

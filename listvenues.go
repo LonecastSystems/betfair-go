@@ -1,4 +1,4 @@
-package betfairgo
+package betfair
 
 type (
 	VenueParams struct {
@@ -12,7 +12,7 @@ type (
 	}
 )
 
-func (client *BetfairClient) ListVenues(params VenueParams) ([]TimeRangeResult, error) {
+func (client *Client) ListVenues(params VenueParams) ([]TimeRangeResult, error) {
 	json := []TimeRangeResult{}
 
 	if err := client.GetSports("listVenues", params, &json); err != nil {

@@ -1,4 +1,4 @@
-package betfairgo
+package betfair
 
 type (
 	CompetitionParams struct {
@@ -18,7 +18,7 @@ type (
 	}
 )
 
-func (client *BetfairClient) ListCompetitions(params CompetitionParams) ([]CompetitionResult, error) {
+func (client *Client) ListCompetitions(params CompetitionParams) ([]CompetitionResult, error) {
 	json := []CompetitionResult{}
 
 	if err := client.GetSports("listCompetitions", params, &json); err != nil {

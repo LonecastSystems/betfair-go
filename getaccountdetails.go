@@ -1,4 +1,4 @@
-package betfairgo
+package betfair
 
 type AccountDetailsResponse struct {
 	CurrencyCode  string  `json:"currencyCode"`
@@ -12,7 +12,7 @@ type AccountDetailsResponse struct {
 	CountryCode   string  `json:"countryCode"`
 }
 
-func (client *BetfairClient) GetAccountDetails() (AccountDetailsResponse, error) {
+func (client *Client) GetAccountDetails() (AccountDetailsResponse, error) {
 	json := AccountDetailsResponse{}
 
 	if err := client.GetAccounts("getAccountDetails", nil, &json); err != nil {

@@ -1,4 +1,4 @@
-package betfairgo
+package betfair
 
 type (
 	AccountDetailsParams struct {
@@ -16,7 +16,7 @@ type (
 	}
 )
 
-func (client *BetfairClient) GetAccountFunds(params AccountDetailsParams) (AccountFundsResponse, error) {
+func (client *Client) GetAccountFunds(params AccountDetailsParams) (AccountFundsResponse, error) {
 	json := AccountFundsResponse{}
 
 	if err := client.GetAccounts("getAccountFunds", params, &json); err != nil {

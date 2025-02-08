@@ -1,9 +1,9 @@
-package betfairgo
+package betfair
 
 import "testing"
 
 func TestEventTypes(t *testing.T) {
-	c := NewTestBetfairClient(t)
+	c := NewTestClient(t)
 
 	params := EventTypeParams{Filter: MarketFilter{
 		MarketTypeCodes: []string{"OVER_UNDER_25"},

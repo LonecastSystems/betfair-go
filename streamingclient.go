@@ -1,4 +1,4 @@
-package betfairgo
+package betfair
 
 import (
 	"crypto/tls"
@@ -71,14 +71,19 @@ func (client *StreamingClient) Authenticate(config *tls.Config, applicationKey, 
 	return err
 }
 
+func (client *StreamingClient) Close() error {
+	if client.Connection != nil {
+		return client.Connection.Close()
+	}
+
+	return nil
+}
+
 func (client *StreamingClient) Read(response any) error {
 	if client.Connection == nil {
 		return errors.New("connection not established: please authenticate")
 	}
-
-	dec := json.NewDecoder(client.Connection)
-
-	if err := dec.Decode(&response); err != nil && err != io.EOF {
+	if err := json.NewDecoder(client.Connection).Decode(&response); err != nil && err != io.EOF {
 		return err
 	}
 
@@ -90,21 +95,21 @@ func (client *StreamingClient) Write(request any, isRequest bool) error {
 		return errors.New("connection not established: please authenticate")
 	}
 
-	enc := json.NewEncoder(client.Connection)
-
-	if err := enc.Encode(request); err != nil {
+	if err := json.NewEncoder(client.Connection).Encode(request); err != nil {
 		return err
 	}
 
-	if isRequest {
-		status := &StatusMessage{}
-		if err := client.Read(status); err != nil {
-			return err
-		}
+	if !isRequest {
+		return nil
+	}
 
-		if status.ErrorCode != "" {
-			return errors.New(status.ErrorCode)
-		}
+	status := &StatusMessage{}
+	if err := client.Read(status); err != nil {
+		return err
+	}
+
+	if status.ErrorCode != "" {
+		return errors.New(status.ErrorCode)
 	}
 
 	return nil

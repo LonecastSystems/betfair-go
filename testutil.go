@@ -1,4 +1,4 @@
-package betfairgo
+package betfair
 
 import (
 	"testing"
@@ -9,7 +9,7 @@ const certificate_crt_path = ""
 const certificate_key_path = ""
 const rest = false
 
-func NewTestBetfairClient(t *testing.T) *BetfairClient {
+func NewTestClient(t *testing.T) *Client {
 	if sessionToken == "" || appKey == "" {
 		t.Skip("Invalid credentials")
 	}
@@ -19,7 +19,7 @@ func NewTestBetfairClient(t *testing.T) *BetfairClient {
 		t.Fatal(err)
 	}
 
-	c := NewBetfairClient(tlsConfig, appKey, "")
+	c := NewClient(tlsConfig, appKey, "")
 	c.Rest = rest
 
 	if _, err := c.Resume(sessionToken); err != nil {
@@ -39,14 +39,14 @@ func NewTestStreamingClient(t *testing.T) *StreamingClient {
 		t.Fatal(err)
 	}
 
-	c := NewBetfairClient(tlsConfig, appKey, "")
+	c := NewClient(tlsConfig, appKey, "")
 	if _, err := c.Resume(sessionToken); err != nil {
 		t.Fatal(err)
 	}
 
 	sc := NewStreamingClient()
 
-	if err := c.LoginStream(sc); err != nil {
+	if err := c.GetStream(sc); err != nil {
 		t.Fatal(err)
 		return nil
 	} else {

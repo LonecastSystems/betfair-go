@@ -1,4 +1,4 @@
-package betfairgo
+package betfair
 
 import (
 	"crypto/tls"

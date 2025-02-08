@@ -1,9 +1,9 @@
-package betfairgo
+package betfair
 
 import "testing"
 
 func TestGetDeveloperAppKeys(t *testing.T) {
-	c := NewTestBetfairClient(t)
+	c := NewTestClient(t)
 
 	resp, err := c.GetDeveloperAppKeys()
 	if err != nil {

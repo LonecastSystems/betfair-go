@@ -1,9 +1,9 @@
-package betfairgo
+package betfair
 
 import "testing"
 
 func TestListCurrencyRates(t *testing.T) {
-	c := NewTestBetfairClient(t)
+	c := NewTestClient(t)
 
 	resp, err := c.ListCurrencyRates(CurrencyRateParams{FromCurrency: "GBP"})
 	if err != nil {
