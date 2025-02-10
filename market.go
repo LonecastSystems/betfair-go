@@ -90,8 +90,8 @@ type (
 		Conflated                  bool        `json:"con"`           // If true, more than one change is combined in this message
 		TradedVolume               float64     `json:"tv,omitempty"`  // Traded Volume on this runner (only sent if changed)
 		LastTradedPrice            float64     `json:"ltp,omitempty"` // Last Traded Price on this runner (only sent if changed)
-		StartingPriceNear          interface{} `json:"spn,omitempty"` // Starting Price Near (only sent if changed)
-		StartingPriceFar           interface{} `json:"spf,omitempty"` // Starting Price Far (only sent if changed)
+		StartingPriceNear          any         `json:"spn,omitempty"` // Starting Price Near (only sent if changed)
+		StartingPriceFar           any         `json:"spf,omitempty"` // Starting Price Far (only sent if changed)
 		BestAvailableToBack        [][]float64 `json:"batb"`          // Best Available To Back
 		BestAvailableToLay         [][]float64 `json:"batl"`          // Best Available To Lay
 		BestDisplayAvailableToBack [][]float64 `json:"bdatb"`         // Best Display Available To Back

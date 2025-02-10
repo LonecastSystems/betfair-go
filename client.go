@@ -216,10 +216,10 @@ const (
 
 type (
 	JsonRpcResponse struct {
-		JsonRPC string      `json:"jsonrpc"`
-		Result  interface{} `json:"result"`
-		Error   JsonError   `json:"error,omitempty"`
-		ID      int         `json:"id"`
+		JsonRPC string    `json:"jsonrpc"`
+		Result  any       `json:"result"`
+		Error   JsonError `json:"error,omitempty"`
+		ID      int       `json:"id"`
 	}
 
 	JsonError struct {
