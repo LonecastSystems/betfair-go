@@ -12,11 +12,11 @@ type (
 	}
 )
 
-func (client *Client) ListVenues(params VenueParams) ([]TimeRangeResult, error) {
-	json := []TimeRangeResult{}
+func (client *Client) ListVenues(params VenueParams) ([]VenueResult, error) {
+	json := []VenueResult{}
 
 	if err := client.GetSports("listVenues", params, &json); err != nil {
-		return []TimeRangeResult{}, err
+		return []VenueResult{}, err
 	}
 
 	return json, nil

@@ -1,7 +1,5 @@
 package betfair
 
-import "time"
-
 type (
 	EventParams struct {
 		Filter MarketFilter `json:"filter"`
@@ -11,15 +9,6 @@ type (
 	EventResult struct {
 		Event       Event `json:"event"`
 		MarketCount int   `json:"marketCount"`
-	}
-
-	Event struct {
-		ID          string    `json:"id,omitempty"`
-		Name        string    `json:"name,omitempty"`
-		CountryCode string    `json:"countryCode,omitempty"`
-		Timezone    string    `json:"timezone,omitempty"`
-		Venue       string    `json:"venue,omitempty"`
-		OpenDate    time.Time `json:"openDate,omitempty"`
 	}
 )
 

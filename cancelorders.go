@@ -1,9 +1,5 @@
 package betfair
 
-import (
-	"time"
-)
-
 type (
 	CancelOrdersParams struct {
 		MarketID     string              `json:"marketId,omitempty"`
@@ -22,14 +18,6 @@ type (
 		ErrorCode          ExecutionReportErrorCode  `json:"errorCode,omitempty"`
 		MarketID           string                    `json:"marketId,omitempty"`
 		InstructionReports []CancelInstructionReport `json:"instructionReports,omitempty"`
-	}
-
-	CancelInstructionReport struct {
-		Status        InstructionReportStatus    `json:"status"`
-		ErrorCode     InstructionReportErrorCode `json:"errorCode,omitempty"`
-		Instruction   CancelInstruction          `json:"instruction,omitempty"`
-		SizeCancelled float64                    `json:"sizeCancelled"`
-		CanceledDate  time.Time                  `json:"canceledDate,omitempty"`
 	}
 )
 

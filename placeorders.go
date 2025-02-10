@@ -1,9 +1,5 @@
 package betfair
 
-import (
-	"time"
-)
-
 type BetTargetType string
 
 const (
@@ -63,17 +59,6 @@ type (
 		ErrorCode          ExecutionReportErrorCode `json:"errorCode,omitempty"`
 		MarketID           string                   `json:"marketId,omitempty"`
 		InstructionReports []PlaceInstructionReport `json:"instructionReports,omitempty"`
-	}
-
-	PlaceInstructionReport struct {
-		Status              InstructionReportStatus    `json:"status"`
-		ErrorCode           InstructionReportErrorCode `json:"errorCode,omitempty"`
-		OrderStatus         OrderStatus                `json:"orderStatus,omitempty"`
-		Instruction         PlaceInstruction           `json:"instruction"`
-		BetID               string                     `json:"betId,omitempty"`
-		PlacedDate          time.Time                  `json:"placedDate,omitempty"`
-		AveragePriceMatched float64                    `json:"avgPrice,omitempty"`
-		SizeMatched         float64                    `json:"sizeMatched,omitempty"`
 	}
 )
 

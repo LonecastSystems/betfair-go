@@ -5,12 +5,12 @@ import "testing"
 func TestGetAccountFunds(t *testing.T) {
 	c := NewTestClient(t)
 
-	resp, err := c.GetAccountFunds(AccountDetailsParams{Wallet: "UK"})
+	resp, err := c.GetAccountFunds(AccountDetailsParams{Wallet: W_UK})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	if resp.Wallet != "UK" {
+	if resp.Wallet != W_UK {
 		t.Fatal("Wallet wrong")
 	}
 }
