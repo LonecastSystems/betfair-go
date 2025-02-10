@@ -286,7 +286,7 @@ func (client *Client) getRPC(api string, method string, params any, response any
 	if jsonError, errorCode := jsonRpc.Error, jsonRpc.Error.Code; errorCode < 0 {
 		ex := jsonError.Data.APINGException
 
-		return fmt.Errorf("%v -> %v: %v (%v)", ex.RequestUUID, jsonError.Code, jsonError.Message, ex.ErrorCode)
+		return fmt.Errorf("%v -> %v: %v (%v)", jsonRpc.ID, jsonError.Code, jsonError.Message, ex.ErrorCode)
 	}
 
 	if m, err := json.Marshal(jsonRpc.Result); err == nil {

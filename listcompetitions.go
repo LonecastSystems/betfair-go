@@ -11,11 +11,6 @@ type (
 		MarketCount       int         `json:"marketCount"`
 		CompetitionRegion string      `json:"competitionRegion"`
 	}
-
-	Competition struct {
-		ID   string `json:"id"`
-		Name string `json:"name"`
-	}
 )
 
 func (client *Client) ListCompetitions(params CompetitionParams) ([]CompetitionResult, error) {

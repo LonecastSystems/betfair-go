@@ -75,10 +75,6 @@ type (
 	CurrentItemDescription struct {
 		MarketVersion MarketVersion `json:"marketVersion,omitempty"`
 	}
-
-	MarketVersion struct {
-		Version int64 `json:"version,omitempty"`
-	}
 )
 
 func (client *Client) ListCurrentOrders(params CurrentOrdersParams) (CurrentOrderSummaryReport, error) {

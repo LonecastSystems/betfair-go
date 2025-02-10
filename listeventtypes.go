@@ -10,11 +10,6 @@ type (
 		EventType   EventType `json:"eventType,omitempty"`
 		MarketCount int       `json:"marketCount,omitempty"`
 	}
-
-	EventType struct {
-		ID   string `json:"id,omitempty"`
-		Name string `json:"name,omitempty"`
-	}
 )
 
 func (client *Client) ListEventTypes(params EventTypeParams) ([]EventTypeResult, error) {
