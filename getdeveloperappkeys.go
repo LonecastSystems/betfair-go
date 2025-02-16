@@ -9,7 +9,7 @@ func (client *Client) GetDeveloperAppKeys() ([]DeveloperApp, error) {
 	json := []DeveloperApp{}
 
 	if err := client.GetAccounts("getDeveloperAppKeys", nil, &json); err != nil {
-		return []DeveloperApp{}, err
+		return json, err
 	}
 
 	return json, nil

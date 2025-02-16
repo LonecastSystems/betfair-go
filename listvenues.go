@@ -16,7 +16,7 @@ func (client *Client) ListVenues(params VenueParams) ([]VenueResult, error) {
 	json := []VenueResult{}
 
 	if err := client.GetSports("listVenues", params, &json); err != nil {
-		return []VenueResult{}, err
+		return json, err
 	}
 
 	return json, nil

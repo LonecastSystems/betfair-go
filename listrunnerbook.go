@@ -26,7 +26,7 @@ func (client *Client) ListRunnerBook(params RunnerBookParams) ([]MarketBook, err
 	json := []MarketBook{}
 
 	if err := client.GetSports("listRunnerBook", params, &json); err != nil {
-		return []MarketBook{}, err
+		return json, err
 	}
 
 	return json, nil

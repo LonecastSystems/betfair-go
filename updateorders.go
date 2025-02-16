@@ -31,7 +31,7 @@ func (client *Client) UpdateOrders(params UpdateOrdersParams) (UpdateExecutionRe
 	json := UpdateExecutionReport{}
 
 	if err := client.GetSports("updateOrders", params, &json); err != nil {
-		return UpdateExecutionReport{}, err
+		return json, err
 	}
 
 	return json, nil

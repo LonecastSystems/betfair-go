@@ -16,7 +16,7 @@ func (client *Client) GetAccountDetails() (AccountDetailsResponse, error) {
 	json := AccountDetailsResponse{}
 
 	if err := client.GetAccounts("getAccountDetails", nil, &json); err != nil {
-		return AccountDetailsResponse{}, err
+		return json, err
 	}
 
 	return json, nil

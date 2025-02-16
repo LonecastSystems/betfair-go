@@ -17,7 +17,7 @@ func (client *Client) ListCompetitions(params CompetitionParams) ([]CompetitionR
 	json := []CompetitionResult{}
 
 	if err := client.GetSports("listCompetitions", params, &json); err != nil {
-		return []CompetitionResult{}, err
+		return json, err
 	}
 
 	return json, nil

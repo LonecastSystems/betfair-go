@@ -59,7 +59,7 @@ func (client *Client) ListRaceDetails(params RaceDetailsParams) ([]RaceDetails, 
 	json := []RaceDetails{}
 
 	if err := client.GetScores("listRaceDetails", params, &json); err != nil {
-		return []RaceDetails{}, err
+		return json, err
 	}
 
 	return json, nil

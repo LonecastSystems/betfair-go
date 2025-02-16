@@ -34,7 +34,7 @@ func (client *Client) ReplaceOrders(params ReplaceOrdersParams) (ReplaceExecutio
 	json := ReplaceExecutionReport{}
 
 	if err := client.GetSports("replaceOrders", params, &json); err != nil {
-		return ReplaceExecutionReport{}, err
+		return json, err
 	}
 
 	return json, nil

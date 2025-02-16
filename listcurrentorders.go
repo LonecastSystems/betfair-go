@@ -81,7 +81,7 @@ func (client *Client) ListCurrentOrders(params CurrentOrdersParams) (CurrentOrde
 	json := CurrentOrderSummaryReport{}
 
 	if err := client.GetSports("listCurrentOrders", params, &json); err != nil {
-		return CurrentOrderSummaryReport{}, err
+		return json, err
 	}
 
 	return json, nil

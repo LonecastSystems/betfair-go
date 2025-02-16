@@ -66,7 +66,7 @@ func (client *Client) PlaceOrders(params PlaceOrdersParams) (PlaceExecutionRepor
 	json := PlaceExecutionReport{}
 
 	if err := client.GetSports("placeOrders", params, &json); err != nil {
-		return PlaceExecutionReport{}, err
+		return json, err
 	}
 
 	return json, nil

@@ -102,7 +102,7 @@ func (client *Client) ListMarketCatalogue(params MarketCatalogueParams) ([]Marke
 	json := []MarketCatalogueResult{}
 
 	if err := client.GetSports("listMarketCatalogue", params, &json); err != nil {
-		return []MarketCatalogueResult{}, err
+		return json, err
 	}
 
 	return json, nil

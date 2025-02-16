@@ -25,7 +25,7 @@ func (client *Client) CancelOrders(params CancelOrdersParams) (CancelExecutionRe
 	json := CancelExecutionReport{}
 
 	if err := client.GetSports("cancelOrders", params, &json); err != nil {
-		return CancelExecutionReport{}, err
+		return json, err
 	}
 
 	return json, nil

@@ -53,7 +53,7 @@ func (client *Client) ListMarketBook(params MarketBookParams) ([]MarketBook, err
 	json := []MarketBook{}
 
 	if err := client.GetSports("listMarketBook", params, &json); err != nil {
-		return []MarketBook{}, err
+		return json, err
 	}
 
 	return json, nil

@@ -16,7 +16,7 @@ func (client *Client) ListEventTypes(params EventTypeParams) ([]EventTypeResult,
 	json := []EventTypeResult{}
 
 	if err := client.GetSports("listEventTypes", params, &json); err != nil {
-		return []EventTypeResult{}, err
+		return json, err
 	}
 
 	return json, nil

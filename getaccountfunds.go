@@ -20,7 +20,7 @@ func (client *Client) GetAccountFunds(params AccountDetailsParams) (AccountFunds
 	json := AccountFundsResponse{}
 
 	if err := client.GetAccounts("getAccountFunds", params, &json); err != nil {
-		return AccountFundsResponse{}, err
+		return json, err
 	}
 
 	return json, nil
