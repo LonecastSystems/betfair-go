@@ -19,9 +19,5 @@ type (
 func (client *Client) GetAccountFunds(params AccountDetailsParams) (AccountFundsResponse, error) {
 	json := AccountFundsResponse{}
 
-	if err := client.GetAccounts("getAccountFunds", params, &json); err != nil {
-		return json, err
-	}
-
-	return json, nil
+	return json, client.GetAccounts("getAccountFunds", params, &json)
 }

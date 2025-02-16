@@ -25,9 +25,5 @@ type (
 func (client *Client) Heartbeat(params HeartbeatParams) (HeartbeatReport, error) {
 	json := HeartbeatReport{}
 
-	if err := client.GetHeartbeats("heartbeat", params, &json); err != nil {
-		return json, err
-	}
-
-	return json, nil
+	return json, client.GetHeartbeats("heartbeat", params, &json)
 }

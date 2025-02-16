@@ -30,9 +30,5 @@ type (
 func (client *Client) UpdateOrders(params UpdateOrdersParams) (UpdateExecutionReport, error) {
 	json := UpdateExecutionReport{}
 
-	if err := client.GetSports("updateOrders", params, &json); err != nil {
-		return json, err
-	}
-
-	return json, nil
+	return json, client.GetSports("updateOrders", params, &json)
 }

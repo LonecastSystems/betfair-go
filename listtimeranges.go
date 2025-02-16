@@ -23,9 +23,5 @@ type (
 func (client *Client) ListTimeRanges(params TimeRangesParams) ([]TimeRangeResult, error) {
 	json := []TimeRangeResult{}
 
-	if err := client.GetSports("listTimeRanges", params, &json); err != nil {
-		return json, err
-	}
-
-	return json, nil
+	return json, client.GetSports("listTimeRanges", params, &json)
 }

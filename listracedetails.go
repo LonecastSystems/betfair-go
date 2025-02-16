@@ -58,9 +58,5 @@ type (
 func (client *Client) ListRaceDetails(params RaceDetailsParams) ([]RaceDetails, error) {
 	json := []RaceDetails{}
 
-	if err := client.GetScores("listRaceDetails", params, &json); err != nil {
-		return json, err
-	}
-
-	return json, nil
+	return json, client.GetScores("listRaceDetails", params, &json)
 }

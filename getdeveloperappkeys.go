@@ -8,9 +8,5 @@ type DeveloperApp struct {
 func (client *Client) GetDeveloperAppKeys() ([]DeveloperApp, error) {
 	json := []DeveloperApp{}
 
-	if err := client.GetAccounts("getDeveloperAppKeys", nil, &json); err != nil {
-		return json, err
-	}
-
-	return json, nil
+	return json, client.GetAccounts("getDeveloperAppKeys", nil, &json)
 }

@@ -25,9 +25,5 @@ type (
 func (client *Client) ListMarketProfitAndLoss(params MarketProfitAndLossParams) ([]MarketProfitAndLoss, error) {
 	json := []MarketProfitAndLoss{}
 
-	if err := client.GetSports("listMarketProfitAndLoss", params, &json); err != nil {
-		return json, err
-	}
-
-	return json, nil
+	return json, client.GetSports("listMarketProfitAndLoss", params, &json)
 }

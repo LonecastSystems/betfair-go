@@ -91,9 +91,5 @@ type (
 func (client *Client) ListClearedOrders(params ClearedOrdersParams) (ClearedOrderSummaryReport, error) {
 	json := ClearedOrderSummaryReport{}
 
-	if err := client.GetSports("listClearedOrders", params, &json); err != nil {
-		return json, err
-	}
-
-	return json, nil
+	return json, client.GetSports("listClearedOrders", params, &json)
 }

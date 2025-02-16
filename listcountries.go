@@ -15,9 +15,5 @@ type (
 func (client *Client) ListCountries(params CountryParams) ([]CountryCodeResult, error) {
 	json := []CountryCodeResult{}
 
-	if err := client.GetSports("listCountries", params, &json); err != nil {
-		return json, err
-	}
-
-	return json, nil
+	return json, client.GetSports("listCountries", params, &json)
 }

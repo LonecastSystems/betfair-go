@@ -15,9 +15,5 @@ type AccountDetailsResponse struct {
 func (client *Client) GetAccountDetails() (AccountDetailsResponse, error) {
 	json := AccountDetailsResponse{}
 
-	if err := client.GetAccounts("getAccountDetails", nil, &json); err != nil {
-		return json, err
-	}
-
-	return json, nil
+	return json, client.GetAccounts("getAccountDetails", nil, &json)
 }

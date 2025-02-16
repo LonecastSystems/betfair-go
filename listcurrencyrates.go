@@ -14,9 +14,5 @@ type (
 func (client *Client) ListCurrencyRates(params CurrencyRateParams) ([]CurrencyRate, error) {
 	json := []CurrencyRate{}
 
-	if err := client.GetAccounts("listCurrencyRates", params, &json); err != nil {
-		return json, err
-	}
-
-	return json, nil
+	return json, client.GetAccounts("listCurrencyRates", params, &json)
 }

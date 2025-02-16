@@ -84,9 +84,5 @@ type (
 func (client *Client) GetAccountStatement(params AccountStatementParams) (AccountStatementReport, error) {
 	json := AccountStatementReport{}
 
-	if err := client.GetAccounts("getAccountStatement", params, &json); err != nil {
-		return json, err
-	}
-
-	return json, nil
+	return json, client.GetAccounts("getAccountStatement", params, &json)
 }

@@ -65,9 +65,5 @@ type (
 func (client *Client) PlaceOrders(params PlaceOrdersParams) (PlaceExecutionReport, error) {
 	json := PlaceExecutionReport{}
 
-	if err := client.GetSports("placeOrders", params, &json); err != nil {
-		return json, err
-	}
-
-	return json, nil
+	return json, client.GetSports("placeOrders", params, &json)
 }

@@ -15,9 +15,5 @@ type (
 func (client *Client) ListMarketTypes(params MarketTypeParams) ([]MarketTypeResult, error) {
 	json := []MarketTypeResult{}
 
-	if err := client.GetSports("listMarketTypes", params, &json); err != nil {
-		return json, err
-	}
-
-	return json, nil
+	return json, client.GetSports("listMarketTypes", params, &json)
 }
