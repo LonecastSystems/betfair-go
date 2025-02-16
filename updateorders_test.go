@@ -1,10 +1,10 @@
 package betfair
 
 import (
-	"fmt"
 	"testing"
 )
 
+// Use with caution
 func TestUpdateOrders(t *testing.T) {
 	c := NewTestClient(t)
 
@@ -12,7 +12,10 @@ func TestUpdateOrders(t *testing.T) {
 
 	report, err := c.UpdateOrders(params)
 	if err != nil {
-		fmt.Printf(report.CustomerRef)
 		t.Fatal(err)
+	}
+
+	if report.Status != ERS_SUCCESS {
+		t.Fatal(report.Status)
 	}
 }

@@ -1,18 +1,23 @@
 package betfair
 
 import (
-	"fmt"
 	"testing"
 )
 
+// Use with caution
 func TestCancelOrders(t *testing.T) {
 	c := NewTestClient(t)
 
-	params := CancelOrdersParams{}
+	params := CancelOrdersParams{
+		MarketID: GetRandomMarketID(t, c),
+	}
 
 	report, err := c.CancelOrders(params)
 	if err != nil {
-		fmt.Printf(report.CustomerRef)
 		t.Fatal(err)
+	}
+
+	if report.Status != ERS_SUCCESS {
+		t.Fatal(report.Status)
 	}
 }

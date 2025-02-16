@@ -53,3 +53,20 @@ func NewTestStreamingClient(t *testing.T) *StreamingClient {
 		return sc
 	}
 }
+
+func GetRandomMarketID(t *testing.T, c *Client) string {
+	mcParams := MarketCatalogueParams{
+		Filter:     MarketFilter{},
+		MaxResults: 1}
+
+	markets, err := c.ListMarketCatalogue(mcParams)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(markets) == 0 {
+		t.Fatal("No markets")
+	}
+
+	return markets[0].MarketID
+}

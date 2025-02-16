@@ -6,7 +6,7 @@ func TestMarketBook(t *testing.T) {
 	c := NewTestClient(t)
 
 	params := MarketBookParams{
-		MarketIDs: []string{"1.233455113"},
+		MarketIDs: []string{GetRandomMarketID(t, c)},
 		PriceProjection: PriceProjection{
 			PriceData: []PriceData{"EX_ALL_OFFERS"}}}
 

@@ -6,7 +6,7 @@ func TestListMarketProfitAndLoss(t *testing.T) {
 	c := NewTestClient(t)
 
 	params := MarketProfitAndLossParams{
-		MarketIDs: []string{"1.233455113"}}
+		MarketIDs: []string{GetRandomMarketID(t, c)}}
 
 	pnl, err := c.ListMarketProfitAndLoss(params)
 	if err != nil {
