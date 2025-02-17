@@ -8,9 +8,7 @@ import (
 func TestCancelOrders(t *testing.T) {
 	c := NewTestClient(t)
 
-	params := CancelOrdersParams{
-		MarketID: GetRandomMarketID(t, c),
-	}
+	params := CancelOrdersParams{}
 
 	report, err := c.CancelOrders(params)
 	if err != nil {
