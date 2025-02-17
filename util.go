@@ -4,7 +4,6 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/json"
-	"errors"
 	"io"
 	"net/http"
 )
@@ -19,26 +18,26 @@ func ReadJson(res *http.Response, response any) error {
 	return nil
 }
 
-func ReadStream[T any](connection *tls.Conn, reads chan<- T) (err error) {
-	defer close(reads)
-
-	if connection == nil {
-		return errors.New("connection not established: please authenticate")
-	}
+func ReadStream[T any](connection *tls.Conn) chan T {
+	reads := make(chan T)
 
 	dec := json.NewDecoder(connection)
 
-	for dec.More() {
-		var x T
+	go func() {
+		defer close(reads)
 
-		if err = dec.Decode(&x); err != nil && err != io.EOF {
-			break
+		for dec.More() {
+			var x T
+
+			if err := dec.Decode(&x); err != nil && err != io.EOF {
+				break
+			}
+
+			reads <- x
 		}
+	}()
 
-		reads <- x
-	}
-
-	return err
+	return reads
 }
 
 func GetTLSConfig(certFilePath string, keyFilePath string) (*tls.Config, error) {

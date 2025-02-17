@@ -121,8 +121,5 @@ func (client *StreamingClient) SubscribeToMarkets(marketFilter StreamMarketFilte
 		return nil, err
 	}
 
-	marketChanges := make(chan MarketChangeMessage)
-	go ReadStream(client.Connection, marketChanges)
-
-	return marketChanges, nil
+	return ReadStream[MarketChangeMessage](client.Connection), nil
 }

@@ -97,8 +97,5 @@ func (client *StreamingClient) SubscribeToOrders(orderFilter OrderFilter) (chan 
 		return nil, err
 	}
 
-	orderChanges := make(chan OrderChangeMessage)
-	go ReadStream(client.Connection, orderChanges)
-
-	return orderChanges, nil
+	return ReadStream[OrderChangeMessage](client.Connection), nil
 }
