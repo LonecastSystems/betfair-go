@@ -2,16 +2,16 @@ package betfair
 
 type (
 	ReplaceOrdersParams struct {
-		MarketID     string               `json:"marketId"`
-		Instructions []ReplaceInstruction `json:"instructions"`
+		MarketID      string               `json:"marketId"`
+		Instructions  []ReplaceInstruction `json:"instructions"`
+		CustomerRef   string               `json:"customerRef,omitempty"`
+		MarketVersion MarketVersion        `json:"marketVersion,omitempty"`
+		Async         bool                 `json:"async,omitempty"`
 	}
 
 	ReplaceInstruction struct {
-		BetID         string        `json:"betId"`
-		NewPrice      float64       `json:"newPrice"`
-		CustomerRef   string        `json:"customerRef,omitempty"`
-		MarketVersion MarketVersion `json:"marketVersion,omitempty"`
-		Async         bool          `json:"async,omitempty"`
+		BetID    string  `json:"betId"`
+		NewPrice float64 `json:"newPrice"`
 	}
 
 	ReplaceExecutionReport struct {
