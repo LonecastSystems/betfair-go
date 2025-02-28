@@ -5,12 +5,12 @@ import "time"
 type MarketBettingType string
 
 const (
-	MBT_ODDS       MarketBettingType = "ODDS"
-	MBT_LINE       MarketBettingType = "LINE"
-	MBT_RANGE      MarketBettingType = "RANGE"
-	MBT_ASIAN      MarketBettingType = "ASIAN_HANDICAP_DOUBLE_LINE"
-	MBT_FIXED      MarketBettingType = "FIXED_ODDS"
-	MBT_FIXED_ODDS MarketBettingType = "FIXED_ODDS"
+	MBT_ODDS                       MarketBettingType = "ODDS"
+	MBT_LINE                       MarketBettingType = "LINE"
+	MBT_RANGE                      MarketBettingType = "RANGE"
+	MBT_ASIAN_HANDICAP_SINGLE_LINE MarketBettingType = "ASIAN_HANDICAP_SINGLE_LINE"
+	MBT_ASIAN_HANDICAP_DOUBLE_LINE MarketBettingType = "ASIAN_HANDICAP_DOUBLE_LINE"
+	MBT_FIXED_ODDS                 MarketBettingType = "FIXED_ODDS"
 )
 
 type (
@@ -333,5 +333,4 @@ const (
 	IRS_ERR_UNEXPECTED_MIN_FILL_SIZE        InstructionReportErrorCode = "UNEXPECTED_MIN_FILL_SIZE"
 	IRS_ERR_INVALID_CUSTOMER_ORDER_REF      InstructionReportErrorCode = "INVALID_CUSTOMER_ORDER_REF"
 	IRS_ERR_INVALID_MIN_FILL_SIZE           InstructionReportErrorCode = "BET_LAPSED_PRICE_IMPROVEMENT_TOO_LARGE"
-	IRS_ERR_BET_LAPSED                      InstructionReportErrorCode = "BET_LAPSED"
 )
