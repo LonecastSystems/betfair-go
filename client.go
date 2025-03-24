@@ -11,19 +11,69 @@ import (
 	"net/url"
 )
 
+type LoginStatus string
+
+const (
+	LS_SUCCESS                                 LoginStatus = "SUCCESS"
+	LS_INVALID_USERNAME_OR_PASSWORD            LoginStatus = "INVALID_USERNAME_OR_PASSWORD"
+	LS_ACCOUNT_NOW_LOCKED                      LoginStatus = "ACCOUNT_NOW_LOCKED"
+	LS_ACCOUNT_ALREADY_LOCKED                  LoginStatus = "ACCOUNT_ALREADY_LOCKED"
+	LS_PENDING_AUTH                            LoginStatus = "PENDING_AUTH"
+	LS_TELBET_TERMS_CONDITIONS_NA              LoginStatus = "TELBET_TERMS_CONDITIONS_NA"
+	LS_DUPLICATE_CARDS                         LoginStatus = "DUPLICATE_CARDS"
+	LS_SECURITY_QUESTION_WRONG_3X              LoginStatus = "SECURITY_QUESTION_WRONG_3X"
+	LS_KYC_SUSPEND                             LoginStatus = "KYC_SUSPEND"
+	LS_SUSPENDED                               LoginStatus = "SUSPENDED"
+	LS_CLOSED                                  LoginStatus = "CLOSED"
+	LS_SELF_EXCLUDED                           LoginStatus = "SELF_EXCLUDED"
+	LS_INVALID_CONNECTIVITY_TO_REGULATOR_DK    LoginStatus = "INVALID_CONNECTIVITY_TO_REGULATOR_DK"
+	LS_NOT_AUTHORIZED_BY_REGULATOR_DK          LoginStatus = "NOT_AUTHORIZED_BY_REGULATOR_DK"
+	LS_INVALID_CONNECTIVITY_TO_REGULATOR_IT    LoginStatus = "INVALID_CONNECTIVITY_TO_REGULATOR_IT"
+	LS_NOT_AUTHORIZED_BY_REGULATOR_IT          LoginStatus = "NOT_AUTHORIZED_BY_REGULATOR_IT"
+	LS_SECURITY_RESTRICTED_LOCATION            LoginStatus = "SECURITY_RESTRICTED_LOCATION"
+	LS_BETTING_RESTRICTED_LOCATION             LoginStatus = "BETTING_RESTRICTED_LOCATION"
+	LS_TRADING_MASTER                          LoginStatus = "TRADING_MASTER"
+	LS_TRADING_MASTER_SUSPENDED                LoginStatus = "TRADING_MASTER_SUSPENDED"
+	LS_AGENT_CLIENT_MASTER                     LoginStatus = "AGENT_CLIENT_MASTER"
+	LS_AGENT_CLIENT_MASTER_SUSPENDED           LoginStatus = "AGENT_CLIENT_MASTER_SUSPENDED"
+	LS_DANISH_AUTHORIZATION_REQUIRED           LoginStatus = "DANISH_AUTHORIZATION_REQUIRED"
+	LS_SPAIN_MIGRATION_REQUIRED                LoginStatus = "SPAIN_MIGRATION_REQUIRED"
+	LS_DENMARK_MIGRATION_REQUIRED              LoginStatus = "DENMARK_MIGRATION_REQUIRED"
+	LS_SPANISH_TERMS_ACCEPTANCE_REQUIRED       LoginStatus = "SPANISH_TERMS_ACCEPTANCE_REQUIRED"
+	LS_ITALIAN_CONTRACT_ACCEPTANCE_REQUIRED    LoginStatus = "ITALIAN_CONTRACT_ACCEPTANCE_REQUIRED"
+	LS_CERT_AUTH_REQUIRED                      LoginStatus = "CERT_AUTH_REQUIRED"
+	LS_CHANGE_PASSWORD_REQUIRED                LoginStatus = "CHANGE_PASSWORD_REQUIRED"
+	LS_PERSONAL_MESSAGE_REQUIRED               LoginStatus = "PERSONAL_MESSAGE_REQUIRED"
+	LS_INTERNATIONAL_TERMS_ACCEPTANCE_REQUIRED LoginStatus = "INTERNATIONAL_TERMS_ACCEPTANCE_REQUIRED"
+	LS_EMAIL_LOGIN_NOT_ALLOWED                 LoginStatus = "EMAIL_LOGIN_NOT_ALLOWED"
+	LS_MULTIPLE_USERS_WITH_SAME_CREDENTIAL     LoginStatus = "MULTIPLE_USERS_WITH_SAME_CREDENTIAL"
+	LS_ACCOUNT_PENDING_PASSWORD_CHANGE         LoginStatus = "ACCOUNT_PENDING_PASSWORD_CHANGE"
+	LS_TEMPORARY_BAN_TOO_MANY_REQUESTS         LoginStatus = "TEMPORARY_BAN_TOO_MANY_REQUESTS"
+	LS_ITALIAN_PROFILING_ACCEPTANCE_REQUIRED   LoginStatus = "ITALIAN_PROFILING_ACCEPTANCE_REQUIRED"
+	LS_AUTHORIZED_ONLY_FOR_DOMAIN_RO           LoginStatus = "AUTHORIZED_ONLY_FOR_DOMAIN_RO"
+	LS_AUTHORIZED_ONLY_FOR_DOMAIN_SE           LoginStatus = "AUTHORIZED_ONLY_FOR_DOMAIN_SE"
+	LS_SWEDEN_NATIONAL_IDENTIFIER_REQUIRED     LoginStatus = "SWEDEN_NATIONAL_IDENTIFIER_REQUIRED"
+	LS_SWEDEN_BANK_ID_VERIFICATION_REQUIRED    LoginStatus = "SWEDEN_BANK_ID_VERIFICATION_REQUIRED"
+	LS_ACTIONS_REQUIRED                        LoginStatus = "ACTIONS_REQUIRED"
+	LS_INPUT_VALIDATION_ERROR                  LoginStatus = "INPUT_VALIDATION_ERROR"
+	LS_MIGRATION_REQUIRED                      LoginStatus = "MIGRATION_REQUIRED"
+	LS_TERMS_AND_CONDITIONS                    LoginStatus = "TERMS_AND_CONDITIONS"
+	LS_CONTACT_VERIFICATION_REQUIRED           LoginStatus = "CONTACT_VERIFICATION_REQUIRED"
+)
+
 type SessionStatus string
 
 const (
-	SS_SUCCESS = "SUCCESS"
-	SS_FAIL    = "FAIL"
+	SS_SUCCESS SessionStatus = "SUCCESS"
+	SS_FAIL    SessionStatus = "FAIL"
 )
 
 type SessionStatusError string
 
 const (
-	SS_ERR_INPUT_VALIDATION_ERROR = "INPUT_VALIDATION_ERROR"
-	SS_ERR_INTERNAL_ERROR         = "INTERNAL_ERROR"
-	SS_ERR_NO_SESSION             = "NO_SESSION"
+	SS_ERR_INPUT_VALIDATION_ERROR SessionStatusError = "INPUT_VALIDATION_ERROR"
+	SS_ERR_INTERNAL_ERROR         SessionStatusError = "INTERNAL_ERROR"
+	SS_ERR_NO_SESSION             SessionStatusError = "NO_SESSION"
 )
 
 type (
@@ -37,8 +87,8 @@ type (
 	}
 
 	SessionResponse struct {
-		SessionToken string `json:"sessionToken"`
-		LoginStatus  string `json:"loginStatus"`
+		SessionToken string      `json:"sessionToken"`
+		LoginStatus  LoginStatus `json:"loginStatus"`
 	}
 
 	SessionStatusResponse struct {
@@ -66,7 +116,7 @@ func (client *Client) Do(req *http.Request) (*http.Response, error) {
 	return client.HttpClient.Do(req)
 }
 
-func (client *Client) Resume(sessionToken string) (*http.Response, error) {
+func (client *Client) Resume(sessionToken string) (*SessionStatusResponse, error) {
 	client.HttpClient = &http.Client{}
 	client.SessionToken = sessionToken
 
@@ -77,26 +127,26 @@ func (client *Client) Resume(sessionToken string) (*http.Response, error) {
 	if err != nil {
 		client.HttpClient = nil
 		client.SessionToken = ""
-		return resp, err
+		return nil, err
 	}
 
-	json := SessionStatusResponse{}
+	json := &SessionStatusResponse{}
 	if err := ReadJson(resp, &json); err != nil {
 		client.HttpClient = nil
 		client.SessionToken = ""
-		return resp, err
+		return json, err
 	}
 
 	if json.Error != "" {
 		client.HttpClient = nil
 		client.SessionToken = ""
-		return resp, errors.New(string(json.Error))
+		return json, errors.New(string(json.Error))
 	}
 
-	return resp, nil
+	return json, nil
 }
 
-func (client *Client) Login(username string, password string) (*http.Response, error) {
+func (client *Client) Login(username string, password string) (*SessionResponse, error) {
 	postUrl := url.URL{Path: "https://identitysso-cert.betfair.com/api/certlogin"}
 	q := postUrl.Query()
 	q.Set("username", username)
@@ -119,42 +169,47 @@ func (client *Client) Login(username string, password string) (*http.Response, e
 	resp, err := client.HttpClient.Do(req)
 	if err != nil {
 		client.HttpClient = nil
-		return resp, err
+		return nil, err
 	}
 
-	json := SessionResponse{}
+	json := &SessionResponse{}
 	if err := ReadJson(resp, &json); err != nil {
 		client.HttpClient = nil
-		return resp, err
+		return json, err
+	}
+
+	if json.LoginStatus != LS_SUCCESS {
+		client.HttpClient = nil
+		return json, errors.New(string(json.LoginStatus))
 	}
 
 	client.SessionToken = json.SessionToken
-	return resp, nil
+	return json, nil
 }
 
-func (client *Client) Logout() (*http.Response, error) {
+func (client *Client) Logout() (*SessionStatusResponse, error) {
 	postUrl := url.URL{Path: "https://identitysso.betfair.com/api/logout"}
 
 	req, _ := http.NewRequest("POST", postUrl.RequestURI(), nil)
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return resp, err
+		return nil, err
 	}
 
-	json := SessionStatusResponse{}
+	json := &SessionStatusResponse{}
 	if err := ReadJson(resp, &json); err != nil {
-		return resp, err
+		return json, err
 	}
 
 	if json.Error != "" {
-		return resp, errors.New(string(json.Error))
+		return json, errors.New(string(json.Error))
 	}
 
 	client.HttpClient = nil
 	client.SessionToken = ""
 
-	return resp, nil
+	return json, nil
 }
 
 func (client *Client) GetStream(sc *StreamingClient) error {
