@@ -9,13 +9,17 @@ import (
 )
 
 type (
-	StreamingClient struct {
-		Connection          *tls.Conn
+	StreamingClientConfig struct {
 		SegmentationEnabled bool
 		ConflateMs          int
 		HeartbeatMs         int
 		InitialClk          string
 		Clk                 string
+	}
+
+	StreamingClient struct {
+		Connection *tls.Conn
+		Config     *StreamingClientConfig
 	}
 
 	StatusMessage struct {
@@ -42,8 +46,8 @@ type (
 	}
 )
 
-func NewStreamingClient() (client *StreamingClient) {
-	return &StreamingClient{}
+func NewStreamingClient(config *StreamingClientConfig) (client *StreamingClient) {
+	return &StreamingClient{Config: config}
 }
 
 func (client *StreamingClient) Authenticate(config *tls.Config, applicationKey, sessionToken string) (err error) {

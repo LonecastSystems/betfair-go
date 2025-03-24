@@ -19,8 +19,8 @@ func NewTestClient(t *testing.T) *Client {
 		t.Fatal(err)
 	}
 
-	c := NewClient(tlsConfig, appKey, "")
-	c.Rest = rest
+	config := &ClientConfig{Tls: tlsConfig, ApplicationKey: appKey, Rest: rest}
+	c := NewClient(config)
 
 	if _, err := c.Resume(sessionToken); err != nil {
 		t.Fatal(err)
@@ -39,14 +39,13 @@ func NewTestStreamingClient(t *testing.T) *StreamingClient {
 		t.Fatal(err)
 	}
 
-	c := NewClient(tlsConfig, appKey, "")
+	config := &ClientConfig{Tls: tlsConfig, ApplicationKey: appKey, Rest: rest}
+	c := NewClient(config)
 	if _, err := c.Resume(sessionToken); err != nil {
 		t.Fatal(err)
 	}
 
-	sc := NewStreamingClient()
-
-	if err := c.GetStream(sc); err != nil {
+	if sc, err := c.GetStream(&StreamingClientConfig{}); err != nil {
 		t.Fatal(err)
 		return nil
 	} else {

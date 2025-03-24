@@ -82,15 +82,17 @@ type (
 )
 
 func (client *StreamingClient) SubscribeToOrders(orderFilter OrderFilter) (chan OrderChangeMessage, error) {
+	config := client.Config
+
 	ms := OrderSubscriptionMessage{
 		ID:                  int(rand.Uint64()),
 		Op:                  "orderSubscription",
 		OrderFilter:         orderFilter,
-		SegmentationEnabled: client.SegmentationEnabled,
-		ConflateMs:          client.ConflateMs,
-		HeartbeatMs:         client.HeartbeatMs,
-		InitialClk:          client.InitialClk,
-		Clk:                 client.Clk,
+		SegmentationEnabled: config.SegmentationEnabled,
+		ConflateMs:          config.ConflateMs,
+		HeartbeatMs:         config.HeartbeatMs,
+		InitialClk:          config.InitialClk,
+		Clk:                 config.Clk,
 	}
 
 	if err := client.Write(ms, true); err != nil {

@@ -77,13 +77,17 @@ const (
 )
 
 type (
-	Client struct {
-		HttpClient      *http.Client
+	ClientConfig struct {
 		Tls             *tls.Config
 		ApplicationName string
 		ApplicationKey  string
 		SessionToken    string
 		Rest            bool
+	}
+
+	Client struct {
+		HttpClient *http.Client
+		Config     *ClientConfig
 	}
 
 	SessionResponse struct {
@@ -99,8 +103,8 @@ type (
 	}
 )
 
-func NewClient(tls *tls.Config, app_key string, applicationName string) *Client {
-	return &Client{Tls: tls, ApplicationKey: app_key, ApplicationName: applicationName}
+func NewClient(config *ClientConfig) *Client {
+	return &Client{Config: config}
 }
 
 func (client *Client) Do(req *http.Request) (*http.Response, error) {
@@ -108,8 +112,10 @@ func (client *Client) Do(req *http.Request) (*http.Response, error) {
 		return nil, errors.New("client not initialised: please resume or create a new session")
 	}
 
-	req.Header.Add("X-Authentication", client.SessionToken)
-	req.Header.Add("X-Application", client.ApplicationKey)
+	clientConfig := client.Config
+
+	req.Header.Add("X-Authentication", clientConfig.SessionToken)
+	req.Header.Add("X-Application", clientConfig.ApplicationKey)
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("content-type", "application/json")
 
@@ -118,7 +124,9 @@ func (client *Client) Do(req *http.Request) (*http.Response, error) {
 
 func (client *Client) Resume(sessionToken string) (*SessionStatusResponse, error) {
 	client.HttpClient = &http.Client{}
-	client.SessionToken = sessionToken
+
+	clientConfig := client.Config
+	clientConfig.SessionToken = sessionToken
 
 	keepAliveUrl := url.URL{Path: "https://identitysso.betfair.com/api/keepAlive"}
 	req, _ := http.NewRequest("POST", keepAliveUrl.RequestURI(), nil)
@@ -126,20 +134,20 @@ func (client *Client) Resume(sessionToken string) (*SessionStatusResponse, error
 	resp, err := client.Do(req)
 	if err != nil {
 		client.HttpClient = nil
-		client.SessionToken = ""
+		clientConfig.SessionToken = ""
 		return nil, err
 	}
 
 	json := &SessionStatusResponse{}
 	if err := ReadJson(resp, &json); err != nil {
 		client.HttpClient = nil
-		client.SessionToken = ""
+		clientConfig.SessionToken = ""
 		return json, err
 	}
 
 	if json.Error != "" {
 		client.HttpClient = nil
-		client.SessionToken = ""
+		clientConfig.SessionToken = ""
 		return json, errors.New(string(json.Error))
 	}
 
@@ -157,12 +165,14 @@ func (client *Client) Login(username string, password string) (*SessionResponse,
 	req, _ := http.NewRequest("POST", postUrl.RequestURI(), nil)
 	req.SetBasicAuth(username, password)
 
-	req.Header.Add("X-Application", client.ApplicationName)
+	clientConfig := client.Config
+
+	req.Header.Add("X-Application", clientConfig.ApplicationName)
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	client.HttpClient = &http.Client{
 		Transport: &http.Transport{
-			TLSClientConfig: client.Tls,
+			TLSClientConfig: clientConfig.Tls,
 		},
 	}
 
@@ -183,7 +193,7 @@ func (client *Client) Login(username string, password string) (*SessionResponse,
 		return json, errors.New(string(json.LoginStatus))
 	}
 
-	client.SessionToken = json.SessionToken
+	clientConfig.SessionToken = json.SessionToken
 	return json, nil
 }
 
@@ -207,17 +217,20 @@ func (client *Client) Logout() (*SessionStatusResponse, error) {
 	}
 
 	client.HttpClient = nil
-	client.SessionToken = ""
+	client.Config.SessionToken = ""
 
 	return json, nil
 }
 
-func (client *Client) GetStream(sc *StreamingClient) error {
+func (client *Client) GetStream(config *StreamingClientConfig) (*StreamingClient, error) {
 	if client.HttpClient == nil {
-		return errors.New("client not initialised: please resume or create a new session")
+		return nil, errors.New("client not initialised: please resume or create a new session")
 	}
 
-	return sc.Authenticate(client.Tls, client.ApplicationKey, client.SessionToken)
+	sc := NewStreamingClient(config)
+
+	clientConfig := client.Config
+	return sc, sc.Authenticate(clientConfig.Tls, clientConfig.ApplicationKey, clientConfig.SessionToken)
 }
 
 const (
@@ -244,7 +257,7 @@ func (client *Client) GetScores(method string, params any, response any) error {
 }
 
 func (client *Client) get(api string, method string, params any, response any) error {
-	if client.Rest {
+	if client.Config.Rest {
 		return client.getRest(api, method, params, response)
 	} else {
 		return client.getRPC(api, method, params, response)

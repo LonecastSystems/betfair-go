@@ -105,16 +105,18 @@ type (
 )
 
 func (client *StreamingClient) SubscribeToMarkets(marketFilter StreamMarketFilter, marketDataFilter MarketDataFilter) (chan MarketChangeMessage, error) {
+	config := client.Config
+
 	ms := MarketSubscriptionMessage{
 		ID:                  int(rand.Uint64()),
 		Op:                  "marketSubscription",
 		MarketFilter:        marketFilter,
 		MarketDataFilter:    marketDataFilter,
-		SegmentationEnabled: client.SegmentationEnabled,
-		ConflateMs:          client.ConflateMs,
-		HeartbeatMs:         client.HeartbeatMs,
-		InitialClk:          client.InitialClk,
-		Clk:                 client.Clk,
+		SegmentationEnabled: config.SegmentationEnabled,
+		ConflateMs:          config.ConflateMs,
+		HeartbeatMs:         config.HeartbeatMs,
+		InitialClk:          config.InitialClk,
+		Clk:                 config.Clk,
 	}
 
 	if err := client.Write(ms, true); err != nil {
