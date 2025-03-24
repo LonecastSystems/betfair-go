@@ -81,13 +81,13 @@ type (
 		Tls             *tls.Config
 		ApplicationName string
 		ApplicationKey  string
-		SessionToken    string
 		Rest            bool
 	}
 
 	Client struct {
-		HttpClient *http.Client
-		Config     *ClientConfig
+		HttpClient   *http.Client
+		Config       *ClientConfig
+		SessionToken string
 	}
 
 	SessionResponse struct {
@@ -112,10 +112,8 @@ func (client *Client) Do(req *http.Request) (*http.Response, error) {
 		return nil, errors.New("client not initialised: please resume or create a new session")
 	}
 
-	clientConfig := client.Config
-
-	req.Header.Add("X-Authentication", clientConfig.SessionToken)
-	req.Header.Add("X-Application", clientConfig.ApplicationKey)
+	req.Header.Add("X-Authentication", client.SessionToken)
+	req.Header.Add("X-Application", client.Config.ApplicationKey)
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("content-type", "application/json")
 
@@ -125,8 +123,7 @@ func (client *Client) Do(req *http.Request) (*http.Response, error) {
 func (client *Client) Resume(sessionToken string) (*SessionStatusResponse, error) {
 	client.HttpClient = &http.Client{}
 
-	clientConfig := client.Config
-	clientConfig.SessionToken = sessionToken
+	client.SessionToken = sessionToken
 
 	keepAliveUrl := url.URL{Path: "https://identitysso.betfair.com/api/keepAlive"}
 	req, _ := http.NewRequest("POST", keepAliveUrl.RequestURI(), nil)
@@ -134,20 +131,20 @@ func (client *Client) Resume(sessionToken string) (*SessionStatusResponse, error
 	resp, err := client.Do(req)
 	if err != nil {
 		client.HttpClient = nil
-		clientConfig.SessionToken = ""
+		client.SessionToken = ""
 		return nil, err
 	}
 
 	json := &SessionStatusResponse{}
 	if err := ReadJson(resp, &json); err != nil {
 		client.HttpClient = nil
-		clientConfig.SessionToken = ""
+		client.SessionToken = ""
 		return json, err
 	}
 
 	if json.Error != "" {
 		client.HttpClient = nil
-		clientConfig.SessionToken = ""
+		client.SessionToken = ""
 		return json, errors.New(string(json.Error))
 	}
 
@@ -193,7 +190,7 @@ func (client *Client) Login(username string, password string) (*SessionResponse,
 		return json, errors.New(string(json.LoginStatus))
 	}
 
-	clientConfig.SessionToken = json.SessionToken
+	client.SessionToken = json.SessionToken
 	return json, nil
 }
 
@@ -217,7 +214,7 @@ func (client *Client) Logout() (*SessionStatusResponse, error) {
 	}
 
 	client.HttpClient = nil
-	client.Config.SessionToken = ""
+	client.SessionToken = ""
 
 	return json, nil
 }
@@ -230,7 +227,7 @@ func (client *Client) GetStream(config *StreamingClientConfig) (*StreamingClient
 	sc := NewStreamingClient(config)
 
 	clientConfig := client.Config
-	return sc, sc.Authenticate(clientConfig.Tls, clientConfig.ApplicationKey, clientConfig.SessionToken)
+	return sc, sc.Authenticate(clientConfig.Tls, clientConfig.ApplicationKey, client.SessionToken)
 }
 
 const (
