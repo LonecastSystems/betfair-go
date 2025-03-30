@@ -25,17 +25,17 @@ type (
 	}
 
 	OrderChangeMessage struct {
-		ID                 int                `json:"id"`
-		Op                 string             `json:"op"`
-		ChangeType         string             `json:"ct"`
-		SegmentType        string             `json:"segmentType"`
-		ConflateMs         int                `json:"conflateMs"`
-		Status             string             `json:"status"`
-		HeartbeatMs        int                `json:"heartbeatMs"`
-		PublishTime        int64              `json:"pt"`
-		InitialClk         string             `json:"initialClk"`
-		Clk                string             `json:"clk"`
-		OrderAccountChange OrderAccountChange `json:"oc"`
+		ID                 int                  `json:"id"`
+		Op                 string               `json:"op"`
+		ChangeType         string               `json:"ct"`
+		SegmentType        string               `json:"segmentType"`
+		ConflateMs         int                  `json:"conflateMs"`
+		Status             string               `json:"status"`
+		HeartbeatMs        int                  `json:"heartbeatMs"`
+		PublishTime        int64                `json:"pt"`
+		InitialClk         string               `json:"initialClk"`
+		Clk                string               `json:"clk"`
+		OrderAccountChange []OrderAccountChange `json:"oc"`
 	}
 
 	OrderAccountChange struct {
