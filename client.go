@@ -324,7 +324,7 @@ func (client *Client) getRPC(api string, method string, params any, response any
 		JsonRPC: "2.0",
 		Method:  fmt.Sprintf("%v/v1.0/%v", apis[api], method),
 		Params:  params,
-		ID:      int(rand.Uint64()),
+		ID:      int(rand.Uint32()),
 	}
 
 	body, err := json.Marshal(&query)

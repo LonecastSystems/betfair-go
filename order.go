@@ -85,7 +85,7 @@ func (client *StreamingClient) SubscribeToOrders(orderFilter OrderFilter) (chan 
 	config := client.Config
 
 	ms := OrderSubscriptionMessage{
-		ID:                  int(rand.Uint64()),
+		ID:                  int(rand.Uint32()),
 		Op:                  "orderSubscription",
 		OrderFilter:         orderFilter,
 		SegmentationEnabled: config.SegmentationEnabled,
