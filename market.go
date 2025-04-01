@@ -58,32 +58,44 @@ type (
 	}
 
 	MarketDefinition struct {
-		MarketID              string    `json:"id"`                    // Market Id - the id of the market
-		Venue                 string    `json:"venue"`                 // The venue - applies to horse racing and greyhound markets only
-		BspMarket             bool      `json:"bspMarket"`             // If 'true' the market supports Betfair SP betting
-		TurnInPlayEnabled     bool      `json:"turnInPlayEnabled"`     // If 'true' the market is set to turn in-play
-		PersistenceEnabled    bool      `json:"persistenceEnabled"`    // If 'true' the market supports 'Keep' bets if the market is to be turned in-play
-		MarketBaseRate        float64   `json:"marketBaseRate"`        // The commission rate applicable to the market
-		EventID               string    `json:"eventId"`               // The unique id for the event
-		EventTypeID           string    `json:"eventTypeId"`           // The unique eventTypeId that the event belongs to
-		NumberOfWinners       int       `json:"numberOfWinners"`       // The number of winners on a market
-		BettingType           string    `json:"bettingType"`           // The market betting type i.e. ODDS, ASIAN_HANDICAP_DOUBLE_LINE, etc.
-		MarketType            string    `json:"marketType"`            // Market base type
-		MarketTime            string    `json:"marketTime"`            // The market start time
-		SuspendTime           string    `json:"suspendTime"`           // The market suspend time
-		BspReconciled         bool      `json:"bspReconciled"`         // True if the market starting price has been reconciled
-		Complete              bool      `json:"complete"`              // If false, runners may be added to the market
-		InPlay                bool      `json:"inPlay"`                // True if the market is currently in play
-		CrossMatching         bool      `json:"crossMatching"`         // True if cross-matching is enabled for this market
-		RunnersVoidable       bool      `json:"runnersVoidable"`       // True if runners in the market can be voided
-		NumberOfActiveRunners int       `json:"numberOfActiveRunners"` // The number of runners that are currently active
-		BetDelay              int       `json:"betDelay"`              // The number of seconds an order is held until it is submitted into the market
-		Status                string    `json:"status"`                // The status of the market, for example, OPEN, SUSPENDED, CLOSED (settled), etc.
-		Regulators            []string  `json:"regulators"`            // The market regulators
-		DiscountAllowed       bool      `json:"discountAllowed"`       // Indicate whether or not the user's discount rate is taken into account in this market
-		Timezone              string    `json:"timezone"`              // This is the timezone in which the event is taking place
-		OpenDate              time.Time `json:"openDate"`              // The scheduled start date and time of the event (GMT by default)
-		Version               int64     `json:"version"`               // A non-monotonically increasing number indicates market changes
+		MarketID              string                `json:"id"`                    // Market Id - the id of the market
+		Venue                 string                `json:"venue"`                 // The venue - applies to horse racing and greyhound markets only
+		RaceType              string                `json:"raceType"`              // Harness, Flat, Hurdle, Chase, Bumper, NH Flat, Steeple (AUS/NZ races), and NO_VALUE (when no valid race type has been mapped).
+		SettledTime           time.Time             `json:"settledTime"`           // Market settled time.
+		TimeZone              string                `json:"timeZone"`              // This is the timezone in which the event is taking place
+		EachWayDivisor        float64               `json:"eachWayDivisor"`        // The divisor is returned for the marketType EACH_WAY only and refers to the fraction of the win odds at which the place portion of an each way bet is settled
+		BspMarket             bool                  `json:"bspMarket"`             // If 'true' the market supports Betfair SP betting
+		TurnInPlayEnabled     bool                  `json:"turnInPlayEnabled"`     // If 'true' the market is set to turn in-play
+		PriceLadderDefinition PriceLadderDefinition `json:"priceLadderDefinition"` // Definition of the price ladder type “CLASSIC”, “FINEST”, “LINE_RANGE”
+		KeyLineDefinition     int                   `json:"keyLineDefinition"`     // Definition of a markets key line selection (for valid markets), comprising the selectionId and handicap of the team it is applied to
+		PersistenceEnabled    bool                  `json:"persistenceEnabled"`    // If 'true' the market supports 'Keep' bets if the market is to be turned in-play
+		MarketBaseRate        float64               `json:"marketBaseRate"`        // The commission rate applicable to the market
+		EventID               string                `json:"eventId"`               // The unique id for the event
+		EventTypeID           string                `json:"eventTypeId"`           // The unique eventTypeId that the event belongs to
+		NumberOfWinners       int                   `json:"numberOfWinners"`       // The number of winners on a market
+		CountryCode           string                `json:"countryCode"`           // The events ISO 3166-2 country code.
+		LineMaxUnit           float64               `json:"lineMaxUnit"`           // For Handicap and Line markets, the maximum value for the outcome, in market units for this market (eg 100 runs).
+		BettingType           string                `json:"bettingType"`           // The market betting type i.e. ODDS, ASIAN_HANDICAP_DOUBLE_LINE, etc.
+		MarketType            string                `json:"marketType"`            // Market base type
+		MarketTime            string                `json:"marketTime"`            // The market start time
+		SuspendTime           string                `json:"suspendTime"`           // The market suspend time
+		BspReconciled         bool                  `json:"bspReconciled"`         // True if the market starting price has been reconciled
+		Complete              bool                  `json:"complete"`              // If false, runners may be added to the market
+		InPlay                bool                  `json:"inPlay"`                // True if the market is currently in play
+		CrossMatching         bool                  `json:"crossMatching"`         // True if cross-matching is enabled for this market
+		RunnersVoidable       bool                  `json:"runnersVoidable"`       // True if runners in the market can be voided
+		NumberOfActiveRunners int                   `json:"numberOfActiveRunners"` // The number of runners that are currently active
+		LineMinUnit           float64               `json:"lineMinUnit"`           // For Handicap and Line markets, the minimum value for the outcome, in market units for this market (eg 0 runs).
+		BetDelay              int                   `json:"betDelay"`              // The number of seconds an order is held until it is submitted into the market
+		Status                string                `json:"status"`                // The status of the market, for example, OPEN, SUSPENDED, CLOSED (settled), etc.
+		Regulators            []string              `json:"regulators"`            // The market regulators
+		DiscountAllowed       bool                  `json:"discountAllowed"`       // Indicate whether or not the user's discount rate is taken into account in this market
+		OpenDate              time.Time             `json:"openDate"`              // The scheduled start date and time of the event (GMT by default)
+		Version               int64                 `json:"version"`               // A non-monotonically increasing number indicates market changes
+	}
+
+	PriceLadderDefinition struct {
+		Type string `json:"type"`
 	}
 
 	RunnerChange struct {
