@@ -120,37 +120,6 @@ func (client *Client) Do(req *http.Request) (*http.Response, error) {
 	return client.HttpClient.Do(req)
 }
 
-func (client *Client) Resume(sessionToken string) (*SessionStatusResponse, error) {
-	client.HttpClient = &http.Client{}
-
-	client.SessionToken = sessionToken
-
-	keepAliveUrl := url.URL{Path: "https://identitysso.betfair.com/api/keepAlive"}
-	req, _ := http.NewRequest("POST", keepAliveUrl.RequestURI(), nil)
-
-	resp, err := client.Do(req)
-	if err != nil {
-		client.HttpClient = nil
-		client.SessionToken = ""
-		return nil, err
-	}
-
-	json := &SessionStatusResponse{}
-	if err := ReadJson(resp, &json); err != nil {
-		client.HttpClient = nil
-		client.SessionToken = ""
-		return json, err
-	}
-
-	if json.Error != "" {
-		client.HttpClient = nil
-		client.SessionToken = ""
-		return json, errors.New(string(json.Error))
-	}
-
-	return json, nil
-}
-
 func (client *Client) Login(username string, password string) (*SessionResponse, error) {
 	postUrl := url.URL{Path: "https://identitysso-cert.betfair.com/api/certlogin"}
 	q := postUrl.Query()
@@ -215,6 +184,40 @@ func (client *Client) Logout() (*SessionStatusResponse, error) {
 
 	client.HttpClient = nil
 	client.SessionToken = ""
+
+	return json, nil
+}
+
+func (client *Client) Resume(sessionToken string) (*SessionStatusResponse, error) {
+	client.HttpClient = &http.Client{}
+	client.SessionToken = sessionToken
+
+	return client.KeepAlive()
+}
+
+func (client *Client) KeepAlive() (*SessionStatusResponse, error) {
+	keepAliveUrl := url.URL{Path: "https://identitysso.betfair.com/api/keepAlive"}
+	req, _ := http.NewRequest("POST", keepAliveUrl.RequestURI(), nil)
+
+	resp, err := client.Do(req)
+	if err != nil {
+		client.HttpClient = nil
+		client.SessionToken = ""
+		return nil, err
+	}
+
+	json := &SessionStatusResponse{}
+	if err := ReadJson(resp, &json); err != nil {
+		client.HttpClient = nil
+		client.SessionToken = ""
+		return json, err
+	}
+
+	if json.Error != "" {
+		client.HttpClient = nil
+		client.SessionToken = ""
+		return json, errors.New(string(json.Error))
+	}
 
 	return json, nil
 }
