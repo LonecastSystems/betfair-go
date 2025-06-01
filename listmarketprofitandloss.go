@@ -2,7 +2,7 @@ package betfair
 
 type (
 	MarketProfitAndLossParams struct {
-		MarketIDs          []string `json:"marketIds"`
+		MarketIDs          []string `json:"marketIds,omitempty"`
 		IncludeSettledBets bool     `json:"includeSettledBets,omitempty"`
 		IncludeBspBets     bool     `json:"includeBspBets,omitempty"`
 		NetOfCommission    bool     `json:"netOfCommission,omitempty"`

@@ -2,7 +2,7 @@ package betfair
 
 type (
 	AccountDetailsParams struct {
-		Wallet Wallet `json:"wallet"`
+		Wallet Wallet `json:"wallet,omitempty"`
 	}
 
 	AccountFundsResponse struct {

@@ -76,12 +76,24 @@ const (
 	SS_ERR_NO_SESSION             SessionStatusError = "NO_SESSION"
 )
 
+type Jurisdiction string
+
+const (
+	JD_GLOBAL    = "com"
+	JD_AUSTRALIA = "au"
+	JD_ITALY     = "it"
+	JD_SPAIN     = "es"
+	JD_ROMANIA   = "ro"
+	JD_SWEDEN    = "se"
+)
+
 type (
 	ClientConfig struct {
 		Tls             *tls.Config
 		ApplicationName string
 		ApplicationKey  string
 		Rest            bool
+		Jurisdiction    Jurisdiction
 	}
 
 	Client struct {
@@ -164,7 +176,7 @@ func (client *Client) Login(username string, password string) (*SessionResponse,
 }
 
 func (client *Client) Logout() (*SessionStatusResponse, error) {
-	postUrl := url.URL{Path: "https://identitysso.betfair.com/api/logout"}
+	postUrl := url.URL{Path: client.Config.GetIdentityUrl() + "/api/logout"}
 
 	req, _ := http.NewRequest("POST", postUrl.RequestURI(), nil)
 
@@ -196,7 +208,7 @@ func (client *Client) Resume(sessionToken string) (*SessionStatusResponse, error
 }
 
 func (client *Client) KeepAlive() (*SessionStatusResponse, error) {
-	keepAliveUrl := url.URL{Path: "https://identitysso.betfair.com/api/keepAlive"}
+	keepAliveUrl := url.URL{Path: client.Config.GetIdentityUrl() + "/api/keepAlive"}
 	req, _ := http.NewRequest("POST", keepAliveUrl.RequestURI(), nil)
 
 	resp, err := client.Do(req)
@@ -220,6 +232,15 @@ func (client *Client) KeepAlive() (*SessionStatusResponse, error) {
 	}
 
 	return json, nil
+}
+
+func (config *ClientConfig) GetIdentityUrl() string {
+	jurisdiction := (config.Jurisdiction)
+	if jurisdiction == "" {
+		jurisdiction = JD_GLOBAL
+	}
+
+	return fmt.Sprintf("https://identitysso.betfair.%v", jurisdiction)
 }
 
 func (client *Client) GetStream(config *StreamingClientConfig) (*StreamingClient, error) {

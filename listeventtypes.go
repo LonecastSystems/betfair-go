@@ -3,7 +3,7 @@ package betfair
 type (
 	EventTypeParams struct {
 		Filter MarketFilter `json:"filter"`
-		Locale string       `json:"locale"`
+		Locale string       `json:"locale,omitempty"`
 	}
 
 	EventTypeResult struct {
