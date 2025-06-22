@@ -1,6 +1,9 @@
 package betfair
 
-import "testing"
+import (
+	"context"
+	"testing"
+)
 
 func TestMarketTypes(t *testing.T) {
 	c := NewTestClient(t)
@@ -10,7 +13,7 @@ func TestMarketTypes(t *testing.T) {
 		MarketCountries: []string{"GB"},
 	}}
 
-	marketTypes, err := c.ListMarketTypes(params)
+	marketTypes, err := c.ListMarketTypes(context.Background(), params)
 	if err != nil {
 		t.Fatal(err)
 	}

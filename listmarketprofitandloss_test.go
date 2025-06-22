@@ -1,6 +1,9 @@
 package betfair
 
-import "testing"
+import (
+	"context"
+	"testing"
+)
 
 func TestListMarketProfitAndLoss(t *testing.T) {
 	c := NewTestClient(t)
@@ -8,7 +11,7 @@ func TestListMarketProfitAndLoss(t *testing.T) {
 	params := MarketProfitAndLossParams{
 		MarketIDs: []string{GetRandomMarketID(t, c)}}
 
-	pnl, err := c.ListMarketProfitAndLoss(params)
+	pnl, err := c.ListMarketProfitAndLoss(context.Background(), params)
 	if err != nil {
 		t.Fatal(err)
 	}

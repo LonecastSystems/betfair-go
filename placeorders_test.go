@@ -1,6 +1,7 @@
 package betfair
 
 import (
+	"context"
 	"testing"
 )
 
@@ -10,7 +11,7 @@ func TestPlaceOrders(t *testing.T) {
 
 	params := PlaceOrdersParams{}
 
-	report, err := c.PlaceOrders(params)
+	report, err := c.PlaceOrders(context.Background(), params)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -1,5 +1,7 @@
 package betfair
 
+import "context"
+
 type TimeGranularity string
 
 const (
@@ -20,8 +22,8 @@ type (
 	}
 )
 
-func (client *Client) ListTimeRanges(params TimeRangesParams) ([]TimeRangeResult, error) {
+func (client *Client) ListTimeRanges(ctx context.Context, params TimeRangesParams) ([]TimeRangeResult, error) {
 	json := []TimeRangeResult{}
 
-	return json, client.GetSports("listTimeRanges", params, &json)
+	return json, client.GetSports(ctx, "listTimeRanges", params, &json)
 }

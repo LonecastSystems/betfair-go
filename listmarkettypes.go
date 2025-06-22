@@ -1,5 +1,7 @@
 package betfair
 
+import "context"
+
 type (
 	MarketTypeParams struct {
 		Filter MarketFilter `json:"filter"`
@@ -12,8 +14,8 @@ type (
 	}
 )
 
-func (client *Client) ListMarketTypes(params MarketTypeParams) ([]MarketTypeResult, error) {
+func (client *Client) ListMarketTypes(ctx context.Context, params MarketTypeParams) ([]MarketTypeResult, error) {
 	json := []MarketTypeResult{}
 
-	return json, client.GetSports("listMarketTypes", params, &json)
+	return json, client.GetSports(ctx, "listMarketTypes", params, &json)
 }

@@ -1,6 +1,7 @@
 package betfair
 
 import (
+	"context"
 	"time"
 )
 
@@ -77,8 +78,8 @@ type (
 	}
 )
 
-func (client *Client) ListCurrentOrders(params CurrentOrdersParams) (CurrentOrderSummaryReport, error) {
+func (client *Client) ListCurrentOrders(ctx context.Context, params CurrentOrdersParams) (CurrentOrderSummaryReport, error) {
 	json := CurrentOrderSummaryReport{}
 
-	return json, client.GetSports("listCurrentOrders", params, &json)
+	return json, client.GetSports(ctx, "listCurrentOrders", params, &json)
 }

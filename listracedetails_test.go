@@ -1,13 +1,16 @@
 package betfair
 
-import "testing"
+import (
+	"context"
+	"testing"
+)
 
 func TestListRaceDetails(t *testing.T) {
 	c := NewTestClient(t)
 
 	params := RaceDetailsParams{}
 
-	races, err := c.ListRaceDetails(params)
+	races, err := c.ListRaceDetails(context.Background(), params)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -1,11 +1,14 @@
 package betfair
 
-import "testing"
+import (
+	"context"
+	"testing"
+)
 
 func TestListCurrencyRates(t *testing.T) {
 	c := NewTestClient(t)
 
-	resp, err := c.ListCurrencyRates(CurrencyRateParams{FromCurrency: "GBP"})
+	resp, err := c.ListCurrencyRates(context.Background(), CurrencyRateParams{FromCurrency: "GBP"})
 	if err != nil {
 		t.Fatal(err)
 	}

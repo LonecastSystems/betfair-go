@@ -1,11 +1,14 @@
 package betfair
 
-import "testing"
+import (
+	"context"
+	"testing"
+)
 
 func TestGetAccountStatement(t *testing.T) {
 	c := NewTestClient(t)
 
-	resp, err := c.GetAccountStatement(AccountStatementParams{})
+	resp, err := c.GetAccountStatement(context.Background(), AccountStatementParams{})
 	if err != nil {
 		t.Fatal(err)
 	}

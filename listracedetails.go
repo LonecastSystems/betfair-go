@@ -1,6 +1,9 @@
 package betfair
 
-import "time"
+import (
+	"context"
+	"time"
+)
 
 type RaceStatus string
 
@@ -55,8 +58,8 @@ type (
 	}
 )
 
-func (client *Client) ListRaceDetails(params RaceDetailsParams) ([]RaceDetails, error) {
+func (client *Client) ListRaceDetails(ctx context.Context, params RaceDetailsParams) ([]RaceDetails, error) {
 	json := []RaceDetails{}
 
-	return json, client.GetScores("listRaceDetails", params, &json)
+	return json, client.GetScores(ctx, "listRaceDetails", params, &json)
 }

@@ -1,5 +1,7 @@
 package betfair
 
+import "context"
+
 type ActionPerformed string
 
 const (
@@ -22,8 +24,8 @@ type (
 	}
 )
 
-func (client *Client) Heartbeat(params HeartbeatParams) (HeartbeatReport, error) {
+func (client *Client) Heartbeat(ctx context.Context, params HeartbeatParams) (HeartbeatReport, error) {
 	json := HeartbeatReport{}
 
-	return json, client.GetHeartbeats("heartbeat", params, &json)
+	return json, client.GetHeartbeats(ctx, "heartbeat", params, &json)
 }

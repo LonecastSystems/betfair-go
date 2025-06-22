@@ -1,6 +1,7 @@
 package betfair
 
 import (
+	"context"
 	"time"
 )
 
@@ -81,8 +82,8 @@ type (
 	}
 )
 
-func (client *Client) GetAccountStatement(params AccountStatementParams) (AccountStatementReport, error) {
+func (client *Client) GetAccountStatement(ctx context.Context, params AccountStatementParams) (AccountStatementReport, error) {
 	json := AccountStatementReport{}
 
-	return json, client.GetAccounts("getAccountStatement", params, &json)
+	return json, client.GetAccounts(ctx, "getAccountStatement", params, &json)
 }

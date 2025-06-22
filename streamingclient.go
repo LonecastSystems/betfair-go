@@ -15,6 +15,7 @@ type (
 		HeartbeatMs         int
 		InitialClk          string
 		Clk                 string
+		PreProduction       bool
 	}
 
 	StreamingClient struct {
@@ -23,12 +24,12 @@ type (
 	}
 
 	StatusMessage struct {
-		ID                   int    `json:"id"`
-		StatusCode           string `json:"statusCode"`
-		ConnectionClosed     bool   `json:"connectionClosed"`
-		ErrorCode            string `json:"errorCode"`
-		ErrorMessage         string `json:"errorMessage"`
-		ConnectionsAvailable int    `json:"connectionsAvailable"`
+		ID                   int                    `json:"id"`
+		StatusCode           string                 `json:"statusCode"`
+		ConnectionClosed     bool                   `json:"connectionClosed"`
+		ErrorCode            StatusMessageErrorCode `json:"errorCode"`
+		ErrorMessage         string                 `json:"errorMessage"`
+		ConnectionsAvailable int                    `json:"connectionsAvailable"`
 	}
 )
 
@@ -50,8 +51,16 @@ func NewStreamingClient(config *StreamingClientConfig) (client *StreamingClient)
 	return &StreamingClient{Config: config}
 }
 
+func (config *StreamingClientConfig) GetStreamUrl() string {
+	if config.PreProduction {
+		return "stream-api-integration.betfair.com"
+	}
+
+	return "stream-api.betfair.com:443"
+}
+
 func (client *StreamingClient) Authenticate(config *tls.Config, applicationKey, sessionToken string) (err error) {
-	if client.Connection, err = tls.Dial("tcp", "stream-api.betfair.com:443", config); err != nil {
+	if client.Connection, err = tls.Dial("tcp", client.Config.GetStreamUrl(), config); err != nil {
 		return err
 	}
 
@@ -113,7 +122,7 @@ func (client *StreamingClient) Write(request any, isRequest bool) error {
 	}
 
 	if status.ErrorCode != "" {
-		return errors.New(status.ErrorCode)
+		return errors.New(string(status.ErrorCode))
 	}
 
 	return nil

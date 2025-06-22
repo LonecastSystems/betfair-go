@@ -1,13 +1,16 @@
 package betfair
 
-import "testing"
+import (
+	"context"
+	"testing"
+)
 
 func TestListClearedOrders(t *testing.T) {
 	c := NewTestClient(t)
 
-	params := ClearedOrdersParams{BetStatus: "SETTLED"}
+	params := ClearedOrdersParams{BetStatus: BS_SETTLED}
 
-	report, err := c.ListClearedOrders(params)
+	report, err := c.ListClearedOrders(context.Background(), params)
 	if err != nil {
 		t.Fatal(err)
 	}

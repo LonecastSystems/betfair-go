@@ -1,5 +1,7 @@
 package betfair
 
+import "context"
+
 type (
 	MarketProfitAndLossParams struct {
 		MarketIDs          []string `json:"marketIds,omitempty"`
@@ -22,8 +24,8 @@ type (
 	}
 )
 
-func (client *Client) ListMarketProfitAndLoss(params MarketProfitAndLossParams) ([]MarketProfitAndLoss, error) {
+func (client *Client) ListMarketProfitAndLoss(ctx context.Context, params MarketProfitAndLossParams) ([]MarketProfitAndLoss, error) {
 	json := []MarketProfitAndLoss{}
 
-	return json, client.GetSports("listMarketProfitAndLoss", params, &json)
+	return json, client.GetSports(ctx, "listMarketProfitAndLoss", params, &json)
 }

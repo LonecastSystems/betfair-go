@@ -1,6 +1,7 @@
 package betfair
 
 import (
+	"context"
 	"time"
 )
 
@@ -49,8 +50,8 @@ type (
 	}
 )
 
-func (client *Client) ListMarketBook(params MarketBookParams) ([]MarketBook, error) {
+func (client *Client) ListMarketBook(ctx context.Context, params MarketBookParams) ([]MarketBook, error) {
 	json := []MarketBook{}
 
-	return json, client.GetSports("listMarketBook", params, &json)
+	return json, client.GetSports(ctx, "listMarketBook", params, &json)
 }

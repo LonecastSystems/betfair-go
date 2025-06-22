@@ -9,9 +9,9 @@ func TestSubscribeToMarkets(t *testing.T) {
 	config := c.Config
 	config.HeartbeatMs = 524
 
-	marketFilter := StreamMarketFilter{MarketIDs: []string{"1.241243070"}}
+	marketFilter := StreamMarketFilter{MarketIDs: []string{"1.240636817"}}
 
-	fields := []string{"EX_BEST_OFFERS_DISP", "EX_BEST_OFFERS", "EX_ALL_OFFERS", "EX_TRADED", "EX_TRADED_VOL", "EX_LTP", "EX_MARKET_DEF", "SP_TRADED", "SP_PROJECTED"}
+	fields := []MarketDataFilterField{MDFF_EX_BEST_OFFERS_DISP, MDFF_EX_BEST_OFFERS, MDFF_EX_ALL_OFFERS, MDFF_EX_TRADED, MDFF_EX_TRADED_VOL, MDFF_EX_LTP, MDFF_EX_MARKET_DEF, MDFF_SP_TRADED, MDFF_SP_PROJECTED}
 	marketDataFilter := MarketDataFilter{Fields: fields, LadderLevels: 2}
 
 	marketChanges, err := c.SubscribeToMarkets(marketFilter, marketDataFilter)

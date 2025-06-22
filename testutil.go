@@ -1,6 +1,7 @@
 package betfair
 
 import (
+	"context"
 	"testing"
 )
 
@@ -22,7 +23,7 @@ func NewTestClient(t *testing.T) *Client {
 	config := &ClientConfig{Tls: tlsConfig, ApplicationKey: appKey, Rest: rest}
 	c := NewClient(config)
 
-	if _, err := c.Resume(sessionToken); err != nil {
+	if _, err := c.Resume(context.Background(), sessionToken); err != nil {
 		t.Fatal(err)
 	}
 
@@ -41,7 +42,7 @@ func NewTestStreamingClient(t *testing.T) *StreamingClient {
 
 	config := &ClientConfig{Tls: tlsConfig, ApplicationKey: appKey, Rest: rest}
 	c := NewClient(config)
-	if _, err := c.Resume(sessionToken); err != nil {
+	if _, err := c.Resume(context.Background(), sessionToken); err != nil {
 		t.Fatal(err)
 	}
 
@@ -58,7 +59,7 @@ func GetRandomMarketID(t *testing.T, c *Client) string {
 		Filter:     MarketFilter{},
 		MaxResults: 1}
 
-	markets, err := c.ListMarketCatalogue(mcParams)
+	markets, err := c.ListMarketCatalogue(context.Background(), mcParams)
 	if err != nil {
 		t.Fatal(err)
 	}

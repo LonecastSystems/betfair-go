@@ -1,5 +1,7 @@
 package betfair
 
+import "context"
+
 type (
 	CurrencyRateParams struct {
 		FromCurrency string `json:"fromCurrency,omitempty"`
@@ -11,8 +13,8 @@ type (
 	}
 )
 
-func (client *Client) ListCurrencyRates(params CurrencyRateParams) ([]CurrencyRate, error) {
+func (client *Client) ListCurrencyRates(ctx context.Context, params CurrencyRateParams) ([]CurrencyRate, error) {
 	json := []CurrencyRate{}
 
-	return json, client.GetAccounts("listCurrencyRates", params, &json)
+	return json, client.GetAccounts(ctx, "listCurrencyRates", params, &json)
 }

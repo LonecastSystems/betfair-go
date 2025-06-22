@@ -1,5 +1,7 @@
 package betfair
 
+import "context"
+
 type (
 	ReplaceOrdersParams struct {
 		MarketID      string               `json:"marketId"`
@@ -30,8 +32,8 @@ type (
 	}
 )
 
-func (client *Client) ReplaceOrders(params ReplaceOrdersParams) (ReplaceExecutionReport, error) {
+func (client *Client) ReplaceOrders(ctx context.Context, params ReplaceOrdersParams) (ReplaceExecutionReport, error) {
 	json := ReplaceExecutionReport{}
 
-	return json, client.GetSports("replaceOrders", params, &json)
+	return json, client.GetSports(ctx, "replaceOrders", params, &json)
 }

@@ -1,6 +1,7 @@
 package betfair
 
 import (
+	"context"
 	"testing"
 )
 
@@ -10,7 +11,7 @@ func TestReplaceOrders(t *testing.T) {
 
 	params := ReplaceOrdersParams{}
 
-	report, err := c.ReplaceOrders(params)
+	report, err := c.ReplaceOrders(context.Background(), params)
 	if err != nil {
 		t.Fatal(err)
 	}

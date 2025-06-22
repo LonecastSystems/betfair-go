@@ -1,5 +1,7 @@
 package betfair
 
+import "context"
+
 type (
 	AccountDetailsParams struct {
 		Wallet Wallet `json:"wallet,omitempty"`
@@ -16,8 +18,8 @@ type (
 	}
 )
 
-func (client *Client) GetAccountFunds(params AccountDetailsParams) (AccountFundsResponse, error) {
+func (client *Client) GetAccountFunds(ctx context.Context, params AccountDetailsParams) (AccountFundsResponse, error) {
 	json := AccountFundsResponse{}
 
-	return json, client.GetAccounts("getAccountFunds", params, &json)
+	return json, client.GetAccounts(ctx, "getAccountFunds", params, &json)
 }

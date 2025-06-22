@@ -1,5 +1,7 @@
 package betfair
 
+import "context"
+
 type (
 	CancelOrdersParams struct {
 		MarketID     string              `json:"marketId,omitempty"`
@@ -21,8 +23,8 @@ type (
 	}
 )
 
-func (client *Client) CancelOrders(params CancelOrdersParams) (CancelExecutionReport, error) {
+func (client *Client) CancelOrders(ctx context.Context, params CancelOrdersParams) (CancelExecutionReport, error) {
 	json := CancelExecutionReport{}
 
-	return json, client.GetSports("cancelOrders", params, &json)
+	return json, client.GetSports(ctx, "cancelOrders", params, &json)
 }

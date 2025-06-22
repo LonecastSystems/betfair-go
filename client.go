@@ -2,6 +2,7 @@ package betfair
 
 import (
 	"bytes"
+	"context"
 	"crypto/tls"
 	"encoding/json"
 	"errors"
@@ -79,12 +80,12 @@ const (
 type Jurisdiction string
 
 const (
-	JD_GLOBAL    = "com"
-	JD_AUSTRALIA = "au"
-	JD_ITALY     = "it"
-	JD_SPAIN     = "es"
-	JD_ROMANIA   = "ro"
-	JD_SWEDEN    = "se"
+	JD_GLOBAL    Jurisdiction = "com"
+	JD_AUSTRALIA Jurisdiction = "au"
+	JD_ITALY     Jurisdiction = "it"
+	JD_SPAIN     Jurisdiction = "es"
+	JD_ROMANIA   Jurisdiction = "ro"
+	JD_SWEDEN    Jurisdiction = "se"
 )
 
 type (
@@ -132,7 +133,7 @@ func (client *Client) Do(req *http.Request) (*http.Response, error) {
 	return client.HttpClient.Do(req)
 }
 
-func (client *Client) Login(username string, password string) (*SessionResponse, error) {
+func (client *Client) Login(ctx context.Context, username string, password string) (*SessionResponse, error) {
 	postUrl := url.URL{Path: "https://identitysso-cert.betfair.com/api/certlogin"}
 	q := postUrl.Query()
 	q.Set("username", username)
@@ -140,7 +141,7 @@ func (client *Client) Login(username string, password string) (*SessionResponse,
 
 	postUrl.RawQuery = q.Encode()
 
-	req, _ := http.NewRequest("POST", postUrl.RequestURI(), nil)
+	req, _ := http.NewRequestWithContext(ctx, "POST", postUrl.RequestURI(), nil)
 	req.SetBasicAuth(username, password)
 
 	clientConfig := client.Config
@@ -175,10 +176,10 @@ func (client *Client) Login(username string, password string) (*SessionResponse,
 	return json, nil
 }
 
-func (client *Client) Logout() (*SessionStatusResponse, error) {
+func (client *Client) Logout(ctx context.Context) (*SessionStatusResponse, error) {
 	postUrl := url.URL{Path: client.Config.GetIdentityUrl() + "/api/logout"}
 
-	req, _ := http.NewRequest("POST", postUrl.RequestURI(), nil)
+	req, _ := http.NewRequestWithContext(ctx, "POST", postUrl.RequestURI(), nil)
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -200,16 +201,16 @@ func (client *Client) Logout() (*SessionStatusResponse, error) {
 	return json, nil
 }
 
-func (client *Client) Resume(sessionToken string) (*SessionStatusResponse, error) {
+func (client *Client) Resume(ctx context.Context, sessionToken string) (*SessionStatusResponse, error) {
 	client.HttpClient = &http.Client{}
 	client.SessionToken = sessionToken
 
-	return client.KeepAlive()
+	return client.KeepAlive(ctx)
 }
 
-func (client *Client) KeepAlive() (*SessionStatusResponse, error) {
+func (client *Client) KeepAlive(ctx context.Context) (*SessionStatusResponse, error) {
 	keepAliveUrl := url.URL{Path: client.Config.GetIdentityUrl() + "/api/keepAlive"}
-	req, _ := http.NewRequest("POST", keepAliveUrl.RequestURI(), nil)
+	req, _ := http.NewRequestWithContext(ctx, "POST", keepAliveUrl.RequestURI(), nil)
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -243,6 +244,15 @@ func (config *ClientConfig) GetIdentityUrl() string {
 	return fmt.Sprintf("https://identitysso.betfair.%v", jurisdiction)
 }
 
+func (config *ClientConfig) GetApiUrl() string {
+	jurisdiction := (config.Jurisdiction)
+	if jurisdiction == JD_AUSTRALIA {
+		return fmt.Sprintf("https://api.betfair.com.%v", jurisdiction)
+	}
+
+	return "https://api.betfair.com"
+}
+
 func (client *Client) GetStream(config *StreamingClientConfig) (*StreamingClient, error) {
 	if client.HttpClient == nil {
 		return nil, errors.New("client not initialised: please resume or create a new session")
@@ -261,27 +271,27 @@ const (
 	api_scores    = "scores"
 )
 
-func (client *Client) GetAccounts(method string, params any, response any) error {
-	return client.get(api_account, method, params, response)
+func (client *Client) GetAccounts(ctx context.Context, method string, params any, response any) error {
+	return client.get(ctx, api_account, method, params, response)
 }
 
-func (client *Client) GetSports(method string, params any, response any) error {
-	return client.get(api_betting, method, params, response)
+func (client *Client) GetSports(ctx context.Context, method string, params any, response any) error {
+	return client.get(ctx, api_betting, method, params, response)
 }
 
-func (client *Client) GetHeartbeats(method string, params any, response any) error {
-	return client.get(api_heartbeat, method, params, response)
+func (client *Client) GetHeartbeats(ctx context.Context, method string, params any, response any) error {
+	return client.get(ctx, api_heartbeat, method, params, response)
 }
 
-func (client *Client) GetScores(method string, params any, response any) error {
-	return client.getRPC(api_scores, method, params, response) //Only supported by RPC for now.
+func (client *Client) GetScores(ctx context.Context, method string, params any, response any) error {
+	return client.getRPC(ctx, api_scores, method, params, response) //Only supported by RPC for now.
 }
 
-func (client *Client) get(api string, method string, params any, response any) error {
+func (client *Client) get(ctx context.Context, api string, method string, params any, response any) error {
 	if client.Config.Rest {
-		return client.getRest(api, method, params, response)
+		return client.getRest(ctx, api, method, params, response)
 	} else {
-		return client.getRPC(api, method, params, response)
+		return client.getRPC(ctx, api, method, params, response)
 	}
 }
 
@@ -343,7 +353,7 @@ var apis = map[string]string{
 	api_scores:    "ScoresAPING",
 }
 
-func (client *Client) getRPC(api string, method string, params any, response any) error {
+func (client *Client) getRPC(ctx context.Context, api string, method string, params any, response any) error {
 	query := JsonRPC{
 		JsonRPC: "2.0",
 		Method:  fmt.Sprintf("%v/v1.0/%v", apis[api], method),
@@ -356,8 +366,8 @@ func (client *Client) getRPC(api string, method string, params any, response any
 		return err
 	}
 
-	apiUrl := fmt.Sprintf("https://api.betfair.com/exchange/%v/json-rpc/v1/", api)
-	req, err := http.NewRequest("POST", apiUrl, bytes.NewBuffer(body))
+	apiUrl := fmt.Sprintf("%v/exchange/%v/json-rpc/v1/", client.Config.GetApiUrl(), api)
+	req, err := http.NewRequestWithContext(ctx, "POST", apiUrl, bytes.NewBuffer(body))
 	if err != nil {
 		return err
 	}
@@ -392,14 +402,14 @@ type JsonRestErrorResponse struct {
 	} `json:"detail"`
 }
 
-func (client *Client) getRest(api string, method string, params any, response any) error {
+func (client *Client) getRest(ctx context.Context, api string, method string, params any, response any) error {
 	body, err := json.Marshal(&params)
 	if err != nil {
 		return err
 	}
 
-	apiUrl := fmt.Sprintf("https://api.betfair.com/exchange/%v/rest/v1.0/%v/", api, method)
-	req, err := http.NewRequest("POST", apiUrl, bytes.NewBuffer(body))
+	apiUrl := fmt.Sprintf("%v/exchange/%v/rest/v1.0/%v/", client.Config.GetApiUrl(), api, method)
+	req, err := http.NewRequestWithContext(ctx, "POST", apiUrl, bytes.NewBuffer(body))
 	if err != nil {
 		return err
 	}

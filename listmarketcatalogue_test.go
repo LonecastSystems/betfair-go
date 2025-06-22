@@ -1,6 +1,9 @@
 package betfair
 
-import "testing"
+import (
+	"context"
+	"testing"
+)
 
 func TestMarketCatalogue(t *testing.T) {
 	c := NewTestClient(t)
@@ -9,7 +12,7 @@ func TestMarketCatalogue(t *testing.T) {
 		Filter:     MarketFilter{},
 		MaxResults: 10}
 
-	markets, err := c.ListMarketCatalogue(params)
+	markets, err := c.ListMarketCatalogue(context.Background(), params)
 	if err != nil {
 		t.Fatal(err)
 	}

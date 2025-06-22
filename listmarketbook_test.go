@@ -1,6 +1,9 @@
 package betfair
 
-import "testing"
+import (
+	"context"
+	"testing"
+)
 
 func TestMarketBook(t *testing.T) {
 	c := NewTestClient(t)
@@ -8,9 +11,9 @@ func TestMarketBook(t *testing.T) {
 	params := MarketBookParams{
 		MarketIDs: []string{GetRandomMarketID(t, c)},
 		PriceProjection: PriceProjection{
-			PriceData: []PriceData{"EX_ALL_OFFERS"}}}
+			PriceData: []PriceData{PD_EX_ALL_OFFERS}}}
 
-	marketBooks, err := c.ListMarketBook(params)
+	marketBooks, err := c.ListMarketBook(context.Background(), params)
 	if err != nil {
 		t.Fatal(err)
 	}

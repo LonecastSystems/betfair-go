@@ -334,3 +334,36 @@ const (
 	IRS_ERR_INVALID_CUSTOMER_ORDER_REF      InstructionReportErrorCode = "INVALID_CUSTOMER_ORDER_REF"
 	IRS_ERR_INVALID_MIN_FILL_SIZE           InstructionReportErrorCode = "BET_LAPSED_PRICE_IMPROVEMENT_TOO_LARGE"
 )
+
+type StatusMessageErrorCode string
+
+const (
+	SMEC_ERR_INVALID_INPUT                 StatusMessageErrorCode = "INVALID_INPUT"
+	SMEC_ERR_TIMEOUT                       StatusMessageErrorCode = "TIMEOUT"
+	SMEC_ERR_NO_APP_KEY                    StatusMessageErrorCode = "NO_APP_KEY"
+	SMEC_ERR_INVALID_APP_KEY               StatusMessageErrorCode = "INVALID_APP_KEY"
+	SMEC_ERR_NO_SESSION                    StatusMessageErrorCode = "NO_SESSION"
+	SMEC_ERR_INVALID_SESSION_INFORMATION   StatusMessageErrorCode = "INVALID_SESSION_INFORMATION"
+	SMEC_ERR_MAX_CONNECTION_LIMIT_EXCEEDED StatusMessageErrorCode = "MAX_CONNECTION_LIMIT_EXCEEDED"
+	SMEC_ERR_TOO_MANY_REQUESTS             StatusMessageErrorCode = "TOO_MANY_REQUESTS"
+	SMEC_ERR_SUBSCRIPTION_LIMIT_EXCEEDED   StatusMessageErrorCode = "SUBSCRIPTION_LIMIT_EXCEEDED"
+	SMEC_ERR_INVALID_CLOCK                 StatusMessageErrorCode = "INVALID_CLOCK"
+	SMEC_ERR_UNEXPECTED_ERROR              StatusMessageErrorCode = "UNEXPECTED_ERROR"
+	SMEC_ERR_CONNECTION_FAILED             StatusMessageErrorCode = "CONNECTION_FAILED"
+)
+
+type ChangeType string
+
+const (
+	CT_SUB_IMAGE   ChangeType = "SUB_IMAGE"
+	CT_RESUB_DELTA ChangeType = "RESUB_DELTA"
+	CT_HEARTBEAT   ChangeType = "HEARTBEAT"
+)
+
+type SegmentType string
+
+const (
+	ST_SEG_START SegmentType = "SEG_START"
+	ST_SEG       SegmentType = "SEG"
+	ST_SEG_END   SegmentType = "SEG_END"
+)

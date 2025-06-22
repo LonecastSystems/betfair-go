@@ -1,15 +1,18 @@
 package betfair
 
-import "testing"
+import (
+	"context"
+	"testing"
+)
 
 func TestListTimeRanges(t *testing.T) {
 	c := NewTestClient(t)
 
 	params := TimeRangesParams{Filter: MarketFilter{
 		EventTypeIDs: []string{"1"}},
-		Granularity: "DAYS"}
+		Granularity: TG_DAYS}
 
-	timeRanges, err := c.ListTimeRanges(params)
+	timeRanges, err := c.ListTimeRanges(context.Background(), params)
 	if err != nil {
 		t.Fatal(err)
 	}

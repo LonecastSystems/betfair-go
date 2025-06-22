@@ -5,6 +5,32 @@ import (
 	"time"
 )
 
+type MarketDataFilterField string
+
+const (
+	MDFF_EX_BEST_OFFERS_DISP MarketDataFilterField = "EX_BEST_OFFERS_DISP"
+	MDFF_EX_BEST_OFFERS      MarketDataFilterField = "EX_BEST_OFFERS"
+	MDFF_EX_ALL_OFFERS       MarketDataFilterField = "EX_ALL_OFFERS"
+	MDFF_EX_TRADED           MarketDataFilterField = "EX_TRADED"
+	MDFF_EX_TRADED_VOL       MarketDataFilterField = "EX_TRADED_VOL"
+	MDFF_EX_LTP              MarketDataFilterField = "EX_LTP"
+	MDFF_EX_MARKET_DEF       MarketDataFilterField = "EX_MARKET_DEF"
+	MDFF_SP_TRADED           MarketDataFilterField = "SP_TRADED"
+	MDFF_SP_PROJECTED        MarketDataFilterField = "SP_PROJECTED"
+)
+
+type RaceType string
+
+const (
+	RC_Harness RaceType = "Harness"
+	RC_Flat    RaceType = "Flat"
+	RC_Hurdle  RaceType = "Hurdle"
+	RC_Chase   RaceType = "Chase"
+	RC_Bumper  RaceType = "Bumper"
+	RC_NHFlat  RaceType = "NH Flat"
+	RC_Steeple RaceType = "Steeple"
+)
+
 type (
 	MarketSubscriptionMessage struct {
 		ID                  int                `json:"id"`
@@ -19,28 +45,28 @@ type (
 	}
 
 	StreamMarketFilter struct {
-		MarketIDs         []string `json:"marketIds,omitempty"`
-		BspMarket         bool     `json:"bspMarket,omitempty"`
-		BettingTypes      []string `json:"bettingTypes,omitempty"`
-		EventTypeIDs      []string `json:"eventTypeIds,omitempty"`
-		EventIDs          []string `json:"eventIds,omitempty"`
-		TurnInPlayEnabled bool     `json:"turnInPlayEnabled,omitempty"`
-		MarketTypes       []string `json:"marketTypes,omitempty"`
-		Venues            []string `json:"venues,omitempty"`
-		CountryCodes      []string `json:"countryCodes,omitempty"`
-		RaceTypes         []string `json:"raceTypes,omitempty"`
+		MarketIDs         []string   `json:"marketIds,omitempty"`
+		BspMarket         bool       `json:"bspMarket,omitempty"`
+		BettingTypes      []string   `json:"bettingTypes,omitempty"`
+		EventTypeIDs      []string   `json:"eventTypeIds,omitempty"`
+		EventIDs          []string   `json:"eventIds,omitempty"`
+		TurnInPlayEnabled bool       `json:"turnInPlayEnabled,omitempty"`
+		MarketTypes       []string   `json:"marketTypes,omitempty"`
+		Venues            []string   `json:"venues,omitempty"`
+		CountryCodes      []string   `json:"countryCodes,omitempty"`
+		RaceTypes         []RaceType `json:"raceTypes,omitempty"`
 	}
 
 	MarketDataFilter struct {
-		LadderLevels int      `json:"ladderLevels,omitempty"`
-		Fields       []string `json:"fields,omitempty"`
+		LadderLevels int                     `json:"ladderLevels,omitempty"`
+		Fields       []MarketDataFilterField `json:"fields,omitempty"`
 	}
 
 	MarketChangeMessage struct {
 		ID            int            `json:"id"`
 		Op            string         `json:"op"`
-		ChangeType    string         `json:"ct"`
-		SegmentType   string         `json:"segmentType"`
+		ChangeType    ChangeType     `json:"ct,omitempty"`
+		SegmentType   SegmentType    `json:"segmentType,omitempty"`
 		ConflateMs    int            `json:"conflateMs"`
 		Status        string         `json:"status"`
 		HeartbeatMs   int            `json:"heartbeatMs"`
@@ -60,7 +86,7 @@ type (
 	MarketDefinition struct {
 		MarketID              string                `json:"id"`                    // Market Id - the id of the market
 		Venue                 string                `json:"venue"`                 // The venue - applies to horse racing and greyhound markets only
-		RaceType              string                `json:"raceType"`              // Harness, Flat, Hurdle, Chase, Bumper, NH Flat, Steeple (AUS/NZ races), and NO_VALUE (when no valid race type has been mapped).
+		RaceType              RaceType              `json:"raceType"`              // Harness, Flat, Hurdle, Chase, Bumper, NH Flat, Steeple (AUS/NZ races), and NO_VALUE (when no valid race type has been mapped).
 		SettledTime           time.Time             `json:"settledTime"`           // Market settled time.
 		TimeZone              string                `json:"timeZone"`              // This is the timezone in which the event is taking place
 		EachWayDivisor        float64               `json:"eachWayDivisor"`        // The divisor is returned for the marketType EACH_WAY only and refers to the fraction of the win odds at which the place portion of an each way bet is settled

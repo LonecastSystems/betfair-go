@@ -1,6 +1,7 @@
 package betfair
 
 import (
+	"context"
 	"testing"
 )
 
@@ -10,7 +11,7 @@ func TestUpdateOrders(t *testing.T) {
 
 	params := UpdateOrdersParams{}
 
-	report, err := c.UpdateOrders(params)
+	report, err := c.UpdateOrders(context.Background(), params)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -1,5 +1,7 @@
 package betfair
 
+import "context"
+
 type BetTargetType string
 
 const (
@@ -62,8 +64,8 @@ type (
 	}
 )
 
-func (client *Client) PlaceOrders(params PlaceOrdersParams) (PlaceExecutionReport, error) {
+func (client *Client) PlaceOrders(ctx context.Context, params PlaceOrdersParams) (PlaceExecutionReport, error) {
 	json := PlaceExecutionReport{}
 
-	return json, client.GetSports("placeOrders", params, &json)
+	return json, client.GetSports(ctx, "placeOrders", params, &json)
 }
