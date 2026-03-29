@@ -71,7 +71,7 @@ func (client *StreamingClient) Authenticate(config *tls.Config, applicationKey, 
 	}
 
 	am := AuthenticationMessage{
-		ID:      int(rand.Uint32()),
+		ID:      int(rand.UintN(16)),
 		Op:      "authentication",
 		AppKey:  applicationKey,
 		Session: sessionToken,

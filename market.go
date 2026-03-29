@@ -146,7 +146,7 @@ func (client *StreamingClient) SubscribeToMarkets(marketFilter StreamMarketFilte
 	config := client.Config
 
 	ms := MarketSubscriptionMessage{
-		ID:                  int(rand.Uint32()),
+		ID:                  int(rand.UintN(16)),
 		Op:                  "marketSubscription",
 		MarketFilter:        marketFilter,
 		MarketDataFilter:    marketDataFilter,
