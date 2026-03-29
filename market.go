@@ -31,6 +31,14 @@ const (
 	RC_Steeple RaceType = "Steeple"
 )
 
+type BettingType string
+
+const (
+	BT_ODDS                       BettingType = "ODDS"
+	BT_ASIAN_HANDICAP_DOUBLE_LINE BettingType = "ASIAN_HANDICAP_DOUBLE_LINE"
+	BT_ASIAN_HANDICAP_SINGLE_LINE BettingType = "ASIAN_HANDICAP_SINGLE_LINE"
+)
+
 type (
 	MarketSubscriptionMessage struct {
 		ID                  int                `json:"id"`
@@ -45,16 +53,16 @@ type (
 	}
 
 	StreamMarketFilter struct {
-		MarketIDs         []string   `json:"marketIds,omitempty"`
-		BspMarket         bool       `json:"bspMarket,omitempty"`
-		BettingTypes      []string   `json:"bettingTypes,omitempty"`
-		EventTypeIDs      []string   `json:"eventTypeIds,omitempty"`
-		EventIDs          []string   `json:"eventIds,omitempty"`
-		TurnInPlayEnabled bool       `json:"turnInPlayEnabled,omitempty"`
-		MarketTypes       []string   `json:"marketTypes,omitempty"`
-		Venues            []string   `json:"venues,omitempty"`
-		CountryCodes      []string   `json:"countryCodes,omitempty"`
-		RaceTypes         []RaceType `json:"raceTypes,omitempty"`
+		MarketIDs         []string      `json:"marketIds,omitempty"`
+		BspMarket         bool          `json:"bspMarket,omitempty"`
+		BettingTypes      []BettingType `json:"bettingTypes,omitempty"`
+		EventTypeIDs      []string      `json:"eventTypeIds,omitempty"`
+		EventIDs          []string      `json:"eventIds,omitempty"`
+		TurnInPlayEnabled bool          `json:"turnInPlayEnabled,omitempty"`
+		MarketTypes       []string      `json:"marketTypes,omitempty"`
+		Venues            []string      `json:"venues,omitempty"`
+		CountryCodes      []string      `json:"countryCodes,omitempty"`
+		RaceTypes         []RaceType    `json:"raceTypes,omitempty"`
 	}
 
 	MarketDataFilter struct {

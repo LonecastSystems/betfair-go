@@ -23,17 +23,25 @@ const (
 type WinLose string
 
 const (
-	WL_RESULT_ERR            = "RESULT_ERR"
-	WL_RESULT_FIX            = "RESULT_FIX"
-	WL_RESULT_LOST           = "RESULT_LOST"
-	WL_RESULT_NOT_APPLICABLE = "RESULT_NOT_APPLICABLE"
-	WL_RESULT_WON            = "RESULT_WON"
-	WL_COMMISSION_REVERSAL   = "COMMISSION_REVERSAL"
+	WL_RESULT_ERR            WinLose = "RESULT_ERR"
+	WL_RESULT_FIX            WinLose = "RESULT_FIX"
+	WL_RESULT_LOST           WinLose = "RESULT_LOST"
+	WL_RESULT_NOT_APPLICABLE WinLose = "RESULT_NOT_APPLICABLE"
+	WL_RESULT_WON            WinLose = "RESULT_WON"
+	WL_COMMISSION_REVERSAL   WinLose = "COMMISSION_REVERSAL"
+)
+
+type MarketType string
+
+const (
+	MT_ASIAN_HANDICAP MarketType = "A"
+	MT_LINE_MARKET    MarketType = "L"
+	MT_ODDS_MARKET    MarketType = "O"
+	MT_RANGE_MARKET   MarketType = "R"
+	MT_NOT_APPLICABLE MarketType = "NOT_APPLICABLE"
 )
 
 type (
-	MarketType string
-
 	AccountStatementParams struct {
 		Locale        string      `json:"locale,omitempty"`
 		FromRecord    int         `json:"fromRecord,omitempty"`
