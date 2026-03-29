@@ -77,7 +77,7 @@ type (
 	}
 
 	MarketChange struct {
-		Image            bool             `json:"img"`                        // Replace existing prices/data with the data supplied (null if delta)
+		Image            bool             `json:"img,omitempty"`              // Replace existing prices/data with the data supplied (null if delta)
 		TotalVolume      float64          `json:"tv,omitempty"`               // Total amount matched across the market (null if unchanged)
 		MarketDefinition MarketDefinition `json:"marketDefinition,omitempty"` // Full Market Definition if changed
 		RunnerChanges    []RunnerChange   `json:"rc"`                         // List of Runner Changes
