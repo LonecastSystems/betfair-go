@@ -49,3 +49,14 @@ func GetTLSConfig(certFilePath string, keyFilePath string) (*tls.Config, error) 
 		Certificates: []tls.Certificate{clientTLSCert},
 	}, nil
 }
+
+func GetTLSConfigFromBytes(certBytes, keyBytes []byte) (*tls.Config, error) {
+	clientTLSCert, err := tls.X509KeyPair(certBytes, keyBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	return &tls.Config{
+		Certificates: []tls.Certificate{clientTLSCert},
+	}, nil
+}
