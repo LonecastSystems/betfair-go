@@ -134,24 +134,25 @@ func (client *Client) Do(req *http.Request) (*http.Response, error) {
 }
 
 func (client *Client) Login(ctx context.Context, username string, password string) (*SessionResponse, error) {
-	postUrl := url.URL{Path: "https://identitysso-cert.betfair.com/api/certlogin"}
-	q := postUrl.Query()
+	loginURL, err := url.Parse(client.Config.GetCertIdentityUrl() + "/api/certlogin")
+	if err != nil {
+		return nil, err
+	}
+	q := loginURL.Query()
 	q.Set("username", username)
 	q.Set("password", password)
+	loginURL.RawQuery = q.Encode()
+	req, err := http.NewRequestWithContext(ctx, "POST", loginURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
-	postUrl.RawQuery = q.Encode()
-
-	req, _ := http.NewRequestWithContext(ctx, "POST", postUrl.RequestURI(), nil)
-	req.SetBasicAuth(username, password)
-
-	clientConfig := client.Config
-
-	req.Header.Add("X-Application", clientConfig.ApplicationName)
+	req.Header.Add("X-Application", client.Config.ApplicationKey)
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	client.HttpClient = &http.Client{
 		Transport: &http.Transport{
-			TLSClientConfig: clientConfig.Tls,
+			TLSClientConfig: client.Config.Tls,
 		},
 	}
 
@@ -177,9 +178,10 @@ func (client *Client) Login(ctx context.Context, username string, password strin
 }
 
 func (client *Client) Logout(ctx context.Context) (*SessionStatusResponse, error) {
-	postUrl := url.URL{Path: client.Config.GetIdentityUrl() + "/api/logout"}
-
-	req, _ := http.NewRequestWithContext(ctx, "POST", postUrl.RequestURI(), nil)
+	req, err := http.NewRequestWithContext(ctx, "POST", client.Config.GetIdentityUrl()+"/api/logout", nil)
+	if err != nil {
+		return nil, err
+	}
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -209,8 +211,10 @@ func (client *Client) Resume(ctx context.Context, sessionToken string) (*Session
 }
 
 func (client *Client) KeepAlive(ctx context.Context) (*SessionStatusResponse, error) {
-	keepAliveUrl := url.URL{Path: client.Config.GetIdentityUrl() + "/api/keepAlive"}
-	req, _ := http.NewRequestWithContext(ctx, "POST", keepAliveUrl.RequestURI(), nil)
+	req, err := http.NewRequestWithContext(ctx, "POST", client.Config.GetIdentityUrl()+"/api/keepAlive", nil)
+	if err != nil {
+		return nil, err
+	}
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -235,13 +239,19 @@ func (client *Client) KeepAlive(ctx context.Context) (*SessionStatusResponse, er
 	return json, nil
 }
 
-func (config *ClientConfig) GetIdentityUrl() string {
-	jurisdiction := (config.Jurisdiction)
-	if jurisdiction == "" {
-		jurisdiction = JD_GLOBAL
+func (config *ClientConfig) jurisdiction() Jurisdiction {
+	if config.Jurisdiction == "" {
+		return JD_GLOBAL
 	}
+	return config.Jurisdiction
+}
 
-	return fmt.Sprintf("https://identitysso.betfair.%v", jurisdiction)
+func (config *ClientConfig) GetIdentityUrl() string {
+	return fmt.Sprintf("https://identitysso.betfair.%v", config.jurisdiction())
+}
+
+func (config *ClientConfig) GetCertIdentityUrl() string {
+	return fmt.Sprintf("https://identitysso-cert.betfair.%v", config.jurisdiction())
 }
 
 func (config *ClientConfig) GetApiUrl() string {
@@ -260,8 +270,7 @@ func (client *Client) GetStream(config *StreamingClientConfig) (*StreamingClient
 
 	sc := NewStreamingClient(config)
 
-	clientConfig := client.Config
-	return sc, sc.Authenticate(clientConfig.Tls, clientConfig.ApplicationKey, client.SessionToken)
+	return sc, sc.Authenticate(client.Config.Tls, client.Config.ApplicationKey, client.SessionToken)
 }
 
 const (
@@ -298,19 +307,19 @@ func (client *Client) get(ctx context.Context, api string, method string, params
 type JsonAPINGExceptionErrorCode string
 
 const (
-	EC_UNEXPECTED_ERROR            = "UNEXPECTED_ERROR"
-	EC_INVALID_INPUT_DATA          = "INVALID_INPUT_DATA"
-	EC_INVALID_SESSION_INFORMATION = "INVALID_SESSION_INFORMATION"
-	EC_INVALID_APP_KEY             = "INVALID_APP_KEY"
-	EC_SERVICE_BUSY                = "SERVICE_BUSY"
-	EC_TIMEOUT_ERROR               = "TIMEOUT_ERROR"
-	EC_NO_SESSION                  = "NO_SESSION"
-	EC_NO_APP_KEY                  = "NO_APP_KEY"
-	EC_TOO_MANY_REQUESTS           = "TOO_MANY_REQUESTS"
-	EC_SERVICE_UNAVAILABLE         = "SERVICE_UNAVAILABLE"
-	EC_REQUEST_SIZE_EXCEEDS_LIMIT  = "REQUEST_SIZE_EXCEEDS_LIMIT"
-	EC_TOO_MUCH_DATA               = "TOO_MUCH_DATA"
-	EC_ACCESS_DENIED               = "ACCESS_DENIED"
+	EC_UNEXPECTED_ERROR            JsonAPINGExceptionErrorCode = "UNEXPECTED_ERROR"
+	EC_INVALID_INPUT_DATA          JsonAPINGExceptionErrorCode = "INVALID_INPUT_DATA"
+	EC_INVALID_SESSION_INFORMATION JsonAPINGExceptionErrorCode = "INVALID_SESSION_INFORMATION"
+	EC_INVALID_APP_KEY             JsonAPINGExceptionErrorCode = "INVALID_APP_KEY"
+	EC_SERVICE_BUSY                JsonAPINGExceptionErrorCode = "SERVICE_BUSY"
+	EC_TIMEOUT_ERROR               JsonAPINGExceptionErrorCode = "TIMEOUT_ERROR"
+	EC_NO_SESSION                  JsonAPINGExceptionErrorCode = "NO_SESSION"
+	EC_NO_APP_KEY                  JsonAPINGExceptionErrorCode = "NO_APP_KEY"
+	EC_TOO_MANY_REQUESTS           JsonAPINGExceptionErrorCode = "TOO_MANY_REQUESTS"
+	EC_SERVICE_UNAVAILABLE         JsonAPINGExceptionErrorCode = "SERVICE_UNAVAILABLE"
+	EC_REQUEST_SIZE_EXCEEDS_LIMIT  JsonAPINGExceptionErrorCode = "REQUEST_SIZE_EXCEEDS_LIMIT"
+	EC_TOO_MUCH_DATA               JsonAPINGExceptionErrorCode = "TOO_MUCH_DATA"
+	EC_ACCESS_DENIED               JsonAPINGExceptionErrorCode = "ACCESS_DENIED"
 )
 
 type (

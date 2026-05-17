@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"math/rand/v2"
 )
@@ -123,6 +124,9 @@ func (client *StreamingClient) Write(request any, isRequest bool) error {
 
 	if status.ErrorCode != "" {
 		return errors.New(string(status.ErrorCode))
+	}
+	if status.StatusCode != "" && status.StatusCode != "SUCCESS" {
+		return fmt.Errorf("stream request failed: %s", status.StatusCode)
 	}
 
 	return nil
