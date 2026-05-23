@@ -16,24 +16,24 @@ type (
 		NewPrice float64 `json:"newPrice"`
 	}
 
-	ReplaceExecutionReport struct {
-		CustomerRef        string                     `json:"customerRef,omitempty"`
-		Status             ExecutionReportStatus      `json:"status"`
-		ErrorCode          ExecutionReportErrorCode   `json:"errorCode,omitempty"`
-		MarketID           string                     `json:"marketId,omitempty"`
-		InstructionReports []ReplaceInstructionReport `json:"instructionReports,omitempty"`
+	ReplaceOrdersReport struct {
+		CustomerRef        string                           `json:"customerRef,omitempty"`
+		Status             ExecutionReportStatus            `json:"status"`
+		ErrorCode          ExecutionReportErrorCode         `json:"errorCode,omitempty"`
+		MarketID           string                           `json:"marketId,omitempty"`
+		InstructionReports []ReplaceOrdersInstructionReport `json:"instructionReports,omitempty"`
 	}
 
-	ReplaceInstructionReport struct {
-		Status                  InstructionReportStatus    `json:"status"`
-		ErrorCode               InstructionReportErrorCode `json:"errorCode,omitempty"`
-		CancelInstructionReport CancelInstructionReport    `json:"cancelInstructionReport,omitempty"`
-		PlaceInstructionReport  PlaceInstructionReport     `json:"placeInstructionReport,omitempty"`
+	ReplaceOrdersInstructionReport struct {
+		Status                        InstructionReportStatus       `json:"status"`
+		ErrorCode                     InstructionReportErrorCode    `json:"errorCode,omitempty"`
+		CancelOrdersInstructionReport CancelOrdersInstructionReport `json:"cancelInstructionReport,omitempty"`
+		PlaceOrdersInstructionReport  PlaceOrdersInstructionReport  `json:"placeInstructionReport,omitempty"`
 	}
 )
 
-func (client *Client) ReplaceOrders(ctx context.Context, params ReplaceOrdersParams) (ReplaceExecutionReport, error) {
-	json := ReplaceExecutionReport{}
+func (client *Client) ReplaceOrders(ctx context.Context, params ReplaceOrdersParams) (ReplaceOrdersReport, error) {
+	json := ReplaceOrdersReport{}
 
 	return json, client.GetSports(ctx, "replaceOrders", params, &json)
 }

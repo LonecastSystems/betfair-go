@@ -6,7 +6,7 @@ import (
 )
 
 func TestGetDeveloperAppKeys(t *testing.T) {
-	c := NewTestClient(t)
+	c := newTestClient(t)
 
 	resp, err := c.GetDeveloperAppKeys(context.Background())
 	if err != nil {

@@ -2,7 +2,7 @@ package betfair
 
 import "context"
 
-type AccountDetailsResponse struct {
+type GetAccountDetailsResponse struct {
 	CurrencyCode  string  `json:"currencyCode"`
 	FirstName     string  `json:"firstName"`
 	LastName      string  `json:"lastName"`
@@ -14,8 +14,8 @@ type AccountDetailsResponse struct {
 	CountryCode   string  `json:"countryCode"`
 }
 
-func (client *Client) GetAccountDetails(ctx context.Context) (AccountDetailsResponse, error) {
-	json := AccountDetailsResponse{}
+func (client *Client) GetAccountDetails(ctx context.Context) (GetAccountDetailsResponse, error) {
+	json := GetAccountDetailsResponse{}
 
 	return json, client.GetAccounts(ctx, "getAccountDetails", nil, &json)
 }

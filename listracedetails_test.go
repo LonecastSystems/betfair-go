@@ -6,9 +6,9 @@ import (
 )
 
 func TestListRaceDetails(t *testing.T) {
-	c := NewTestClient(t)
+	c := newTestClient(t)
 
-	params := RaceDetailsParams{}
+	params := ListRaceDetailsParams{}
 
 	races, err := c.ListRaceDetails(context.Background(), params)
 	if err != nil {

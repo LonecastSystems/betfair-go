@@ -6,7 +6,7 @@ import (
 )
 
 func TestGetAccountDetails(t *testing.T) {
-	c := NewTestClient(t)
+	c := newTestClient(t)
 
 	resp, err := c.GetAccountDetails(context.Background())
 	if err != nil {

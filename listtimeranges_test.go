@@ -6,9 +6,9 @@ import (
 )
 
 func TestListTimeRanges(t *testing.T) {
-	c := NewTestClient(t)
+	c := newTestClient(t)
 
-	params := TimeRangesParams{Filter: MarketFilter{
+	params := ListTimeRangesParams{Filter: MarketFilter{
 		EventTypeIDs: []string{"1"}},
 		Granularity: TG_DAYS}
 

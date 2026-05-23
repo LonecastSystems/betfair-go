@@ -5,7 +5,7 @@ import (
 )
 
 func TestSubscribeToMarkets(t *testing.T) {
-	c := NewTestStreamingClient(t)
+	c := newTestStreamingClient(t)
 	config := c.Config
 	config.HeartbeatMs = 524
 

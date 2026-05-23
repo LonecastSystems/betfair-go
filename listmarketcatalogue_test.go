@@ -6,9 +6,9 @@ import (
 )
 
 func TestMarketCatalogue(t *testing.T) {
-	c := NewTestClient(t)
+	c := newTestClient(t)
 
-	params := MarketCatalogueParams{
+	params := ListMarketCatalogueParams{
 		Filter:     MarketFilter{},
 		MaxResults: 10}
 

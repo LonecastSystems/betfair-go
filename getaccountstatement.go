@@ -17,7 +17,24 @@ const (
 type ItemClass string
 
 const (
-	IC_UNKNOWN = "UNKNOWN"
+	IC_UNKNOWN                ItemClass = "UNKNOWN"
+	IC_DEPOSIT                ItemClass = "DEPOSIT"
+	IC_WITHDRAWAL             ItemClass = "WITHDRAWAL"
+	IC_COMMISSION             ItemClass = "COMMISSION"
+	IC_SETTLED_BET            ItemClass = "SETTLED_BET"
+	IC_VOIDED_BET             ItemClass = "VOIDED_BET"
+	IC_LAPSED_BET             ItemClass = "LAPSED_BET"
+	IC_CANCELLED_BET          ItemClass = "CANCELLED_BET"
+	IC_TRANSFER               ItemClass = "TRANSFER"
+	IC_TAX                    ItemClass = "TAX"
+	IC_DISCOUNT               ItemClass = "DISCOUNT"
+	IC_BONUS                  ItemClass = "BONUS"
+	IC_ADJUSTMENT             ItemClass = "ADJUSTMENT"
+	IC_ADMIN                  ItemClass = "ADMIN"
+	IC_DEPOSIT_FAIL           ItemClass = "DEPOSIT_FAIL"
+	IC_WITHDRAWAL_FAIL        ItemClass = "WITHDRAWAL_FAIL"
+	IC_TRANSFER_TO_EXCHANGE   ItemClass = "TRANSFER_TO_EXCHANGE"
+	IC_TRANSFER_FROM_EXCHANGE ItemClass = "TRANSFER_FROM_EXCHANGE"
 )
 
 type WinLose string
@@ -42,7 +59,7 @@ const (
 )
 
 type (
-	AccountStatementParams struct {
+	GetAccountStatementParams struct {
 		Locale        string      `json:"locale,omitempty"`
 		FromRecord    int         `json:"fromRecord,omitempty"`
 		RecordCount   int         `json:"recordCount,omitempty"`
@@ -51,12 +68,12 @@ type (
 		Wallet        Wallet      `json:"wallet,omitempty"`
 	}
 
-	AccountStatementReport struct {
-		AccountStatements []AccountStatement `json:"accountStatement"`
-		MoreAvailable     bool               `json:"moreAvailable"`
+	GetAccountStatementReport struct {
+		AccountStatements []GetAccountStatementResult `json:"accountStatement"`
+		MoreAvailable     bool                        `json:"moreAvailable"`
 	}
 
-	AccountStatement struct {
+	GetAccountStatementResult struct {
 		RefID         string              `json:"refId"`
 		ItemDate      time.Time           `json:"itemDate"`
 		Amount        float64             `json:"amount"`
@@ -90,8 +107,8 @@ type (
 	}
 )
 
-func (client *Client) GetAccountStatement(ctx context.Context, params AccountStatementParams) (AccountStatementReport, error) {
-	json := AccountStatementReport{}
+func (client *Client) GetAccountStatement(ctx context.Context, params GetAccountStatementParams) (GetAccountStatementReport, error) {
+	json := GetAccountStatementReport{}
 
 	return json, client.GetAccounts(ctx, "getAccountStatement", params, &json)
 }

@@ -35,7 +35,7 @@ const (
 )
 
 type (
-	MarketBookParams struct {
+	ListMarketBookParams struct {
 		MarketIDs                     []string        `json:"marketIds"`
 		PriceProjection               PriceProjection `json:"priceProjection,omitempty"`
 		OrderProjection               OrderProjection `json:"orderProjection,omitempty"`
@@ -50,8 +50,10 @@ type (
 	}
 )
 
-func (client *Client) ListMarketBook(ctx context.Context, params MarketBookParams) ([]MarketBook, error) {
-	json := []MarketBook{}
+type ListMarketBookResult = MarketBook
+
+func (client *Client) ListMarketBook(ctx context.Context, params ListMarketBookParams) ([]ListMarketBookResult, error) {
+	json := []ListMarketBookResult{}
 
 	return json, client.GetSports(ctx, "listMarketBook", params, &json)
 }

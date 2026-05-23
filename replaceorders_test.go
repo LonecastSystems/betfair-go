@@ -7,7 +7,9 @@ import (
 
 // Use with caution
 func TestReplaceOrders(t *testing.T) {
-	c := NewTestClient(t)
+	t.Skip("This may place orders, use with caution")
+
+	c := newTestClient(t)
 
 	params := ReplaceOrdersParams{}
 

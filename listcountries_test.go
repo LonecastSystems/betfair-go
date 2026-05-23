@@ -6,9 +6,9 @@ import (
 )
 
 func TestListCountries(t *testing.T) {
-	c := NewTestClient(t)
+	c := newTestClient(t)
 
-	params := CountryParams{Filter: MarketFilter{
+	params := ListCountriesParams{Filter: MarketFilter{
 		MarketCountries: []string{"GB"},
 	}}
 

@@ -6,9 +6,9 @@ import (
 )
 
 func TestEventTypes(t *testing.T) {
-	c := NewTestClient(t)
+	c := newTestClient(t)
 
-	params := EventTypeParams{Filter: MarketFilter{
+	params := ListEventTypesParams{Filter: MarketFilter{
 		MarketTypeCodes: []string{"OVER_UNDER_25"},
 	}}
 

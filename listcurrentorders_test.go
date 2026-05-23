@@ -6,10 +6,10 @@ import (
 )
 
 func TestListCurrentOrders(t *testing.T) {
-	c := NewTestClient(t)
+	c := newTestClient(t)
 
-	params := CurrentOrdersParams{
-		MarketIDs:   []string{GetRandomMarketID(t, c)},
+	params := ListCurrentOrdersParams{
+		MarketIDs:   []string{getRandomMarketID(t, c)},
 		FromRecord:  0,
 		RecordCount: 1}
 

@@ -3,7 +3,7 @@ package betfair
 import "context"
 
 type (
-	MarketProfitAndLossParams struct {
+	ListMarketProfitAndLossParams struct {
 		MarketIDs          []string `json:"marketIds,omitempty"`
 		IncludeSettledBets bool     `json:"includeSettledBets,omitempty"`
 		IncludeBspBets     bool     `json:"includeBspBets,omitempty"`
@@ -24,8 +24,10 @@ type (
 	}
 )
 
-func (client *Client) ListMarketProfitAndLoss(ctx context.Context, params MarketProfitAndLossParams) ([]MarketProfitAndLoss, error) {
-	json := []MarketProfitAndLoss{}
+type ListMarketProfitAndLossResult = MarketProfitAndLoss
+
+func (client *Client) ListMarketProfitAndLoss(ctx context.Context, params ListMarketProfitAndLossParams) ([]ListMarketProfitAndLossResult, error) {
+	json := []ListMarketProfitAndLossResult{}
 
 	return json, client.GetSports(ctx, "listMarketProfitAndLoss", params, &json)
 }

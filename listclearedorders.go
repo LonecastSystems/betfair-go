@@ -25,12 +25,12 @@ const (
 )
 
 type (
-	ClearedOrdersParams struct {
+	ListClearedOrdersParams struct {
 		BetStatus              BetStatus `json:"betStatus"`
 		EventTypeIDs           []string  `json:"eventTypeIds,omitempty"`
 		EventIDs               []string  `json:"eventIds,omitempty"`
 		MarketIDs              []string  `json:"marketIds,omitempty"`
-		RunnerIDs              []string  `json:"runnerIds,omitempty"`
+		RunnerIDs              []int64   `json:"runnerIds,omitempty"`
 		BetIDs                 []string  `json:"betIds,omitempty"`
 		CustomerOrderRefs      []string  `json:"customerOrderRefs,omitempty"`
 		CustomerStrategyRefs   []string  `json:"customerStrategyRefs,omitempty"`
@@ -44,9 +44,9 @@ type (
 		IncludeSourceID        bool      `json:"includeSourceId,omitempty"`
 	}
 
-	ClearedOrderSummaryReport struct {
-		ClearedOrders []ClearedOrderSummary `json:"clearedOrders"`
-		MoreAvailable bool                  `json:"moreAvailable"`
+	ListClearedOrdersReport struct {
+		ClearedOrders []ListClearedOrdersResult `json:"clearedOrders"`
+		MoreAvailable bool                      `json:"moreAvailable"`
 	}
 
 	ItemDescription struct {
@@ -60,7 +60,7 @@ type (
 		EachWayDivisor  float64   `json:"eachWayDivisor,omitempty"`
 	}
 
-	ClearedOrderSummary struct {
+	ListClearedOrdersResult struct {
 		EventTypeID         string          `json:"eventTypeId,omitempty"`
 		EventID             string          `json:"eventId,omitempty"`
 		MarketID            string          `json:"marketId,omitempty"`
@@ -89,8 +89,8 @@ type (
 	}
 )
 
-func (client *Client) ListClearedOrders(ctx context.Context, params ClearedOrdersParams) (ClearedOrderSummaryReport, error) {
-	json := ClearedOrderSummaryReport{}
+func (client *Client) ListClearedOrders(ctx context.Context, params ListClearedOrdersParams) (ListClearedOrdersReport, error) {
+	json := ListClearedOrdersReport{}
 
 	return json, client.GetSports(ctx, "listClearedOrders", params, &json)
 }

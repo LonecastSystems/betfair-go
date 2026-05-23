@@ -18,7 +18,7 @@ type (
 	}
 
 	OrderFilter struct {
-		AccountIDs                    bool     `json:"accountIds,omitempty"`
+		AccountIDs                    []int64  `json:"accountIds,omitempty"` // Internal-only, do not set this
 		IncludeOverallPosition        bool     `json:"includeOverallPosition,omitempty"`
 		CustomerStrategyRefs          []string `json:"customerStrategyRefs,omitempty"`
 		PartitionMatchedByStrategyRef bool     `json:"partitionMatchedByStrategyRef,omitempty"`

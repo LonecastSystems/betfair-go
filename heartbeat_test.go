@@ -6,7 +6,7 @@ import (
 )
 
 func TestHeartbeat(t *testing.T) {
-	c := NewTestClient(t)
+	c := newTestClient(t)
 
 	params := HeartbeatParams{PreferredTimeoutSeconds: 10}
 

@@ -13,6 +13,13 @@ const (
 	MBT_FIXED_ODDS                 MarketBettingType = "FIXED_ODDS"
 )
 
+type BetDelayModel string
+
+const (
+	BDM_PASSIVE BetDelayModel = "PASSIVE"
+	BDM_DYNAMIC BetDelayModel = "DYNAMIC"
+)
+
 type (
 	MarketFilter struct {
 		TextQuery          string              `json:"textQuery,omitempty"`
@@ -26,10 +33,11 @@ type (
 		InPlayOnly         bool                `json:"inPlayOnly,omitempty"`
 		MarketBettingTypes []MarketBettingType `json:"marketBettingTypes,omitempty"`
 		MarketTypeCodes    []string            `json:"marketTypeCodes,omitempty"`
-		MarketCountries    []string            `json:"marketCountries"`
+		MarketCountries    []string            `json:"marketCountries,omitempty"`
 		MarketStartTime    TimeRange           `json:"marketStartTime,omitempty"`
 		WithOrders         []OrderStatus       `json:"withOrders,omitempty"`
-		RaceTypes          []string            `json:"raceTypes,omitempty"`
+		RaceTypes          []RaceType          `json:"raceTypes,omitempty"`
+		BetDelayModels     []BetDelayModel     `json:"betDelayModels,omitempty"`
 	}
 
 	TimeRange struct {
@@ -41,7 +49,10 @@ type (
 type Wallet string
 
 const (
-	W_UK = "UK"
+	W_UK        Wallet = "UK"
+	W_AUSTRALIA Wallet = "AUSTRALIA"
+	W_SPAIN     Wallet = "SPAIN"
+	W_ITALY     Wallet = "ITALY"
 )
 
 type MatchProjection string
@@ -92,6 +103,7 @@ type (
 		MarketID              string             `json:"marketId"`
 		IsMarketDataDelayed   bool               `json:"isMarketDataDelayed"`
 		Status                MarketStatus       `json:"status,omitempty"`
+		SuspendReason         string             `json:"suspendReason,omitempty"`
 		BetDelay              int                `json:"betDelay,omitempty"`
 		BspReconciled         bool               `json:"bspReconciled,omitempty"`
 		Complete              bool               `json:"complete,omitempty"`
@@ -107,6 +119,7 @@ type (
 		Version               int64              `json:"version,omitempty"`
 		Runners               []Runner           `json:"runners,omitempty"`
 		KeyLineDescription    KeyLineDescription `json:"keyLineDescription,omitempty"`
+		BetDelayModels        []BetDelayModel    `json:"betDelayModels,omitempty"`
 	}
 
 	Runner struct {
@@ -208,22 +221,22 @@ type (
 )
 
 type (
-	CancelInstructionReport struct {
+	CancelOrdersInstructionReport struct {
 		Status        InstructionReportStatus    `json:"status"`
 		ErrorCode     InstructionReportErrorCode `json:"errorCode,omitempty"`
 		Instruction   CancelInstruction          `json:"instruction,omitempty"`
 		SizeCancelled float64                    `json:"sizeCancelled"`
-		CanceledDate  time.Time                  `json:"canceledDate,omitempty"`
+		CancelledDate time.Time                  `json:"cancelledDate,omitempty"`
 	}
 
-	PlaceInstructionReport struct {
+	PlaceOrdersInstructionReport struct {
 		Status              InstructionReportStatus    `json:"status"`
 		ErrorCode           InstructionReportErrorCode `json:"errorCode,omitempty"`
 		OrderStatus         OrderStatus                `json:"orderStatus,omitempty"`
 		Instruction         PlaceInstruction           `json:"instruction"`
 		BetID               string                     `json:"betId,omitempty"`
 		PlacedDate          time.Time                  `json:"placedDate,omitempty"`
-		AveragePriceMatched float64                    `json:"avgPrice,omitempty"`
+		AveragePriceMatched float64                    `json:"averagePriceMatched,omitempty"`
 		SizeMatched         float64                    `json:"sizeMatched,omitempty"`
 	}
 )
@@ -264,28 +277,28 @@ const (
 type ExecutionReportErrorCode string
 
 const (
-	ERS_ERR_ERROR_IN_MATCHER                    ExecutionReportErrorCode = "ERROR_IN_MATCHER"
-	ERS_ERR_PROCESSED_WITH_ERRORS               ExecutionReportErrorCode = "PROCESSED_WITH_ERRORS"
-	ERS_ERR_BET_ACTION_ERROR                    ExecutionReportErrorCode = "BET_ACTION_ERROR"
-	ERS_ERR_INVALID_ACCOUNT_STATE               ExecutionReportErrorCode = "INVALID_ACCOUNT_STATE"
-	ERS_ERR_INVALID_WALLET_STATUS               ExecutionReportErrorCode = "INVALID_WALLET_STATUS"
-	ERS_ERR_INSUFFICIENT_FUNDS                  ExecutionReportErrorCode = "INSUFFICIENT_FUNDS"
-	ERS_ERR_LOSS_LIMIT_EXCEEDED                 ExecutionReportErrorCode = "LOSS_LIMIT_EXCEEDED"
-	ERS_ERR_MARKET_SUSPENDED                    ExecutionReportErrorCode = "MARKET_SUSPENDED"
-	ERS_ERR_EXE_ERR_MARKET_NOT_OPEN_FOR_BETTING ExecutionReportErrorCode = "MARKET_NOT_OPEN_FOR_BETTING"
-	ERS_ERR_DUPLICATE_TRANSACTION               ExecutionReportErrorCode = "DUPLICATE_TRANSACTION"
-	ERS_ERR_INVALID_ORDER                       ExecutionReportErrorCode = "INVALID_ORDER"
-	ERS_ERR_INVALID_MARKET_ID                   ExecutionReportErrorCode = "INVALID_MARKET_ID"
-	ERS_ERR_PERMISSION_DENIED                   ExecutionReportErrorCode = "PERMISSION_DENIED"
-	ERS_ERR_DUPLICATE_BETIDS                    ExecutionReportErrorCode = "DUPLICATE_BETIDS"
-	ERS_ERR_NO_ACTION_REQUIRED                  ExecutionReportErrorCode = "NO_ACTION_REQUIRED"
-	ERS_ERR_SERVICE_UNAVAILABLE                 ExecutionReportErrorCode = "SERVICE_UNAVAILABLE"
-	ERS_ERR_REJECTED_BY_REGULATOR               ExecutionReportErrorCode = "REJECTED_BY_REGULATOR"
-	ERS_ERR_NO_CHASING                          ExecutionReportErrorCode = "NO_CHASING"
-	ERS_ERR_REGULATOR_IS_NOT_AVAILABLE          ExecutionReportErrorCode = "REGULATOR_IS_NOT_AVAILABLE"
-	ERS_ERR_TOO_MANY_INSTRUCTIONS               ExecutionReportErrorCode = "TOO_MANY_INSTRUCTIONS"
-	ERS_ERR_INVALID_MARKET_VERSION              ExecutionReportErrorCode = "INVALID_MARKET_VERSION"
-	ERS_ERR_INVALID_PROFIT_RATIO                ExecutionReportErrorCode = "INVALID_PROFIT_RATIO"
+	ERS_ERR_ERROR_IN_MATCHER            ExecutionReportErrorCode = "ERROR_IN_MATCHER"
+	ERS_ERR_PROCESSED_WITH_ERRORS       ExecutionReportErrorCode = "PROCESSED_WITH_ERRORS"
+	ERS_ERR_BET_ACTION_ERROR            ExecutionReportErrorCode = "BET_ACTION_ERROR"
+	ERS_ERR_INVALID_ACCOUNT_STATE       ExecutionReportErrorCode = "INVALID_ACCOUNT_STATE"
+	ERS_ERR_INVALID_WALLET_STATUS       ExecutionReportErrorCode = "INVALID_WALLET_STATUS"
+	ERS_ERR_INSUFFICIENT_FUNDS          ExecutionReportErrorCode = "INSUFFICIENT_FUNDS"
+	ERS_ERR_LOSS_LIMIT_EXCEEDED         ExecutionReportErrorCode = "LOSS_LIMIT_EXCEEDED"
+	ERS_ERR_MARKET_SUSPENDED            ExecutionReportErrorCode = "MARKET_SUSPENDED"
+	ERS_ERR_MARKET_NOT_OPEN_FOR_BETTING ExecutionReportErrorCode = "MARKET_NOT_OPEN_FOR_BETTING"
+	ERS_ERR_DUPLICATE_TRANSACTION       ExecutionReportErrorCode = "DUPLICATE_TRANSACTION"
+	ERS_ERR_INVALID_ORDER               ExecutionReportErrorCode = "INVALID_ORDER"
+	ERS_ERR_INVALID_MARKET_ID           ExecutionReportErrorCode = "INVALID_MARKET_ID"
+	ERS_ERR_PERMISSION_DENIED           ExecutionReportErrorCode = "PERMISSION_DENIED"
+	ERS_ERR_DUPLICATE_BETIDS            ExecutionReportErrorCode = "DUPLICATE_BETIDS"
+	ERS_ERR_NO_ACTION_REQUIRED          ExecutionReportErrorCode = "NO_ACTION_REQUIRED"
+	ERS_ERR_SERVICE_UNAVAILABLE         ExecutionReportErrorCode = "SERVICE_UNAVAILABLE"
+	ERS_ERR_REJECTED_BY_REGULATOR       ExecutionReportErrorCode = "REJECTED_BY_REGULATOR"
+	ERS_ERR_NO_CHASING                  ExecutionReportErrorCode = "NO_CHASING"
+	ERS_ERR_REGULATOR_IS_NOT_AVAILABLE  ExecutionReportErrorCode = "REGULATOR_IS_NOT_AVAILABLE"
+	ERS_ERR_TOO_MANY_INSTRUCTIONS       ExecutionReportErrorCode = "TOO_MANY_INSTRUCTIONS"
+	ERS_ERR_INVALID_MARKET_VERSION      ExecutionReportErrorCode = "INVALID_MARKET_VERSION"
+	ERS_ERR_INVALID_PROFIT_RATIO        ExecutionReportErrorCode = "INVALID_PROFIT_RATIO"
 )
 
 type PersistenceType string
@@ -307,49 +320,33 @@ const (
 type InstructionReportErrorCode string
 
 const (
-	IRS_ERR_INVALID_BET_SIZE                InstructionReportErrorCode = "INVALID_BET_SIZE"
-	IRS_ERR_INVALID_RUNNER                  InstructionReportErrorCode = "INVALID_RUNNER"
-	IRS_ERR_BET_TAKEN_OR_LAPSED             InstructionReportErrorCode = "BET_TAKEN_OR_LAPSED"
-	IRS_ERR_BET_IN_PROGRESS                 InstructionReportErrorCode = "BET_IN_PROGRESS"
-	IRS_ERR_RUNNER_REMOVED                  InstructionReportErrorCode = "RUNNER_REMOVED"
-	IRS_ERR_MARKET_NOT_OPEN_FOR_BETTING     InstructionReportErrorCode = "MARKET_NOT_OPEN_FOR_BETTING"
-	IRS_ERR_LOSS_LIMIT_EXCEEDED             InstructionReportErrorCode = "LOSS_LIMIT_EXCEEDED"
-	IRS_ERR_MARKET_NOT_OPEN_FOR_BSP_BETTING InstructionReportErrorCode = "MARKET_NOT_OPEN_FOR_BSP_BETTING"
-	IRS_ERR_INVALID_PRICE_EDIT              InstructionReportErrorCode = "INVALID_PRICE_EDIT"
-	IRS_ERR_INVALID_ODDS                    InstructionReportErrorCode = "INVALID_ODDS"
-	IRS_ERR_INSUFFICIENT_FUNDS              InstructionReportErrorCode = "INSUFFICIENT_FUNDS"
-	IRS_ERR_INVALID_PERSISTENCE_TYPE        InstructionReportErrorCode = "INVALID_PERSISTENCE_TYPE"
-	IRS_ERR_ERROR_IN_MATCHER                InstructionReportErrorCode = "ERROR_IN_MATCHER"
-	IRS_ERR_INVALID_BACK_LAY_COMBINATION    InstructionReportErrorCode = "INVALID_BACK_LAY_COMBINATION"
-	IRS_ERR_ERROR_IN_ORDER                  InstructionReportErrorCode = "ERROR_IN_ORDER"
-	IRS_ERR_INVALID_BID_TYPE                InstructionReportErrorCode = "INVALID_BID_TYPE"
-	IRS_ERR_INVALID_BET_ID                  InstructionReportErrorCode = "INVALID_BET_ID"
-	IRS_ERR_CANCELLED_NOT_PLACED            InstructionReportErrorCode = "CANCELLED_NOT_PLACED"
-	IRS_ERR_RELATED_ACTION_FAILED           InstructionReportErrorCode = "RELATED_ACTION_FAILED"
-	IRS_ERR_NO_ACTION_REQUIRED              InstructionReportErrorCode = "NO_ACTION_REQUIRED"
-	IRS_ERR_TIME_IN_FORCE_CONFLICT          InstructionReportErrorCode = "TIME_IN_FORCE_CONFLICT"
-	IRS_ERR_UNEXPECTED_PERSISTENCE_TYPE     InstructionReportErrorCode = "UNEXPECTED_PERSISTENCE_TYPE"
-	IRS_ERR_INVALID_ORDER_TYPE              InstructionReportErrorCode = "INVALID_ORDER_TYPE"
-	IRS_ERR_UNEXPECTED_MIN_FILL_SIZE        InstructionReportErrorCode = "UNEXPECTED_MIN_FILL_SIZE"
-	IRS_ERR_INVALID_CUSTOMER_ORDER_REF      InstructionReportErrorCode = "INVALID_CUSTOMER_ORDER_REF"
-	IRS_ERR_INVALID_MIN_FILL_SIZE           InstructionReportErrorCode = "BET_LAPSED_PRICE_IMPROVEMENT_TOO_LARGE"
-)
-
-type StatusMessageErrorCode string
-
-const (
-	SMEC_ERR_INVALID_INPUT                 StatusMessageErrorCode = "INVALID_INPUT"
-	SMEC_ERR_TIMEOUT                       StatusMessageErrorCode = "TIMEOUT"
-	SMEC_ERR_NO_APP_KEY                    StatusMessageErrorCode = "NO_APP_KEY"
-	SMEC_ERR_INVALID_APP_KEY               StatusMessageErrorCode = "INVALID_APP_KEY"
-	SMEC_ERR_NO_SESSION                    StatusMessageErrorCode = "NO_SESSION"
-	SMEC_ERR_INVALID_SESSION_INFORMATION   StatusMessageErrorCode = "INVALID_SESSION_INFORMATION"
-	SMEC_ERR_MAX_CONNECTION_LIMIT_EXCEEDED StatusMessageErrorCode = "MAX_CONNECTION_LIMIT_EXCEEDED"
-	SMEC_ERR_TOO_MANY_REQUESTS             StatusMessageErrorCode = "TOO_MANY_REQUESTS"
-	SMEC_ERR_SUBSCRIPTION_LIMIT_EXCEEDED   StatusMessageErrorCode = "SUBSCRIPTION_LIMIT_EXCEEDED"
-	SMEC_ERR_INVALID_CLOCK                 StatusMessageErrorCode = "INVALID_CLOCK"
-	SMEC_ERR_UNEXPECTED_ERROR              StatusMessageErrorCode = "UNEXPECTED_ERROR"
-	SMEC_ERR_CONNECTION_FAILED             StatusMessageErrorCode = "CONNECTION_FAILED"
+	IRS_ERR_INVALID_BET_SIZE                       InstructionReportErrorCode = "INVALID_BET_SIZE"
+	IRS_ERR_INVALID_RUNNER                         InstructionReportErrorCode = "INVALID_RUNNER"
+	IRS_ERR_BET_TAKEN_OR_LAPSED                    InstructionReportErrorCode = "BET_TAKEN_OR_LAPSED"
+	IRS_ERR_BET_IN_PROGRESS                        InstructionReportErrorCode = "BET_IN_PROGRESS"
+	IRS_ERR_RUNNER_REMOVED                         InstructionReportErrorCode = "RUNNER_REMOVED"
+	IRS_ERR_MARKET_NOT_OPEN_FOR_BETTING            InstructionReportErrorCode = "MARKET_NOT_OPEN_FOR_BETTING"
+	IRS_ERR_LOSS_LIMIT_EXCEEDED                    InstructionReportErrorCode = "LOSS_LIMIT_EXCEEDED"
+	IRS_ERR_MARKET_NOT_OPEN_FOR_BSP_BETTING        InstructionReportErrorCode = "MARKET_NOT_OPEN_FOR_BSP_BETTING"
+	IRS_ERR_INVALID_PRICE_EDIT                     InstructionReportErrorCode = "INVALID_PRICE_EDIT"
+	IRS_ERR_INVALID_ODDS                           InstructionReportErrorCode = "INVALID_ODDS"
+	IRS_ERR_INSUFFICIENT_FUNDS                     InstructionReportErrorCode = "INSUFFICIENT_FUNDS"
+	IRS_ERR_INVALID_PERSISTENCE_TYPE               InstructionReportErrorCode = "INVALID_PERSISTENCE_TYPE"
+	IRS_ERR_ERROR_IN_MATCHER                       InstructionReportErrorCode = "ERROR_IN_MATCHER"
+	IRS_ERR_INVALID_BACK_LAY_COMBINATION           InstructionReportErrorCode = "INVALID_BACK_LAY_COMBINATION"
+	IRS_ERR_ERROR_IN_ORDER                         InstructionReportErrorCode = "ERROR_IN_ORDER"
+	IRS_ERR_INVALID_BID_TYPE                       InstructionReportErrorCode = "INVALID_BID_TYPE"
+	IRS_ERR_INVALID_BET_ID                         InstructionReportErrorCode = "INVALID_BET_ID"
+	IRS_ERR_CANCELLED_NOT_PLACED                   InstructionReportErrorCode = "CANCELLED_NOT_PLACED"
+	IRS_ERR_RELATED_ACTION_FAILED                  InstructionReportErrorCode = "RELATED_ACTION_FAILED"
+	IRS_ERR_NO_ACTION_REQUIRED                     InstructionReportErrorCode = "NO_ACTION_REQUIRED"
+	IRS_ERR_TIME_IN_FORCE_CONFLICT                 InstructionReportErrorCode = "TIME_IN_FORCE_CONFLICT"
+	IRS_ERR_UNEXPECTED_PERSISTENCE_TYPE            InstructionReportErrorCode = "UNEXPECTED_PERSISTENCE_TYPE"
+	IRS_ERR_INVALID_ORDER_TYPE                     InstructionReportErrorCode = "INVALID_ORDER_TYPE"
+	IRS_ERR_UNEXPECTED_MIN_FILL_SIZE               InstructionReportErrorCode = "UNEXPECTED_MIN_FILL_SIZE"
+	IRS_ERR_INVALID_CUSTOMER_ORDER_REF             InstructionReportErrorCode = "INVALID_CUSTOMER_ORDER_REF"
+	IRS_ERR_INVALID_MIN_FILL_SIZE                  InstructionReportErrorCode = "INVALID_MIN_FILL_SIZE"
+	IRS_ERR_BET_LAPSED_PRICE_IMPROVEMENT_TOO_LARGE InstructionReportErrorCode = "BET_LAPSED_PRICE_IMPROVEMENT_TOO_LARGE"
 )
 
 type ChangeType string

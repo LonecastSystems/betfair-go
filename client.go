@@ -103,7 +103,7 @@ type (
 		SessionToken string
 	}
 
-	SessionResponse struct {
+	LoginResponse struct {
 		SessionToken string      `json:"sessionToken"`
 		LoginStatus  LoginStatus `json:"loginStatus"`
 	}
@@ -114,6 +114,10 @@ type (
 		Status  SessionStatus      `json:"status"`
 		Error   SessionStatusError `json:"error"`
 	}
+
+	LogoutResponse    = SessionStatusResponse
+	KeepAliveResponse = SessionStatusResponse
+	ResumeResponse    = SessionStatusResponse
 )
 
 func NewClient(config *ClientConfig) *Client {
@@ -133,7 +137,7 @@ func (client *Client) Do(req *http.Request) (*http.Response, error) {
 	return client.HttpClient.Do(req)
 }
 
-func (client *Client) Login(ctx context.Context, username string, password string) (*SessionResponse, error) {
+func (client *Client) Login(ctx context.Context, username string, password string) (*LoginResponse, error) {
 	loginURL, err := url.Parse(client.Config.GetCertIdentityUrl() + "/api/certlogin")
 	if err != nil {
 		return nil, err
@@ -162,7 +166,7 @@ func (client *Client) Login(ctx context.Context, username string, password strin
 		return nil, err
 	}
 
-	json := &SessionResponse{}
+	json := &LoginResponse{}
 	if err := ReadJson(resp, &json); err != nil {
 		client.HttpClient = nil
 		return json, err
@@ -177,7 +181,7 @@ func (client *Client) Login(ctx context.Context, username string, password strin
 	return json, nil
 }
 
-func (client *Client) Logout(ctx context.Context) (*SessionStatusResponse, error) {
+func (client *Client) Logout(ctx context.Context) (*LogoutResponse, error) {
 	req, err := http.NewRequestWithContext(ctx, "POST", client.Config.GetIdentityUrl()+"/api/logout", nil)
 	if err != nil {
 		return nil, err
@@ -203,14 +207,14 @@ func (client *Client) Logout(ctx context.Context) (*SessionStatusResponse, error
 	return json, nil
 }
 
-func (client *Client) Resume(ctx context.Context, sessionToken string) (*SessionStatusResponse, error) {
+func (client *Client) Resume(ctx context.Context, sessionToken string) (*ResumeResponse, error) {
 	client.HttpClient = &http.Client{}
 	client.SessionToken = sessionToken
 
 	return client.KeepAlive(ctx)
 }
 
-func (client *Client) KeepAlive(ctx context.Context) (*SessionStatusResponse, error) {
+func (client *Client) KeepAlive(ctx context.Context) (*KeepAliveResponse, error) {
 	req, err := http.NewRequestWithContext(ctx, "POST", client.Config.GetIdentityUrl()+"/api/keepAlive", nil)
 	if err != nil {
 		return nil, err

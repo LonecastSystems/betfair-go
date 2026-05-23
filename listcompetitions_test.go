@@ -6,9 +6,9 @@ import (
 )
 
 func TestListCompetitions(t *testing.T) {
-	c := NewTestClient(t)
+	c := newTestClient(t)
 
-	params := CompetitionParams{Filter: MarketFilter{
+	params := ListCompetitionsParams{Filter: MarketFilter{
 		CompetitionIDs:  []string{"10932509"},
 		EventTypeIDs:    []string{"1"},
 		MarketCountries: []string{"GB"},

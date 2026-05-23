@@ -9,6 +9,23 @@ import (
 	"math/rand/v2"
 )
 
+type StatusMessageErrorCode string
+
+const (
+	SMEC_ERR_INVALID_INPUT                 StatusMessageErrorCode = "INVALID_INPUT"
+	SMEC_ERR_TIMEOUT                       StatusMessageErrorCode = "TIMEOUT"
+	SMEC_ERR_NO_APP_KEY                    StatusMessageErrorCode = "NO_APP_KEY"
+	SMEC_ERR_INVALID_APP_KEY               StatusMessageErrorCode = "INVALID_APP_KEY"
+	SMEC_ERR_NO_SESSION                    StatusMessageErrorCode = "NO_SESSION"
+	SMEC_ERR_INVALID_SESSION_INFORMATION   StatusMessageErrorCode = "INVALID_SESSION_INFORMATION"
+	SMEC_ERR_MAX_CONNECTION_LIMIT_EXCEEDED StatusMessageErrorCode = "MAX_CONNECTION_LIMIT_EXCEEDED"
+	SMEC_ERR_TOO_MANY_REQUESTS             StatusMessageErrorCode = "TOO_MANY_REQUESTS"
+	SMEC_ERR_SUBSCRIPTION_LIMIT_EXCEEDED   StatusMessageErrorCode = "SUBSCRIPTION_LIMIT_EXCEEDED"
+	SMEC_ERR_INVALID_CLOCK                 StatusMessageErrorCode = "INVALID_CLOCK"
+	SMEC_ERR_UNEXPECTED_ERROR              StatusMessageErrorCode = "UNEXPECTED_ERROR"
+	SMEC_ERR_CONNECTION_FAILED             StatusMessageErrorCode = "CONNECTION_FAILED"
+)
+
 type (
 	StreamingClientConfig struct {
 		SegmentationEnabled bool

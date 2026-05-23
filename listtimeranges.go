@@ -11,19 +11,19 @@ const (
 )
 
 type (
-	TimeRangesParams struct {
+	ListTimeRangesParams struct {
 		Filter      MarketFilter    `json:"filter"`
 		Granularity TimeGranularity `json:"granularity"`
 	}
 
-	TimeRangeResult struct {
+	ListTimeRangesResult struct {
 		TimeRange   TimeRange `json:"timeRange,omitempty"`
 		MarketCount int       `json:"marketCount,omitempty"`
 	}
 )
 
-func (client *Client) ListTimeRanges(ctx context.Context, params TimeRangesParams) ([]TimeRangeResult, error) {
-	json := []TimeRangeResult{}
+func (client *Client) ListTimeRanges(ctx context.Context, params ListTimeRangesParams) ([]ListTimeRangesResult, error) {
+	json := []ListTimeRangesResult{}
 
 	return json, client.GetSports(ctx, "listTimeRanges", params, &json)
 }

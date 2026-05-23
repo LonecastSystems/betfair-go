@@ -6,7 +6,7 @@ import (
 )
 
 type (
-	RunnerBookParams struct {
+	ListRunnerBookParams struct {
 		MarketID                      string          `json:"marketId"`
 		SelectionID                   int64           `json:"selectionId"`
 		Handicap                      float64         `json:"handicap,omitempty"`
@@ -23,8 +23,10 @@ type (
 	}
 )
 
-func (client *Client) ListRunnerBook(ctx context.Context, params RunnerBookParams) ([]MarketBook, error) {
-	json := []MarketBook{}
+type ListRunnerBookResult = MarketBook
+
+func (client *Client) ListRunnerBook(ctx context.Context, params ListRunnerBookParams) ([]ListRunnerBookResult, error) {
+	json := []ListRunnerBookResult{}
 
 	return json, client.GetSports(ctx, "listRunnerBook", params, &json)
 }

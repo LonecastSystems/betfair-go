@@ -6,10 +6,10 @@ import (
 )
 
 func TestListMarketProfitAndLoss(t *testing.T) {
-	c := NewTestClient(t)
+	c := newTestClient(t)
 
-	params := MarketProfitAndLossParams{
-		MarketIDs: []string{GetRandomMarketID(t, c)}}
+	params := ListMarketProfitAndLossParams{
+		MarketIDs: []string{getRandomMarketID(t, c)}}
 
 	pnl, err := c.ListMarketProfitAndLoss(context.Background(), params)
 	if err != nil {

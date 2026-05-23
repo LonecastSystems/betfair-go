@@ -55,17 +55,17 @@ type (
 		Liability float64 `json:"liability"`
 	}
 
-	PlaceExecutionReport struct {
-		CustomerRef        string                   `json:"customerRef,omitempty"`
-		Status             ExecutionReportStatus    `json:"status"`
-		ErrorCode          ExecutionReportErrorCode `json:"errorCode,omitempty"`
-		MarketID           string                   `json:"marketId,omitempty"`
-		InstructionReports []PlaceInstructionReport `json:"instructionReports,omitempty"`
+	PlaceOrdersReport struct {
+		CustomerRef        string                         `json:"customerRef,omitempty"`
+		Status             ExecutionReportStatus          `json:"status"`
+		ErrorCode          ExecutionReportErrorCode       `json:"errorCode,omitempty"`
+		MarketID           string                         `json:"marketId,omitempty"`
+		InstructionReports []PlaceOrdersInstructionReport `json:"instructionReports,omitempty"`
 	}
 )
 
-func (client *Client) PlaceOrders(ctx context.Context, params PlaceOrdersParams) (PlaceExecutionReport, error) {
-	json := PlaceExecutionReport{}
+func (client *Client) PlaceOrders(ctx context.Context, params PlaceOrdersParams) (PlaceOrdersReport, error) {
+	json := PlaceOrdersReport{}
 
 	return json, client.GetSports(ctx, "placeOrders", params, &json)
 }

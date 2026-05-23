@@ -43,12 +43,12 @@ const (
 )
 
 type (
-	RaceDetailsParams struct {
+	ListRaceDetailsParams struct {
 		MeetingIDs []string `json:"meetingIds,omitempty"`
 		RaceIDs    []string `json:"raceIds,omitempty"`
 	}
 
-	RaceDetails struct {
+	ListRaceDetailsResult struct {
 		MeetingID    string       `json:"meetingId,omitempty"`
 		RaceID       string       `json:"raceId,omitempty"`
 		RaceStatus   RaceStatus   `json:"raceStatus,omitempty"`
@@ -58,8 +58,8 @@ type (
 	}
 )
 
-func (client *Client) ListRaceDetails(ctx context.Context, params RaceDetailsParams) ([]RaceDetails, error) {
-	json := []RaceDetails{}
+func (client *Client) ListRaceDetails(ctx context.Context, params ListRaceDetailsParams) ([]ListRaceDetailsResult, error) {
+	json := []ListRaceDetailsResult{}
 
 	return json, client.GetScores(ctx, "listRaceDetails", params, &json)
 }

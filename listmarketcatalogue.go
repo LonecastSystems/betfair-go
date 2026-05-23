@@ -22,6 +22,7 @@ const (
 	MS_MAXIMUM_AVAILABLE MarketSort = "MAXIMUM_AVAILABLE"
 	MS_FIRST_TO_START    MarketSort = "FIRST_TO_START"
 	MS_LAST_TO_START     MarketSort = "LAST_TO_START"
+	MS_RANK              MarketSort = "RANK"
 )
 
 type MarketProjection string
@@ -37,15 +38,15 @@ const (
 )
 
 type (
-	MarketCatalogueParams struct {
-		Filter           MarketFilter     `json:"filter"`
-		MarketProjection MarketProjection `json:"marketProjection,omitempty"`
-		Sort             MarketSort       `json:"sort,omitempty"`
-		MaxResults       int              `json:"maxResults"`
-		Locale           string           `json:"locale,omitempty"`
+	ListMarketCatalogueParams struct {
+		Filter            MarketFilter       `json:"filter"`
+		MarketProjections []MarketProjection `json:"marketProjection,omitempty"`
+		Sort              MarketSort         `json:"sort,omitempty"`
+		MaxResults        int                `json:"maxResults"`
+		Locale            string             `json:"locale,omitempty"`
 	}
 
-	MarketCatalogueResult struct {
+	ListMarketCatalogueResult struct {
 		MarketID          string            `json:"marketId"`
 		MarketName        string            `json:"marketName"`
 		MarketStartTime   time.Time         `json:"marketStartTime,omitempty"`
@@ -95,12 +96,12 @@ type (
 	}
 
 	PriceLadderDescription struct {
-		Type PriceLadderType `json:"priceLadderType,omitempty"`
+		Type PriceLadderType `json:"type,omitempty"`
 	}
 )
 
-func (client *Client) ListMarketCatalogue(ctx context.Context, params MarketCatalogueParams) ([]MarketCatalogueResult, error) {
-	json := []MarketCatalogueResult{}
+func (client *Client) ListMarketCatalogue(ctx context.Context, params ListMarketCatalogueParams) ([]ListMarketCatalogueResult, error) {
+	json := []ListMarketCatalogueResult{}
 
 	return json, client.GetSports(ctx, "listMarketCatalogue", params, &json)
 }

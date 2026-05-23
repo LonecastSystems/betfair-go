@@ -6,9 +6,9 @@ import (
 )
 
 func TestListCurrencyRates(t *testing.T) {
-	c := NewTestClient(t)
+	c := newTestClient(t)
 
-	resp, err := c.ListCurrencyRates(context.Background(), CurrencyRateParams{FromCurrency: "GBP"})
+	resp, err := c.ListCurrencyRates(context.Background(), ListCurrencyRatesParams{FromCurrency: "GBP"})
 	if err != nil {
 		t.Fatal(err)
 	}

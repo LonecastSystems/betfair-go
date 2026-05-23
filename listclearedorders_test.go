@@ -6,9 +6,9 @@ import (
 )
 
 func TestListClearedOrders(t *testing.T) {
-	c := NewTestClient(t)
+	c := newTestClient(t)
 
-	params := ClearedOrdersParams{BetStatus: BS_SETTLED}
+	params := ListClearedOrdersParams{BetStatus: BS_SETTLED}
 
 	_, err := c.ListClearedOrders(context.Background(), params)
 	if err != nil {

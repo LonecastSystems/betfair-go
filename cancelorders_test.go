@@ -7,7 +7,7 @@ import (
 
 // Use with caution
 func TestCancelOrders(t *testing.T) {
-	c := NewTestClient(t)
+	c := newTestClient(t)
 
 	params := CancelOrdersParams{}
 

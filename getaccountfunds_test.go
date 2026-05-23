@@ -6,9 +6,9 @@ import (
 )
 
 func TestGetAccountFunds(t *testing.T) {
-	c := NewTestClient(t)
+	c := newTestClient(t)
 
-	resp, err := c.GetAccountFunds(context.Background(), AccountDetailsParams{Wallet: W_UK})
+	resp, err := c.GetAccountFunds(context.Background(), GetAccountFundsParams{Wallet: W_UK})
 	if err != nil {
 		t.Fatal(err)
 	}

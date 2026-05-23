@@ -6,10 +6,10 @@ import (
 )
 
 func TestListRunnerBook(t *testing.T) {
-	c := NewTestClient(t)
+	c := newTestClient(t)
 
-	params := RunnerBookParams{
-		MarketID: GetRandomMarketID(t, c),
+	params := ListRunnerBookParams{
+		MarketID: getRandomMarketID(t, c),
 		PriceProjection: PriceProjection{
 			PriceData: []PriceData{PD_EX_ALL_OFFERS}}}
 

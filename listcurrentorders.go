@@ -24,7 +24,7 @@ const (
 )
 
 type (
-	CurrentOrdersParams struct {
+	ListCurrentOrdersParams struct {
 		BetIDs                 []string        `json:"betIds,omitempty"`
 		MarketIDs              []string        `json:"marketIds,omitempty"`
 		OrderProjection        OrderProjection `json:"orderProjection,omitempty"`
@@ -33,19 +33,18 @@ type (
 		DateRange              TimeRange       `json:"dateRange,omitempty"`
 		OrderBy                OrderBy         `json:"orderBy,omitempty"`
 		SortDir                SortDir         `json:"sortDir,omitempty"`
-		FromDate               time.Time       `json:"fromDate,omitempty"`
 		FromRecord             int             `json:"fromRecord,omitempty"`
 		RecordCount            int             `json:"recordCount,omitempty"`
 		IncludeItemDescription bool            `json:"includeItemDescription,omitempty"`
 		IncludeSourceID        bool            `json:"includeSourceId,omitempty"`
 	}
 
-	CurrentOrderSummaryReport struct {
-		CurrentOrders []CurrentOrderSummary `json:"currentOrders"`
-		MoreAvailable bool                  `json:"moreAvailable"`
+	ListCurrentOrdersReport struct {
+		CurrentOrders []ListCurrentOrdersResult `json:"currentOrders"`
+		MoreAvailable bool                      `json:"moreAvailable"`
 	}
 
-	CurrentOrderSummary struct {
+	ListCurrentOrdersResult struct {
 		BetID                  string                 `json:"betId"`
 		MarketID               string                 `json:"marketId"`
 		SelectionID            int64                  `json:"selectionId"`
@@ -78,8 +77,8 @@ type (
 	}
 )
 
-func (client *Client) ListCurrentOrders(ctx context.Context, params CurrentOrdersParams) (CurrentOrderSummaryReport, error) {
-	json := CurrentOrderSummaryReport{}
+func (client *Client) ListCurrentOrders(ctx context.Context, params ListCurrentOrdersParams) (ListCurrentOrdersReport, error) {
+	json := ListCurrentOrdersReport{}
 
 	return json, client.GetSports(ctx, "listCurrentOrders", params, &json)
 }

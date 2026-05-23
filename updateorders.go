@@ -14,23 +14,23 @@ type (
 		NewPersistenceType PersistenceType `json:"newPersistenceType,omitempty"`
 	}
 
-	UpdateExecutionReport struct {
-		CustomerRef        string                    `json:"customerRef,omitempty"`
-		Status             ExecutionReportStatus     `json:"status"`
-		ErrorCode          ExecutionReportErrorCode  `json:"errorCode,omitempty"`
-		MarketID           string                    `json:"marketId,omitempty"`
-		InstructionReports []UpdateInstructionReport `json:"instructionReports,omitempty"`
+	UpdateOrdersReport struct {
+		CustomerRef        string                          `json:"customerRef,omitempty"`
+		Status             ExecutionReportStatus           `json:"status"`
+		ErrorCode          ExecutionReportErrorCode        `json:"errorCode,omitempty"`
+		MarketID           string                          `json:"marketId,omitempty"`
+		InstructionReports []UpdateOrdersInstructionReport `json:"instructionReports,omitempty"`
 	}
 
-	UpdateInstructionReport struct {
+	UpdateOrdersInstructionReport struct {
 		Status            InstructionReportStatus    `json:"status"`
 		ErrorCode         InstructionReportErrorCode `json:"errorCode,omitempty"`
 		UpdateInstruction UpdateInstruction          `json:"instruction"`
 	}
 )
 
-func (client *Client) UpdateOrders(ctx context.Context, params UpdateOrdersParams) (UpdateExecutionReport, error) {
-	json := UpdateExecutionReport{}
+func (client *Client) UpdateOrders(ctx context.Context, params UpdateOrdersParams) (UpdateOrdersReport, error) {
+	json := UpdateOrdersReport{}
 
 	return json, client.GetSports(ctx, "updateOrders", params, &json)
 }
