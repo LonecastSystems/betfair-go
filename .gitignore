@@ -1,2 +1,7 @@
 main.go
+cmd/main.go
+*.crt
+*.key
+*.pem
+.env
 .vscode/launch.json
