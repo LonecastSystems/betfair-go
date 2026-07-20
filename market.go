@@ -171,20 +171,20 @@ type (
 	//
 	// Doc: https://betfair-developer-docs.atlassian.net/wiki/spaces/1smk3cen4v3lu3yomq5qye0ni/pages/2687396/Exchange+Stream+API#RunnerChange
 	RunnerChange struct {
-		Conflated                  bool        `json:"con"`           // Conflated - have more than a single change been combined (or null if not conflated).
-		TradedVolume               float64     `json:"tv,omitempty"`  // The total amount matched. This value is truncated at 2dp.
-		LastTradedPrice            float64     `json:"ltp,omitempty"` // Last Traded Price - The last traded price (or null if un-changed).
-		StartingPriceNear          any         `json:"spn,omitempty"` // Starting Price Near - The near starting price (or null if un-changed).
-		StartingPriceFar           any         `json:"spf,omitempty"` // Starting Price Far - The far starting price (or null if un-changed).
-		BestAvailableToBack        [][]float64 `json:"batb"`          // Best Available To Back - LevelPriceVol triple delta of price changes, keyed by level (0 vol is remove).
-		BestAvailableToLay         [][]float64 `json:"batl"`          // Best Available To Lay - LevelPriceVol triple delta of price changes, keyed by level (0 vol is remove).
-		BestDisplayAvailableToBack [][]float64 `json:"bdatb"`         // Best Display Available To Back (includes virtual prices) - LevelPriceVol triple delta of price changes, keyed by level (0 vol is remove).
-		BestDisplayAvailableToLay  [][]float64 `json:"bdatl"`         // Best Display Available To Lay (includes virtual prices) - LevelPriceVol triple delta of price changes, keyed by level (0 vol is remove).
-		AvailableToBack            [][]float64 `json:"atb"`           // Available To Back - PriceVol tuple delta of price changes (0 vol is remove).
-		AvailableToLay             [][]float64 `json:"atl"`           // Available To Lay - PriceVol tuple delta of price changes (0 vol is remove).
-		StartingPriceBack          [][]float64 `json:"spb"`           // Starting Price Back - PriceVol tuple delta of price changes (0 vol is remove).
-		StartingPriceLay           [][]float64 `json:"spl"`           // Starting Price Lay - PriceVol tuple delta of price changes (0 vol is remove).
-		Traded                     [][]float64 `json:"trd"`           // Traded - PriceVol tuple delta of price changes (0 vol is remove).
+		Conflated                  bool      `json:"con"`           // Conflated - have more than a single change been combined (or null if not conflated).
+		TradedVolume               float64   `json:"tv,omitempty"`  // The total amount matched. This value is truncated at 2dp.
+		LastTradedPrice            float64   `json:"ltp,omitempty"` // Last Traded Price - The last traded price (or null if un-changed).
+		StartingPriceNear          *Float    `json:"spn,omitempty"` // Starting Price Near - The near starting price (or null if un-changed). May be NaN/Infinity.
+		StartingPriceFar           *Float    `json:"spf,omitempty"` // Starting Price Far - The far starting price (or null if un-changed). May be NaN/Infinity.
+		BestAvailableToBack        [][]Float `json:"batb"`          // Best Available To Back - LevelPriceVol triple delta of price changes, keyed by level (0 vol is remove).
+		BestAvailableToLay         [][]Float `json:"batl"`          // Best Available To Lay - LevelPriceVol triple delta of price changes, keyed by level (0 vol is remove).
+		BestDisplayAvailableToBack [][]Float `json:"bdatb"`         // Best Display Available To Back (includes virtual prices) - LevelPriceVol triple delta of price changes, keyed by level (0 vol is remove).
+		BestDisplayAvailableToLay  [][]Float `json:"bdatl"`         // Best Display Available To Lay (includes virtual prices) - LevelPriceVol triple delta of price changes, keyed by level (0 vol is remove).
+		AvailableToBack            [][]Float `json:"atb"`           // Available To Back - PriceVol tuple delta of price changes (0 vol is remove).
+		AvailableToLay             [][]Float `json:"atl"`           // Available To Lay - PriceVol tuple delta of price changes (0 vol is remove).
+		StartingPriceBack          [][]Float `json:"spb"`           // Starting Price Back - PriceVol tuple delta of price changes (0 vol is remove).
+		StartingPriceLay           [][]Float `json:"spl"`           // Starting Price Lay - PriceVol tuple delta of price changes (0 vol is remove).
+		Traded                     [][]Float `json:"trd"`           // Traded - PriceVol tuple delta of price changes (0 vol is remove).
 	}
 )
 

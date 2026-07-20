@@ -65,8 +65,8 @@ type (
 		SelectionID     int64            `json:"id"`           // Selection Id - the id of the runner (selection).
 		Handicap        float64          `json:"hc,omitempty"` // Handicap - the handicap of the runner (null if not applicable).
 		UnmatchedOrders []UnmatchedOrder `json:"uo"`           // Unmatched Orders on this runner.
-		MatchedBacks    [][]float64      `json:"mb"`           // Matched Backs - matched amounts by distinct matched price on the Back side for this runner.
-		MatchedLays     [][]float64      `json:"ml"`           // Matched Lays - matched amounts by distinct matched price on the Lay side for this runner.
+		MatchedBacks    [][]Float        `json:"mb"`           // Matched Backs - matched amounts by distinct matched price on the Back side for this runner.
+		MatchedLays     [][]Float        `json:"ml"`           // Matched Lays - matched amounts by distinct matched price on the Lay side for this runner.
 	}
 
 	// UnmatchedOrder is an unmatched order on a runner from the Exchange Stream API.

@@ -177,11 +177,11 @@ type (
 	//
 	// Doc: https://betfair-developer-docs.atlassian.net/wiki/spaces/1smk3cen4v3lu3yomq5qye0ni/pages/2687465/Betting+Type+Definitions#StartingPrices
 	StartingPrices struct {
-		NearPrice         float64     `json:"nearPrice,omitempty"`         // NearPrice is what the starting price would be if the market was reconciled now taking into account the SP bets as well as unmatched exchange bets on the same selection in the exchange. This data is cached and update every 60 seconds. Please note: Type Double may contain numbers, INF, -INF, and NaN.
-		FarPrice          float64     `json:"farPrice,omitempty"`          // FarPrice is what the starting price would be if the market was reconciled now taking into account only the currently place SP bets. The Far Price is not as complicated but not as accurate and only accounts for money on the exchange at SP. This data is cached and updated every 60 seconds. Please note: Type Double may contain numbers, INF, -INF, and NaN.
+		NearPrice         Float       `json:"nearPrice,omitempty"`         // NearPrice is what the starting price would be if the market was reconciled now taking into account the SP bets as well as unmatched exchange bets on the same selection in the exchange. This data is cached and update every 60 seconds. Please note: Type Double may contain numbers, INF, -INF, and NaN.
+		FarPrice          Float       `json:"farPrice,omitempty"`          // FarPrice is what the starting price would be if the market was reconciled now taking into account only the currently place SP bets. The Far Price is not as complicated but not as accurate and only accounts for money on the exchange at SP. This data is cached and updated every 60 seconds. Please note: Type Double may contain numbers, INF, -INF, and NaN.
 		BackStakeTaken    []PriceSize `json:"backStakeTaken,omitempty"`    // BackStakeTaken is the total amount of back bets matched at the actual Betfair Starting Price. Pre-reconciliation, this field is zero for all prices except 1.01 (for Market on Close bets) and at the limit price for any Limit on Close bets.
 		LayLiabilityTaken []PriceSize `json:"layLiabilityTaken,omitempty"` // LayLiabilityTaken is the lay amount matched at the actual Betfair Starting Price. Pre-reconciliation, this field is zero for all prices except 1000 (for Market on Close bets) and at the limit price for any Limit on Close bets.
-		ActualSP          float64     `json:"actualSP,omitempty"`          // ActualSP is the final BSP price for this runner. Only available for a BSP market that has been reconciled. Please note: for REMOVED runners the actualSP will be returned as 'NaN. Value may be returned as 'Infinity' if no BSP can be calculated.
+		ActualSP          Float       `json:"actualSP,omitempty"`          // ActualSP is the final BSP price for this runner. Only available for a BSP market that has been reconciled. Please note: for REMOVED runners the actualSP will be returned as 'NaN. Value may be returned as 'Infinity' if no BSP can be calculated.
 	}
 
 	// ExchangePrices are exchange prices available for a runner.
@@ -197,8 +197,8 @@ type (
 	//
 	// Doc: https://betfair-developer-docs.atlassian.net/wiki/spaces/1smk3cen4v3lu3yomq5qye0ni/pages/2687465/Betting+Type+Definitions#PriceSize
 	PriceSize struct {
-		Price float64 `json:"price"` // Price is the price available
-		Size  float64 `json:"size"`  // Size is the stake available
+		Price Float `json:"price"` // Price is the price available
+		Size  Float `json:"size"`  // Size is the stake available. Virtualised stream sizes may be Infinity.
 	}
 
 	// Order is an order in the market.
